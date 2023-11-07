@@ -4,7 +4,7 @@ import 'package:spectrum_speak/screen/search_centers.dart';
 import 'package:spectrum_speak/screen/edit_profile.dart';
 import 'package:spectrum_speak/screen/profile.dart';
 import 'package:spectrum_speak/screen/test.dart';
-import 'package:spectrum_speak/units/custom_clipper_puzzel.dart';
+import 'package:spectrum_speak/units/custom_clipper_puzzle.dart';
 import 'package:spectrum_speak/widgets/top_bar.dart';
 
 import 'const.dart';
