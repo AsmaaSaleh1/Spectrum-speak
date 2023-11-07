@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:spectrum_speak/screen/search_centers.dart';
 import 'package:spectrum_speak/screen/edit_profile.dart';
 import 'package:spectrum_speak/screen/profile.dart';
+import 'package:spectrum_speak/screen/test.dart';
+import 'package:spectrum_speak/units/custom_clipper_puzzel.dart';
 import 'package:spectrum_speak/widgets/top_bar.dart';
 
 import 'const.dart';
@@ -34,8 +37,8 @@ class MyApp extends StatelessWidget {
             preferredSize: Size.fromHeight(kToolbarHeight),
             child: TopBar(),
           ),
-          body: Profile(),
-          //EditProfile(),
+          body: Centers(),
+          //Test(),
         ));
   }
 }

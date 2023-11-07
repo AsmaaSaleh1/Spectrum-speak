@@ -1,4 +1,3 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -13,13 +12,16 @@ Widget buildTextField(String labelText, String placeholder,
       decoration: InputDecoration(
         suffixIcon: isPasswordTextField
             ? IconButton(
-            onPressed: () {},
-            icon: Icon(
-              Icons.remove_red_eye,
-              color: kDarkerColor,
-            ))
+                onPressed: () {},
+                icon: Icon(
+                  Icons.remove_red_eye,
+                  color: kDarkerColor,
+                ))
             : null,
-        contentPadding: const EdgeInsets.only(bottom: 5, left: 8,),
+        contentPadding: const EdgeInsets.only(
+          bottom: 5,
+          left: 8,
+        ),
         labelText: labelText,
         labelStyle: TextStyle(
           fontSize: 16,
@@ -35,8 +37,8 @@ Widget buildTextField(String labelText, String placeholder,
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(20.0),
-          borderSide: const BorderSide(
-            color: Colors.grey,
+          borderSide: BorderSide(
+            color: Colors.grey.shade700,
           ),
         ),
         focusedBorder: OutlineInputBorder(
