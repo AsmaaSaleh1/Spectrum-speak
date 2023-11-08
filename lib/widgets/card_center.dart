@@ -8,7 +8,7 @@ class CenterCard extends StatelessWidget {
   final Color cardColor;
   const CenterCard({
     Key? key,
-    this.cardColor = Colors.red,
+    this.cardColor = kDarkBlue,
   }) : super(key: key);
   @override
   Widget build(BuildContext context) {
