@@ -2,11 +2,11 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 
-class CustomClipperTest extends CustomClipper<Path> {
+class CustomClipperPuzzle extends CustomClipper<Path> {
   @override
   Path getClip(Size size) {
     Path path = Path();
-    double widthSize=size.width-(size.width/6);
+    double widthSize=size.width;
     double heightSize=size.height-(size.height/6);
     double radius = heightSize / 6;
     double radius2 = widthSize / 6;

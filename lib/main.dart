@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:spectrum_speak/screen/search_centers.dart';
+import 'package:spectrum_speak/screen/search_page.dart';
 import 'package:spectrum_speak/screen/edit_profile.dart';
 import 'package:spectrum_speak/screen/profile.dart';
-import 'package:spectrum_speak/screen/test.dart';
+import 'package:spectrum_speak/widgets/card_specialist.dart';
 import 'package:spectrum_speak/units/custom_clipper_puzzle.dart';
 import 'package:spectrum_speak/widgets/top_bar.dart';
 
