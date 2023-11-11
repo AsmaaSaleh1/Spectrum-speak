@@ -25,9 +25,9 @@ class CardSpecialist extends StatelessWidget {
           borderRadius: BorderRadius.circular(15),
           boxShadow: [
             BoxShadow(
-              color: kDarkerColor,
-              spreadRadius: 1,
-              blurRadius: 1,
+              color: kDarkerColor.withOpacity(0.5),
+              spreadRadius: 2,
+              blurRadius: 4,
               offset: const Offset(0, 0),
             ),
           ],
@@ -137,7 +137,6 @@ class CardSpecialist extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Icon(
-                        //Icons.attach_money,
                         FontAwesomeIcons.sackDollar,
                         size: 15.0,
                         color: kDarkerColor,
@@ -160,7 +159,6 @@ class CardSpecialist extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Icon(
-                        //Icons.attach_money,
                         FontAwesomeIcons.buildingUser,
                         size: 15.0,
                         color: kDarkerColor,
