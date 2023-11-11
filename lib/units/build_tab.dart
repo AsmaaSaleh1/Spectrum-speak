@@ -167,7 +167,7 @@ class _MyTabState extends State<MyTab> {
                                       padding: EdgeInsets.only(left: 10,top: 20,right: 10,bottom: 0),
                                       child: Icon(
                                         FontAwesomeIcons.locationDot,
-                                        size: 30.0,
+                                        size: 22.0,
                                         color: kRed,
                                       ),
                                     ),
@@ -201,7 +201,7 @@ class _MyTabState extends State<MyTab> {
                                       padding: EdgeInsets.only(left: 10,top: 20,right: 10,bottom: 0),
                                       child: Icon(
                                         FontAwesomeIcons.userDoctor,
-                                        size: 30.0,
+                                        size: 22.0,
                                         color: kGreen,
                                       ),
                                     ),
@@ -248,7 +248,7 @@ class _MyTabState extends State<MyTab> {
                                   padding: EdgeInsets.only(left: 10,top: 20,right: 10,bottom: 0),
                                   child: Icon(
                                     FontAwesomeIcons.locationDot,
-                                    size: 30.0,
+                                    size: 22.0,
                                     color: kRed,
                                   ),
                                 ),
@@ -302,7 +302,7 @@ class _MyTabState extends State<MyTab> {
                                       padding: EdgeInsets.only(left: 10,top: 20,right: 10,bottom: 0),
                                       child: Icon(
                                         FontAwesomeIcons.locationDot,
-                                        size: 30.0,
+                                        size: 22.0,
                                         color: kRed,
                                       ),
                                     ),
@@ -336,7 +336,7 @@ class _MyTabState extends State<MyTab> {
                                       padding: EdgeInsets.only(left: 10,top: 20,right: 10,bottom: 0),
                                       child: Icon(
                                         FontAwesomeIcons.venusMars,
-                                        size: 30.0,
+                                        size: 22.0,
                                         color: kBlue,
                                       ),
                                     ),

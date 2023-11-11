@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 
 import '../const.dart';
@@ -33,13 +34,24 @@ class _CentersState extends State<Centers> {
               Center(
                 child: Padding(
                   padding: const EdgeInsets.only(top: 20, bottom: 40),
-                  child: Text(
-                    "Search",
-                    style: TextStyle(
-                      fontSize: 25.0,
-                      fontWeight: FontWeight.bold,
-                      color: kDarkerColor,
-                    ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(
+                        FontAwesomeIcons.magnifyingGlass,
+                        size: 40.0,
+                        color: kDarkBlue,
+                      ),
+                      const SizedBox(width: 20,),
+                      Text(
+                        "Search",
+                        style: TextStyle(
+                          fontSize: 25.0,
+                          fontWeight: FontWeight.bold,
+                          color: kDarkerColor,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),

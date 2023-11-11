@@ -42,7 +42,7 @@ class _CustomDropDownState extends State<CustomDropDown> {
           style: TextStyle(
             color: kDarkerColor,
             fontFamily: GoogleFonts.tinos().fontFamily,
-            fontSize: 20,
+            fontSize: 17,
           ),
           hint: widget.hint != null ? Text(widget.hint!) : null,
           onChanged: (String? value) {
@@ -55,10 +55,12 @@ class _CustomDropDownState extends State<CustomDropDown> {
                     child: Text(item),
                   ))
               .toList(),
-          iconSize: 20,
+          iconSize: 17,
           borderRadius: BorderRadius.circular(20.0),
           menuMaxHeight: 250,
           focusColor: kPrimary,
+          padding: const EdgeInsets.all(5),//textPadding
+          underline:Container(),//Hide the underline
         ),
       ),
     );
