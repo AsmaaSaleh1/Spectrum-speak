@@ -103,7 +103,7 @@ class _MyTabState extends State<MyTab> {
                       children: [
                         const Text('Specialist'),
                         Icon(
-                          FontAwesomeIcons.sackDollar,
+                          FontAwesomeIcons.userDoctor,
                           size: 15.0,
                           color: kDarkerColor,
                         ),
