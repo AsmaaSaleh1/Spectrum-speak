@@ -1,14 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-import '../const.dart';
-import '../units/custom_clipper_center_card.dart';
+import 'package:spectrum_speak/const.dart';
+import 'package:spectrum_speak/screen/center_profile.dart';
+import 'package:spectrum_speak/units/custom_clipper_center_card.dart';
 
 class CenterCard extends StatelessWidget {
   final Color cardColor;
+  final String about;
+  final VoidCallback onTap;
+  final bool isLess;
   const CenterCard({
     Key? key,
     this.cardColor = kDarkBlue,
+    required this.about,
+    required this.onTap,
+    required this.isLess,
   }) : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -113,14 +120,29 @@ class CenterCard extends StatelessWidget {
                         const SizedBox(
                           height: 5,
                         ),
-                        Text(
-                          "The Rehabilitation Centre for Children supports children and youth in realizing their potential and participating in their communities.",
-                          style: TextStyle(
-                            fontSize: 14.0,
-                            fontWeight: FontWeight.w500,
-                            color: kDarkerColor,
-                          ),
-                        )
+                        GestureDetector(
+                          onTap: onTap,
+                          child: isLess
+                              ? Text(
+                                  about,
+                                  style: TextStyle(
+                                    fontSize: 14.0,
+                                    color: kDarkerColor,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                )
+                              : Text(
+                                  about,
+                                  maxLines: 3,
+                                  overflow: TextOverflow.ellipsis,
+                                  //Comment
+                                  style: TextStyle(
+                                    fontSize: 14.0,
+                                    color: kDarkerColor,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                        ),
                       ],
                     ),
                   ),
@@ -143,7 +165,10 @@ class CenterCard extends StatelessWidget {
                           ),
                           IconButton(
                             onPressed: () {
-                              // Add your action here when the button is pressed
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => const CenterProfile()),
+                              );
                             },
                             icon: Icon(
                               FontAwesomeIcons.anglesRight,
