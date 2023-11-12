@@ -6,8 +6,8 @@ import '../screen/edit_profile.dart';
 import '../units/custom_button.dart';
 import '../units/custom_clipper.dart';
 
-class StackContainer extends StatelessWidget {
-  const StackContainer({Key? key}) : super(key: key);
+class StackContainerParent extends StatelessWidget {
+  const StackContainerParent({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Container(

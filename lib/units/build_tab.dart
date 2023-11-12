@@ -26,7 +26,7 @@ class _MyTabState extends State<MyTab> {
   String? selectedCity;
   String? selectedSpecialist;
   String? selectedGender;
-
+  bool isMore = false;
   void onSearchTypeChanged(SearchEnum newValue) {
     setState(() {
       selectedSearch = newValue;
@@ -57,7 +57,14 @@ class _MyTabState extends State<MyTab> {
       if (selectedSearch == SearchEnum.specialist) {
         specialistCards.add(CardSpecialist(cardColor: color));
       } else if (selectedSearch == SearchEnum.center) {
-        centerCards.add(CenterCard(cardColor: color));
+        centerCards.add(CenterCard(
+          cardColor: color,
+          about: "The Rehabilitation Centre for Children supports children and youth in realizing their potential and participating in their communities.",
+          onTap: () => setState(() {
+            isMore = !isMore;
+          }),
+          isLess: isMore,
+        ));
       } else if (selectedSearch == SearchEnum.shadowTeacher) {
         shadowTeacherCards.add(CardShadowTeacher(cardColor: color));
       }
@@ -164,7 +171,11 @@ class _MyTabState extends State<MyTab> {
                                 Column(
                                   children: [
                                     const Padding(
-                                      padding: EdgeInsets.only(left: 10,top: 20,right: 10,bottom: 0),
+                                      padding: EdgeInsets.only(
+                                          left: 10,
+                                          top: 20,
+                                          right: 10,
+                                          bottom: 0),
                                       child: Icon(
                                         FontAwesomeIcons.locationDot,
                                         size: 22.0,
@@ -188,17 +199,22 @@ class _MyTabState extends State<MyTab> {
                                       onChanged: (String? value) {
                                         setState(() {
                                           selectedCity = value;
-                                        }
-                                        );
+                                        });
                                       },
                                     ),
                                   ],
                                 ),
-                                const SizedBox(width: 30,),
+                                const SizedBox(
+                                  width: 30,
+                                ),
                                 Column(
                                   children: [
                                     const Padding(
-                                      padding: EdgeInsets.only(left: 10,top: 20,right: 10,bottom: 0),
+                                      padding: EdgeInsets.only(
+                                          left: 10,
+                                          top: 20,
+                                          right: 10,
+                                          bottom: 0),
                                       child: Icon(
                                         FontAwesomeIcons.userDoctor,
                                         size: 22.0,
@@ -206,7 +222,7 @@ class _MyTabState extends State<MyTab> {
                                       ),
                                     ),
                                     CustomDropDown(
-                                      items: const[
+                                      items: const [
                                         'Audio & Speech',
                                         'Rehabilitation',
                                         'Psychiatrists'
@@ -216,8 +232,7 @@ class _MyTabState extends State<MyTab> {
                                       onChanged: (String? value) {
                                         setState(() {
                                           selectedSpecialist = value;
-                                        }
-                                        );
+                                        });
                                       },
                                     ),
                                   ],
@@ -242,10 +257,11 @@ class _MyTabState extends State<MyTab> {
                           padding: const EdgeInsets.only(left: 30),
                           child: Container(
                             alignment: Alignment.topLeft,
-                            child:Column(
+                            child: Column(
                               children: [
                                 const Padding(
-                                  padding: EdgeInsets.only(left: 10,top: 20,right: 10,bottom: 0),
+                                  padding: EdgeInsets.only(
+                                      left: 10, top: 20, right: 10, bottom: 0),
                                   child: Icon(
                                     FontAwesomeIcons.locationDot,
                                     size: 22.0,
@@ -269,8 +285,7 @@ class _MyTabState extends State<MyTab> {
                                   onChanged: (String? value) {
                                     setState(() {
                                       selectedCity = value;
-                                    }
-                                    );
+                                    });
                                   },
                                 ),
                               ],
@@ -292,14 +307,18 @@ class _MyTabState extends State<MyTab> {
                           padding: const EdgeInsets.only(left: 30),
                           child: Container(
                             alignment: Alignment.topLeft,
-                            child:Wrap(
+                            child: Wrap(
                               alignment: WrapAlignment.start,
                               direction: Axis.horizontal,
                               children: [
                                 Column(
                                   children: [
                                     const Padding(
-                                      padding: EdgeInsets.only(left: 10,top: 20,right: 10,bottom: 0),
+                                      padding: EdgeInsets.only(
+                                          left: 10,
+                                          top: 20,
+                                          right: 10,
+                                          bottom: 0),
                                       child: Icon(
                                         FontAwesomeIcons.locationDot,
                                         size: 22.0,
@@ -323,17 +342,22 @@ class _MyTabState extends State<MyTab> {
                                       onChanged: (String? value) {
                                         setState(() {
                                           selectedCity = value;
-                                        }
-                                        );
+                                        });
                                       },
                                     ),
                                   ],
                                 ),
-                                const SizedBox(width: 30,),
+                                const SizedBox(
+                                  width: 30,
+                                ),
                                 Column(
                                   children: [
                                     const Padding(
-                                      padding: EdgeInsets.only(left: 10,top: 20,right: 10,bottom: 0),
+                                      padding: EdgeInsets.only(
+                                          left: 10,
+                                          top: 20,
+                                          right: 10,
+                                          bottom: 0),
                                       child: Icon(
                                         FontAwesomeIcons.venusMars,
                                         size: 22.0,
@@ -350,8 +374,7 @@ class _MyTabState extends State<MyTab> {
                                       onChanged: (String? value) {
                                         setState(() {
                                           selectedGender = value;
-                                        }
-                                        );
+                                        });
                                       },
                                     )
                                   ],
@@ -365,7 +388,7 @@ class _MyTabState extends State<MyTab> {
                             spacing: 50.0, // Horizontal spacing between items
                             runSpacing: 30.0, // Vertical spacing between lines
                             children:
-                            shadowTeacherCards, // Use the list of cards here
+                                shadowTeacherCards, // Use the list of cards here
                           ),
                         ),
                       ],
