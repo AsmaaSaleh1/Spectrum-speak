@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:spectrum_speak/screen/parent_profile.dart';
 import '../const.dart';
 import '../units/build_text_field.dart';
 import '../units/custom_button.dart';
@@ -93,7 +94,10 @@ class _EditProfileState extends State<EditProfile> {
                       foregroundColor: kDarkerColor,
                       backgroundColor: kPrimary,
                       onPressed: () {
-                        // Handle the edit profile action here
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => const ParentProfile()),
+                        );
                       },
                       buttonText: 'Cansel',
                       icon: const Icon(

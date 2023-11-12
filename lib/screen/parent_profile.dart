@@ -1,24 +1,24 @@
 import 'package:flutter/material.dart';
 import '../widgets/card_item.dart';
-import '../widgets/stack_container.dart';
+import '../widgets/stack_container_parent.dart';
 import '../widgets/parent_information.dart';
 
-class Profile extends StatefulWidget {
-  const Profile({Key? key}) : super(key: key);
+class ParentProfile extends StatefulWidget {
+  const ParentProfile({Key? key}) : super(key: key);
 
   @override
-  State<Profile> createState() => _ProfileState();
+  State<ParentProfile> createState() => _ParentProfileState();
 }
 
-class _ProfileState extends State<Profile> {
+class _ParentProfileState extends State<ParentProfile> {
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
       body: SingleChildScrollView(
         child: Column(
           children: <Widget>[
-            StackContainer(),
-            InformationCard(),
+            StackContainerParent(),
+            ParentInformation(),
             SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: Row(
