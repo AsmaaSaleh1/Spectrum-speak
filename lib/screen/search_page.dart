@@ -5,17 +5,17 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../const.dart';
 import '../units/build_tab.dart';
 
-class Centers extends StatefulWidget {
-  const Centers({Key? key}) : super(key: key);
+class Search extends StatefulWidget {
+  const Search({Key? key}) : super(key: key);
 
   @override
-  State<Centers> createState() => _CentersState();
+  State<Search> createState() => _SearchState();
 }
 
-class _CentersState extends State<Centers> {
-  Search selectedSearch = Search.center;
+class _SearchState extends State<Search> {
+  SearchEnam selectedSearch = SearchEnam.center;
 
-  void onSearchTypeChanged(Search newValue) {
+  void onSearchTypeChanged(SearchEnam newValue) {
     setState(() {
       selectedSearch = newValue;
     });

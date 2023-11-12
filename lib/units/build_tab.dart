@@ -7,10 +7,10 @@ import 'package:spectrum_speak/widgets/card_shadow_teacher.dart';
 import 'package:spectrum_speak/const.dart';
 import 'build_drop_down_menu.dart';
 
-enum Search { center, specialist, shadowTeacher }
+enum SearchEnam { center, specialist, shadowTeacher }
 
 class MyTab extends StatefulWidget {
-  final Search selectedSearch;
+  final SearchEnam selectedSearch;
 
   const MyTab({
     required this.selectedSearch,
@@ -22,12 +22,12 @@ class MyTab extends StatefulWidget {
 }
 
 class _MyTabState extends State<MyTab> {
-  Search selectedSearch = Search.center;
+  SearchEnam selectedSearch = SearchEnam.center;
   String? selectedCity;
   String? selectedSpecialist;
   String? selectedGender;
 
-  void onSearchTypeChanged(Search newValue) {
+  void onSearchTypeChanged(SearchEnam newValue) {
     setState(() {
       selectedSearch = newValue;
     });
@@ -54,11 +54,11 @@ class _MyTabState extends State<MyTab> {
     List<Widget> shadowTeacherCards = [];
 
     for (Color color in cardColors) {
-      if (selectedSearch == Search.specialist) {
+      if (selectedSearch == SearchEnam.specialist) {
         specialistCards.add(CardSpecialist(cardColor: color));
-      } else if (selectedSearch == Search.center) {
+      } else if (selectedSearch == SearchEnam.center) {
         centerCards.add(CenterCard(cardColor: color));
-      } else if (selectedSearch == Search.shadowTeacher) {
+      } else if (selectedSearch == SearchEnam.shadowTeacher) {
         shadowTeacherCards.add(CardShadowTeacher(cardColor: color));
       }
     }
@@ -70,13 +70,13 @@ class _MyTabState extends State<MyTab> {
               onTap: (index) {
                 switch (index) {
                   case 0:
-                    onSearchTypeChanged(Search.specialist);
+                    onSearchTypeChanged(SearchEnam.specialist);
                     break;
                   case 1:
-                    onSearchTypeChanged(Search.center);
+                    onSearchTypeChanged(SearchEnam.center);
                     break;
                   case 2:
-                    onSearchTypeChanged(Search.shadowTeacher);
+                    onSearchTypeChanged(SearchEnam.shadowTeacher);
                     break;
                 }
               },

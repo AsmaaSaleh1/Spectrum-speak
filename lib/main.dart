@@ -37,7 +37,7 @@ class MyApp extends StatelessWidget {
             preferredSize: Size.fromHeight(kToolbarHeight),
             child: TopBar(),
           ),
-          body: Centers(),
+          body: Search(),
           //Test(),
         ));
   }

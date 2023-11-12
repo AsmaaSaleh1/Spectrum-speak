@@ -25,7 +25,6 @@ class _ProfileState extends State<Profile> {
                 children: <Widget>[
                   CardItem(),
                   CardItem(),
-
                   // Add more CardItems as needed
                 ],
               ),
