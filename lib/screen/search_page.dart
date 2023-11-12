@@ -13,9 +13,9 @@ class Search extends StatefulWidget {
 }
 
 class _SearchState extends State<Search> {
-  SearchEnam selectedSearch = SearchEnam.center;
+  SearchEnum selectedSearch = SearchEnum.center;
 
-  void onSearchTypeChanged(SearchEnam newValue) {
+  void onSearchTypeChanged(SearchEnum newValue) {
     setState(() {
       selectedSearch = newValue;
     });
