@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class TopBar extends StatelessWidget {
   const TopBar({
@@ -13,11 +14,11 @@ class TopBar extends StatelessWidget {
         children: <Widget>[
           IconButton(
             onPressed: (){},
-            icon: const Icon(Icons.arrow_back,),
+            icon: const Icon(FontAwesomeIcons.chevronLeft,size: 20,),
           ),
           IconButton(
             onPressed: (){},
-            icon: const Icon(Icons.menu,),
+            icon: const Icon(FontAwesomeIcons.bars,size: 20,),
           ),
         ],
       ),

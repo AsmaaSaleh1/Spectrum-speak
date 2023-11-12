@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:spectrum_speak/screen/center_profile.dart';
 import 'package:spectrum_speak/screen/search_page.dart';
 import 'package:spectrum_speak/screen/edit_profile.dart';
-import 'package:spectrum_speak/screen/profile.dart';
+import 'package:spectrum_speak/screen/parent_profile.dart';
 import 'package:spectrum_speak/widgets/card_specialist.dart';
 import 'package:spectrum_speak/units/custom_clipper_puzzle.dart';
 import 'package:spectrum_speak/widgets/top_bar.dart';
@@ -28,7 +29,7 @@ class MyApp extends StatelessWidget {
           ),
           scaffoldBackgroundColor: kPrimary,
           primaryColor: kPrimary,
-          iconTheme: const IconThemeData(color: kBlue),
+          iconTheme: IconThemeData(color: kDarkerColor),
           fontFamily: GoogleFonts.tinos().fontFamily,
           textTheme: GoogleFonts.tinosTextTheme(),
         ),
@@ -38,7 +39,6 @@ class MyApp extends StatelessWidget {
             child: TopBar(),
           ),
           body: Search(),
-          //Test(),
         ));
   }
 }
