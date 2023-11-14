@@ -41,7 +41,7 @@ class _CardReviewState extends State<CardReview> {
           name: "User Name",
           date: "7th Oct",
           comment: "Lorem ipsum comment Lorem ipsum comment Lorem ipsum comment Lorem ipsum comment Lorem ipsum comment Lorem ipsum comment Lorem ipsum comment Lorem ipsum comment",
-          rating: 3.5,
+          rating: 4,
           onTap: () => setState(() {
             isMore = !isMore;
           }),

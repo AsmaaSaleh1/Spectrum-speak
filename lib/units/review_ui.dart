@@ -1,8 +1,9 @@
 import 'package:circular_profile_avatar/circular_profile_avatar.dart';
 import 'package:flutter/material.dart';
-import 'package:smooth_star_rating_null_safety/smooth_star_rating_null_safety.dart';
 
 import 'package:spectrum_speak/const.dart';
+
+import '../widgets/SmoothStarRating.dart';
 
 class ReviewUi extends StatelessWidget {
   final String image, name, date, comment;
@@ -91,6 +92,9 @@ class ReviewUi extends StatelessWidget {
                 borderColor: kRed,
                 color: kYellow,
                 size: 28,
+                onRatingChanged: (value){
+                  print('Rated $value stars!');
+                },
               ),
               const SizedBox(
                 width: 10,

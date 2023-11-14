@@ -296,15 +296,6 @@ class CenterInformation extends StatelessWidget {
                   ),
                 ),
               ),
-              const SizedBox(height: 20,),
-              Text(
-                "Review",
-                style: TextStyle(
-                  fontSize: 30.0,
-                  fontWeight: FontWeight.bold,
-                  color: kDarkerColor,
-                ),
-              ),
             ],
           ),
         ),
