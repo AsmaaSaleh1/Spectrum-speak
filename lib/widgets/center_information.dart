@@ -19,7 +19,6 @@ class CenterInformation extends StatelessWidget {
   Widget build(BuildContext context) => LayoutBuilder(
     builder: (BuildContext context, BoxConstraints constraints) {
       double screenWidth = constraints.maxWidth;
-
       // Define different padding values based on the screen width.
       EdgeInsets contentPadding;
       if (screenWidth >= 1200) {
