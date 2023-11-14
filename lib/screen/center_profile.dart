@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:spectrum_speak/units/review_add_from_user.dart';
 import 'package:spectrum_speak/widgets/card_review.dart';
 import 'package:spectrum_speak/widgets/stack_container_center.dart';
 import 'package:spectrum_speak/widgets/center_information.dart';
@@ -12,6 +13,8 @@ class CenterProfile extends StatefulWidget {
 
 class _CenterProfileState extends State<CenterProfile> {
   bool isMore = false;
+  double userRating = 0.0;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,11 +23,24 @@ class _CenterProfileState extends State<CenterProfile> {
           children: <Widget>[
             const StackContainerCenter(),
             CenterInformation(
-              about: "Lorem ipsum comment Lorem ipsum comment Lorem ipsum comment Lorem ipsum comment Lorem ipsum comment Lorem ipsum comment Lorem ipsum comment Lorem ipsum comment",
+              about:
+              "Lorem ipsum comment Lorem ipsum comment Lorem ipsum comment Lorem ipsum comment Lorem ipsum comment Lorem ipsum comment Lorem ipsum comment Lorem ipsum comment",
               onTap: () => setState(() {
                 isMore = !isMore;
               }),
               isLess: isMore,
+            ),
+            AddReview(
+              image: 'images/prof.png',
+              name: 'User Name',
+              //comment: 'xx',
+              userRating: userRating,
+              onRating: (double newRating) {
+                print(newRating);
+                setState(() {
+                  userRating = newRating;
+                });
+              },
             ),
             const SingleChildScrollView(
               scrollDirection: Axis.horizontal,
