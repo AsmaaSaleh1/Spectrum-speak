@@ -118,7 +118,7 @@ class _EditCenterProfileState extends State<EditCenterProfile> {
                         Icons.save,
                         size: 18.0,
                       ),
-                      iconColor: Color.fromRGBO(27, 230, 25, 1),
+                      iconColor: kGreen,
                     ),
                   ]),
             ),
