@@ -5,6 +5,7 @@ import 'package:spectrum_speak/const.dart';
 import 'package:spectrum_speak/widgets/SmoothStarRating.dart';
 
 import 'build_text_field.dart';
+import 'custom_button.dart';
 
 class AddReview extends StatefulWidget {
   final String image, name;
@@ -34,12 +35,16 @@ class _AddReviewState extends State<AddReview> {
     String formattedDate = formatter.format(now);
     double screenWidth = constraints.maxWidth;
     EdgeInsets contentPadding;
+    double linePadding;
     if (screenWidth >= 1200) {
       contentPadding = const EdgeInsets.symmetric(vertical: 20,horizontal: 110.0);
+      linePadding=110;
     } else if (screenWidth >= 800) {
       contentPadding = const EdgeInsets.symmetric(vertical: 20,horizontal:70.0);
+      linePadding=70;
     } else {
       contentPadding = const EdgeInsets.symmetric(vertical: 20,horizontal:20.0);
+      linePadding=20;
     }
     return Padding(
       padding: contentPadding,
@@ -119,18 +124,21 @@ class _AddReviewState extends State<AddReview> {
           buildTextField(
               "Comment", "They were cooperative and kind", false, isObscurePassword
           ),
-          const SizedBox(
-            height: 20,
-          ),
           Align(
-            alignment: AlignmentDirectional.topCenter,
-            child: Text(
-              "Review",
-              style: TextStyle(
-                fontSize: 30.0,
-                fontWeight: FontWeight.bold,
-                color: kDarkerColor,
+            alignment: AlignmentDirectional.topEnd ,
+            child: CustomButton(
+              foregroundColor: kDarkerColor,
+              backgroundColor: kPrimary,
+              onPressed: () {
+                // Handle the edit profile action here
+                //TODO:Hide all the addReview part and display on it the own card review
+              },
+              buttonText: 'Save',
+              icon: const Icon(
+                Icons.save,
+                size: 18.0,
               ),
+              iconColor: kGreen,
             ),
           ),
         ],
