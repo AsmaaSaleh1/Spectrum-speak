@@ -124,22 +124,32 @@ class _AddReviewState extends State<AddReview> {
           buildTextField(
               "Comment", "They were cooperative and kind", false, isObscurePassword
           ),
-          Align(
-            alignment: AlignmentDirectional.topEnd ,
-            child: CustomButton(
-              foregroundColor: kDarkerColor,
-              backgroundColor: kPrimary,
-              onPressed: () {
-                // Handle the edit profile action here
-                //TODO:Hide all the addReview part and display on it the own card review
-              },
-              buttonText: 'Save',
-              icon: const Icon(
-                Icons.save,
-                size: 18.0,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                "Reviews are public and include your account",
+                style: TextStyle(
+                  fontSize: 13.0,
+                  fontWeight: FontWeight.bold,
+                  color: kDarkerColor.withOpacity(0.6),
+                ),
               ),
-              iconColor: kGreen,
-            ),
+              CustomButton(
+                foregroundColor: kDarkerColor,
+                backgroundColor: kPrimary,
+                onPressed: () {
+                  // Handle the edit profile action here
+                  //TODO:Hide all the addReview part and display on it the own card review
+                },
+                buttonText: 'Save',
+                icon: const Icon(
+                  Icons.save,
+                  size: 18.0,
+                ),
+                iconColor: kGreen,
+              ),
+            ],
           ),
         ],
       ),
