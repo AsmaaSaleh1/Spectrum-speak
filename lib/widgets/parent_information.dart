@@ -286,15 +286,6 @@ class ParentInformation extends StatelessWidget {
                     ),
                   ),
                 ),
-                const SizedBox(height: 20,),
-                Text(
-                  "Children",
-                  style: TextStyle(
-                    fontSize: 30.0,
-                    fontWeight: FontWeight.bold,
-                    color: kDarkerColor,
-                  ),
-                ),
               ],
             ),
           ),
