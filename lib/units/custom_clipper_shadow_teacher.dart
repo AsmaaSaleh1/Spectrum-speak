@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 
 class CustomClipperShadowTeacher extends CustomClipper<Path> {

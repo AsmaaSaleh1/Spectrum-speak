@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-
 import 'package:spectrum_speak/const.dart';
 
 class CenterInformation extends StatelessWidget {
@@ -81,7 +80,7 @@ class CenterInformation extends StatelessWidget {
                           ),
                         ),
                       ),
-                      SizedBox(height: 10,),
+                      const SizedBox(height: 10,),
                       Text(
                         "Center Information",
                         style: TextStyle(
@@ -201,7 +200,7 @@ class CenterInformation extends StatelessWidget {
                           ),
                         ],
                       ),
-                      SizedBox(height: 10,),
+                      const SizedBox(height: 10,),
                       Text(
                         "Contact",
                         style: TextStyle(

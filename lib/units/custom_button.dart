@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../const.dart';
+import 'package:spectrum_speak/const.dart';
 
 class CustomButton extends StatelessWidget {
   final Color foregroundColor;
@@ -10,14 +10,15 @@ class CustomButton extends StatelessWidget {
   final Icon icon;
   final Color iconColor;
 
-  CustomButton({
+  const CustomButton({
+    Key? key,
     required this.foregroundColor,
     required this.backgroundColor,
     required this.onPressed,
     required this.buttonText,
     required this.icon,
     required this.iconColor,
-  });
+  }): super(key: key);
 
   @override
   Widget build(BuildContext context) {

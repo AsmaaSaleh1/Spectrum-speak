@@ -109,6 +109,7 @@ class _MyTabState extends State<MyTab> {
                     child: Column(
                       children: [
                         const Text('Specialist'),
+                        const SizedBox(height: 8,),
                         Icon(
                           FontAwesomeIcons.userDoctor,
                           size: 15.0,
@@ -125,6 +126,7 @@ class _MyTabState extends State<MyTab> {
                     child: Column(
                       children: [
                         const Text('Center'),
+                        const SizedBox(height: 8,),
                         Icon(
                           FontAwesomeIcons.buildingUser,
                           size: 15.0,
@@ -141,6 +143,7 @@ class _MyTabState extends State<MyTab> {
                     child: Column(
                       children: [
                         const Text('Shadow Teacher'),
+                        const SizedBox(height: 8,),
                         Icon(
                           FontAwesomeIcons.graduationCap,
                           size: 15.0,

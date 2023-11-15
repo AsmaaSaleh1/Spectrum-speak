@@ -1,16 +1,16 @@
 import 'package:circular_profile_avatar/circular_profile_avatar.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import '../const.dart';
-import '../screen/edit_profile.dart';
-import '../units/custom_button.dart';
-import '../units/custom_clipper.dart';
+import 'package:spectrum_speak/const.dart';
+import 'package:spectrum_speak/screen/edit_profile.dart';
+import 'package:spectrum_speak/units/custom_button.dart';
+import 'package:spectrum_speak/units/custom_clipper.dart';
 
 class StackContainerParent extends StatelessWidget {
   const StackContainerParent({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       height: 400.0,
       child: Stack(
         children: <Widget>[

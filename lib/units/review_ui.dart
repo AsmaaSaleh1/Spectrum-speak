@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 import 'package:spectrum_speak/const.dart';
 
-import '../widgets/SmoothStarRating.dart';
+import 'package:spectrum_speak/widgets/SmoothStarRating.dart';
 
 class ReviewUi extends StatelessWidget {
   final String image, name, date, comment;

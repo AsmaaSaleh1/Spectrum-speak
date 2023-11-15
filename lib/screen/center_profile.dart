@@ -54,7 +54,6 @@ class _CenterProfileState extends State<CenterProfile> {
                   //comment: 'xx',
                   userRating: userRating,
                   onRating: (double newRating) {
-                    print(newRating);
                     setState(() {
                       userRating = newRating;
                     });

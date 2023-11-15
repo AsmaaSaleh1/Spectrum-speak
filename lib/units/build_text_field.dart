@@ -1,7 +1,6 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../const.dart';
+import 'package:spectrum_speak/const.dart';
 
 Widget buildTextField(String labelText, String placeholder,
     bool isPasswordTextField, bool isObscurePassword) {

@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:smooth_star_rating_null_safety/smooth_star_rating_null_safety.dart';
-import 'package:circular_profile_avatar/circular_profile_avatar.dart';
-
-import '../const.dart';
-import '../units/review_ui.dart';
+import 'package:spectrum_speak/const.dart';
+import 'package:spectrum_speak/units/review_ui.dart';
 
 class CardReview extends StatefulWidget {
   const CardReview({

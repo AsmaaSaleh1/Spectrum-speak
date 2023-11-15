@@ -10,7 +10,7 @@ class StackContainerShadowTeacher extends StatelessWidget {
   const StackContainerShadowTeacher({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       height: 400.0,
       child: Stack(
         children: <Widget>[
@@ -53,7 +53,7 @@ class StackContainerShadowTeacher extends StatelessWidget {
                         size: 15.0,
                         color: kGreen,
                       ),
-                      SizedBox(width: 3,),
+                      const SizedBox(width: 3,),
                       Text(
                         "Academic Qualification",
                         style: TextStyle(

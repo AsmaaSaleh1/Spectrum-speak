@@ -1,7 +1,7 @@
 import 'package:circular_profile_avatar/circular_profile_avatar.dart';
 import 'package:flutter/material.dart';
 
-import '../const.dart';
+import 'package:spectrum_speak/const.dart';
 
 class CardItem extends StatelessWidget {
   const CardItem({
@@ -23,7 +23,7 @@ class CardItem extends StatelessWidget {
               color: kDarkBlue.withOpacity(0.5),
               spreadRadius: 3,
               blurRadius: 10,
-              offset: Offset(0, 5),
+              offset: const Offset(0, 5),
             ),
           ],
         ),

@@ -48,7 +48,6 @@ class _SpecialistProfileState extends State<SpecialistProfile> {
                   //comment: 'xx',
                   userRating: userRating,
                   onRating: (double newRating) {
-                    print(newRating);
                     setState(() {
                       userRating = newRating;
                     });

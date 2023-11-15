@@ -9,7 +9,7 @@ class StackContainerCenter extends StatelessWidget {
   const StackContainerCenter({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       height: 400.0,
       child: Stack(
         children: <Widget>[

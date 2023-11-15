@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../const.dart';
+import 'package:spectrum_speak/const.dart';
 
 class CustomDropDown extends StatefulWidget {
   final List<String> items;
