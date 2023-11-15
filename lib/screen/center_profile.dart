@@ -4,6 +4,7 @@ import 'package:spectrum_speak/units/review_add_from_user.dart';
 import 'package:spectrum_speak/widgets/card_review.dart';
 import 'package:spectrum_speak/widgets/stack_container_center.dart';
 import 'package:spectrum_speak/widgets/center_information.dart';
+import 'package:spectrum_speak/widgets/top_bar.dart';
 
 class CenterProfile extends StatefulWidget {
   const CenterProfile({Key? key}) : super(key: key);
@@ -28,7 +29,7 @@ class _CenterProfileState extends State<CenterProfile> {
         } else {
           linePadding =20;
         }
-        return Scaffold(
+        return TopBar(
           body: SingleChildScrollView(
             child: Column(
               children: <Widget>[

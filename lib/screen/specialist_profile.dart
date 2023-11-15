@@ -7,6 +7,7 @@ import 'package:spectrum_speak/widgets/stack_container_specialist.dart';
 import 'package:spectrum_speak/widgets/specialist_information.dart';
 
 import 'package:spectrum_speak/units/review_add_from_user.dart';
+import 'package:spectrum_speak/widgets/top_bar.dart';
 
 class SpecialistProfile extends StatefulWidget {
   const SpecialistProfile({Key? key}) : super(key: key);
@@ -29,7 +30,7 @@ class _SpecialistProfileState extends State<SpecialistProfile> {
         } else {
           linePadding = 20;
         }
-        return Scaffold(
+        return TopBar(
           body: SingleChildScrollView(
             child: Column(
               children: <Widget>[

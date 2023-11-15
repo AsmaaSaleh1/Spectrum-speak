@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:spectrum_speak/widgets/top_bar.dart';
 
 
-import '../const.dart';
-import '../units/build_tab.dart';
+import 'package:spectrum_speak/const.dart';
+import 'package:spectrum_speak/units/build_tab.dart';
 
 class Search extends StatefulWidget {
   const Search({Key? key}) : super(key: key);
@@ -23,7 +24,7 @@ class _SearchState extends State<Search> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return TopBar(
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(20.0),

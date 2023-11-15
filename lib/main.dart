@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:spectrum_speak/screen/center_profile.dart';
+import 'package:spectrum_speak/screen/main_page.dart';
 import 'package:spectrum_speak/screen/search_page.dart';
 import 'package:spectrum_speak/screen/edit_profile.dart';
 import 'package:spectrum_speak/screen/parent_profile.dart';
@@ -23,9 +24,9 @@ class MyApp extends StatelessWidget {
         title: 'Profile',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
-          appBarTheme: const AppBarTheme(
+          appBarTheme: AppBarTheme(
             backgroundColor: kDarkBlue,
-            iconTheme: IconThemeData(color: kBlue),
+            iconTheme: IconThemeData(color: kDarkerColor),
           ),
           scaffoldBackgroundColor: kPrimary,
           primaryColor: kPrimary,
@@ -34,11 +35,8 @@ class MyApp extends StatelessWidget {
           textTheme: GoogleFonts.tinosTextTheme(),
         ),
         home: const Scaffold(
-          appBar: PreferredSize(
-            preferredSize: Size.fromHeight(kToolbarHeight),
-            child: TopBar(),
-          ),
-          body: Search(),
-        ));
+          body:MainPage(),
+        )
+    );
   }
 }
