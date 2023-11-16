@@ -93,6 +93,14 @@ class ShadowTeacherInformation extends StatelessWidget {
                               size: 15.0,
                               color: kDarkerColor,
                             ),
+                            const SizedBox(
+                              height: 10.0,
+                            ),
+                            Icon(
+                              FontAwesomeIcons.circleQuestion,
+                              size: 15.0,
+                              color: kDarkerColor,
+                            ),
                           ],
                         ),
                       ),
@@ -154,6 +162,17 @@ class ShadowTeacherInformation extends StatelessWidget {
                                 color: kDarkerColor,
                               ),
                             ),
+                            const SizedBox(
+                              height: 10.0,
+                            ),
+                            Text(
+                              "Availability",
+                              style: TextStyle(
+                                fontSize: 15.0,
+                                fontWeight: FontWeight.bold,
+                                color: kDarkerColor,
+                              ),
+                            ),
                           ],
                         ),
                       ),
@@ -209,6 +228,17 @@ class ShadowTeacherInformation extends StatelessWidget {
                             ),
                             Text(
                               "Age",
+                              style: TextStyle(
+                                fontSize: 15.0,
+                                fontWeight: FontWeight.bold,
+                                color: kDarkerColor,
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 10.0,
+                            ),
+                            Text(
+                              "Availability",
                               style: TextStyle(
                                 fontSize: 15.0,
                                 fontWeight: FontWeight.bold,

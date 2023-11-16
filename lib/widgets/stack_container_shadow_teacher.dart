@@ -1,4 +1,5 @@
 import 'package:circular_profile_avatar/circular_profile_avatar.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:spectrum_speak/const.dart';
@@ -7,7 +8,11 @@ import 'package:spectrum_speak/units/custom_button.dart';
 import 'package:spectrum_speak/units/custom_clipper.dart';
 
 class StackContainerShadowTeacher extends StatelessWidget {
-  const StackContainerShadowTeacher({Key? key}) : super(key: key);
+  final bool isTeacherAvailable;
+  const StackContainerShadowTeacher({
+    Key? key,
+    required this.isTeacherAvailable,
+  }) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -51,11 +56,38 @@ class StackContainerShadowTeacher extends StatelessWidget {
                       const Icon(
                         FontAwesomeIcons.graduationCap,
                         size: 15.0,
-                        color: kGreen,
+                        color: kYellow,
                       ),
-                      const SizedBox(width: 3,),
+                      const SizedBox(
+                        width: 3,
+                      ),
                       Text(
                         "Academic Qualification",
+                        style: TextStyle(
+                          fontSize: 15.0,
+                          color: Colors.grey[700],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(2.0),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        isTeacherAvailable
+                            ? CupertinoIcons.checkmark_circle_fill
+                            : CupertinoIcons.clear_circled_solid,
+                        size: 15.0,
+                        color: isTeacherAvailable ? kGreen : kRed,
+                      ),
+                      const SizedBox(
+                        width: 3,
+                      ),
+                      Text(
+                        isTeacherAvailable ? "Available" : "Not Available",
                         style: TextStyle(
                           fontSize: 15.0,
                           color: Colors.grey[700],
@@ -91,7 +123,9 @@ class StackContainerShadowTeacher extends StatelessWidget {
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => const EditShadowTeacherProfile()),
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              const EditShadowTeacherProfile()),
                     );
                   },
                   buttonText: 'Edit Profile',

@@ -16,6 +16,7 @@ class EditShadowTeacherProfile extends StatefulWidget {
 class _EditShadowTeacherProfileState extends State<EditShadowTeacherProfile> {
   bool isObscurePassword = true;
   String? selectedGender;
+  String? availability;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -79,19 +80,6 @@ class _EditShadowTeacherProfileState extends State<EditShadowTeacherProfile> {
                 children: [
                   buildTextField("Teacher Name", "Asmaa", false, isObscurePassword),
                   buildTextField("Academic Qualification", "Master of special Education", false, isObscurePassword),
-                  CustomDropDown(
-                    items: const [
-                      'Male',
-                      'Female',
-                    ],
-                    selectedValue: selectedGender,
-                    hint: 'Select Gender',
-                    onChanged: (String? value) {
-                      setState(() {
-                        selectedGender = value;
-                      });
-                    },
-                  ),
                   buildTextField(
                       "Location", "Palestine ,Nablus", false, isObscurePassword),
                   buildTextField("Birth Date", "7th Oct 2002", false, isObscurePassword),//TODO: make it calender
@@ -99,6 +87,37 @@ class _EditShadowTeacherProfileState extends State<EditShadowTeacherProfile> {
                   buildTextField(
                       "Emile", "asmaa@gmail.com", false, isObscurePassword),
                   buildTextField("Phone", "0592101010", false, isObscurePassword),
+                  Row(
+                    children: [
+                      CustomDropDown(
+                        items: const [
+                          'Male',
+                          'Female',
+                        ],
+                        selectedValue: selectedGender,
+                        hint: 'Select Gender',
+                        onChanged: (String? value) {
+                          setState(() {
+                            selectedGender = value;
+                          });
+                        },
+                      ),
+                      const SizedBox(width: 20,),
+                      CustomDropDown(
+                        items: const [
+                          'Available',
+                          'Not Available',
+                        ],
+                        selectedValue: availability,
+                        hint: 'availability',
+                        onChanged: (String? value) {
+                          setState(() {
+                            availability = value;
+                          });
+                        },
+                      ),
+                    ],
+                  ),
                 ],
               ),
             ),

@@ -11,7 +11,6 @@ class ShadowTeacherProfile extends StatefulWidget {
   @override
   State<ShadowTeacherProfile> createState() => _ShadowTeacherProfileState();
 }
-//TODO: add the availability
 class _ShadowTeacherProfileState extends State<ShadowTeacherProfile> {
   @override
   Widget build(BuildContext context) {
@@ -19,7 +18,7 @@ class _ShadowTeacherProfileState extends State<ShadowTeacherProfile> {
       body: SingleChildScrollView(
         child: Column(
           children: <Widget>[
-            StackContainerShadowTeacher(),
+            StackContainerShadowTeacher(isTeacherAvailable: true,),
             ShadowTeacherInformation(),
           ],
         ),
