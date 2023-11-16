@@ -31,57 +31,77 @@ class _SpecialistProfileState extends State<SpecialistProfile> {
           linePadding = 20;
         }
         return TopBar(
-          body: SingleChildScrollView(
-            child: Column(
-              children: <Widget>[
-                const StackContainerSpecialist(),
-                const SpecialistInformation(),
-                Divider(
-                  color: kDarkerColor, // You can customize the color
-                  thickness: 2.0, // You can customize the thickness
-                  indent: linePadding,
-                  endIndent: linePadding,
+          body: Stack(
+            children: [
+              SingleChildScrollView(
+                child: Column(
+                  children: <Widget>[
+                    const StackContainerSpecialist(),
+                    const SpecialistInformation(),
+                    Divider(
+                      color: kDarkerColor, // You can customize the color
+                      thickness: 2.0, // You can customize the thickness
+                      indent: linePadding,
+                      endIndent: linePadding,
+                    ),
+                    AddReview(
+                      image: 'images/prof.png',
+                      name: 'User Name',
+                      //comment: 'xx',
+                      userRating: userRating,
+                      onRating: (double newRating) {
+                        setState(() {
+                          userRating = newRating;
+                        });
+                      },
+                    ),
+                    Divider(
+                      color: kDarkerColor, // You can customize the color
+                      thickness: 2.0, // You can customize the thickness
+                      indent: linePadding,
+                      endIndent: linePadding,
+                    ),
+                    Align(
+                      alignment: AlignmentDirectional.topCenter,
+                      child: Text(
+                        "Review",
+                        style: TextStyle(
+                          fontSize: 30.0,
+                          fontWeight: FontWeight.bold,
+                          color: kDarkerColor,
+                        ),
+                      ),
+                    ),
+                    const SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: <Widget>[
+                          CardReview(),
+                          CardReview(),
+                          // Add more CardItems as needed
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 80,),
+                  ],
                 ),
-                AddReview(
-                  image: 'images/prof.png',
-                  name: 'User Name',
-                  //comment: 'xx',
-                  userRating: userRating,
-                  onRating: (double newRating) {
-                    setState(() {
-                      userRating = newRating;
-                    });
-                  },
-                ),
-                Divider(
-                  color: kDarkerColor, // You can customize the color
-                  thickness: 2.0, // You can customize the thickness
-                  indent: linePadding,
-                  endIndent: linePadding,
-                ),
-                Align(
-                  alignment: AlignmentDirectional.topCenter,
-                  child: Text(
-                    "Review",
-                    style: TextStyle(
-                      fontSize: 30.0,
-                      fontWeight: FontWeight.bold,
-                      color: kDarkerColor,
+              ),
+              Positioned(
+                bottom: 0,
+                left: 0,
+                right: 0,
+                child: Container(
+                  height: 80, // Adjust the height as needed
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.bottomCenter,
+                      end: Alignment.topCenter,
+                      colors: [kPrimary.withOpacity(0.8),kPrimary.withOpacity(0.5),kPrimary.withOpacity(0.1),kPrimary.withOpacity(0.0)],
                     ),
                   ),
                 ),
-                const SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    children: <Widget>[
-                      CardReview(),
-                      CardReview(),
-                      // Add more CardItems as needed
-                    ],
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
         );
       });
