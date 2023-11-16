@@ -155,29 +155,42 @@ class CenterCard extends StatelessWidget {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          Text(
-                            "Show More",
-                            style: TextStyle(
-                              fontSize: 16.0,
-                              fontWeight: FontWeight.w700,
-                              color: kDarkerColor,
-                            ),
-                          ),
-                          IconButton(
-                            onPressed: () {
+                          GestureDetector(
+                            onTap: () {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(builder: (context) => const CenterProfile()),
                               );
                             },
-                            icon: Icon(
-                              FontAwesomeIcons.anglesRight,
-                              size: 14,
-                              color: cardColor,
+                            child: Row(
+                              children: [
+                                Text(
+                                  "Show More",
+                                  style: TextStyle(
+                                    fontSize: 16.0,
+                                    fontWeight: FontWeight.w700,
+                                    color: kDarkerColor,
+                                  ),
+                                ),
+                                IconButton(
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(builder: (context) => const CenterProfile()),
+                                    );
+                                  },
+                                  icon: Icon(
+                                    FontAwesomeIcons.anglesRight,
+                                    size: 14,
+                                    color: cardColor,
+                                  ),
+                                ),
+                              ],
                             ),
-                          )
+                          ),
                         ],
                       ),
+
                     )),
               ],
             )
