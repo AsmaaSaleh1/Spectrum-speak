@@ -103,14 +103,19 @@ class _CenterProfileState extends State<CenterProfile> {
                     gradient: LinearGradient(
                       begin: Alignment.bottomCenter,
                       end: Alignment.topCenter,
-                      colors: [kPrimary.withOpacity(0.8),kPrimary.withOpacity(0.5),kPrimary.withOpacity(0.1),kPrimary.withOpacity(0.0)],
+                      colors: [
+                        kPrimary.withOpacity(0.8),
+                        kPrimary.withOpacity(0.5),
+                        kPrimary.withOpacity(0.1),
+                        kPrimary.withOpacity(0.0)
+                      ],
                     ),
                   ),
                 ),
               ),
               Positioned(
-                bottom: 50.0,
-                right: 40.0,
+                bottom: 20.0,
+                right: 20.0,
                 child: FloatingActionButton(
                   onPressed: () {
                     // Handle the message button press
