@@ -7,6 +7,80 @@ import 'package:spectrum_speak/screen/main_page.dart';
 import 'package:spectrum_speak/screen/parent_profile.dart';
 import 'package:spectrum_speak/screen/search_page.dart';
 
+class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
+  const CustomAppBar({
+    Key? key
+  }): super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return AppBar(
+      leading: IconButton(
+        icon: const Icon(
+          CupertinoIcons.list_bullet,
+          color: kPrimary,
+          size: 30,
+        ),
+        onPressed: () {
+          Scaffold.of(context).openDrawer();
+        },
+      ),
+      actions: [
+        IconButton(
+          onPressed: () {
+            print('Message button pressed');
+          },
+          icon: const Icon(
+            CupertinoIcons.envelope_open,
+            color: kPrimary,
+            size: 30,
+          ),
+        ),
+        IconButton(
+          onPressed: () {
+            print('Calendar button pressed');
+          },
+          icon: const Icon(
+            CupertinoIcons.calendar,
+            color: kPrimary,
+            size: 30,
+          ),
+        ),
+        IconButton(
+          onPressed: () {
+            print('Notification button pressed');
+          },
+          icon: const Icon(
+            CupertinoIcons.bell,
+            color: kPrimary,
+            size: 30,
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: CircularProfileAvatar(
+            '',
+            borderWidth: 1.0,
+            borderColor: kPrimary.withOpacity(0.5),
+            radius: 20.0,
+            backgroundColor: kPrimary,
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const ParentProfile()),
+              );
+            },
+            child: Image.asset('images/prof.png'),
+          ),
+        )
+      ],
+    );
+  }
+
+  @override
+  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
+}
+
 class TopBar extends StatelessWidget {
   final Widget body;
 
@@ -17,74 +91,8 @@ class TopBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
     return Scaffold(
-      key: scaffoldKey,
-      appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(
-            CupertinoIcons.list_bullet, // Change this icon to the one you prefer
-            color: kPrimary,
-            size: 30,
-          ),
-          onPressed: () {
-            // Handle drawer opening
-            scaffoldKey.currentState?.openDrawer();
-          },
-        ),
-        actions: [
-          IconButton(
-            onPressed: () {
-              // Handle the message button press
-              print('Message button pressed');
-            },
-            icon: const Icon(
-              CupertinoIcons.envelope_open,
-              color: kPrimary,
-              size: 30,
-            ),
-          ),
-          IconButton(
-            onPressed: () {
-              // Handle the calendar button press
-              print('Calendar button pressed');
-            },
-            icon: const Icon(
-              CupertinoIcons.calendar,
-              color: kPrimary,
-              size: 30,
-            ),
-          ),
-          IconButton(
-            onPressed: () {
-              // Handle the notification button press
-              print('Notification button pressed');
-            },
-            icon: const Icon(
-              CupertinoIcons.bell,
-              color: kPrimary,
-              size: 30,
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: CircularProfileAvatar(
-              '',
-              borderWidth: 1.0,
-              borderColor: kPrimary.withOpacity(0.5),
-              radius: 20.0,
-              backgroundColor: kPrimary,
-              onTap: (){
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const ParentProfile()),
-                );
-              },
-              child: Image.asset('images/prof.png'),
-            ),
-          )
-        ],
-      ),
+      appBar: const CustomAppBar(),
       drawer: Drawer(
         shadowColor: kDarkerColor,
         backgroundColor: kPrimary,
