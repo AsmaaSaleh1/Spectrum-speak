@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:spectrum_speak/const.dart';
-
+//TODO: make it suitable at all width size (like I make in About in CenterProfile) specially Academic Qualification
 class ShadowTeacherInformation extends StatelessWidget {
   const ShadowTeacherInformation({super.key});
 
@@ -194,7 +194,7 @@ class ShadowTeacherInformation extends StatelessWidget {
                               height: 10.0,
                             ),
                             Text(
-                              "Academic Qualification",
+                              "Academic",
                               style: TextStyle(
                                 fontSize: 15.0,
                                 fontWeight: FontWeight.bold,
