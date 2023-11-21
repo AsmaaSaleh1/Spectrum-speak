@@ -41,6 +41,8 @@ dependencies:
   firebase_core: ^2.22.0
   intl: ^0.18.1
   simple_icons: ^7.10.0
+  universal_platform: ^1.0.0+1
+
 
 dev_dependencies:
   flutter_test:
@@ -70,6 +72,7 @@ flutter:
     - images/profile.jpg
     - images/center.jpg
     - images/availability.png
+    - images/chatSplash.png
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
 

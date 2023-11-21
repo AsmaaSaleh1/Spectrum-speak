@@ -4,10 +4,12 @@ import 'package:spectrum_speak/firebase_options.dart';
 import 'package:spectrum_speak/screen/chat.dart';
 import 'package:spectrum_speak/screen/main_page.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:spectrum_speak/screen/splash_screen_chat.dart';
 import 'firebase_options.dart';
 import 'const.dart';
-
+late Size mq;
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   _initializeFirebase();
   runApp(const MyApp());
 }
@@ -39,7 +41,7 @@ class MyApp extends StatelessWidget {
         textTheme: GoogleFonts.tinosTextTheme(),
       ),
       home: const Scaffold(
-        body: AllChat(),
+        body: SplashChatScreen(),
       ),
     );
   }
