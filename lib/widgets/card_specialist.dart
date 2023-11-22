@@ -19,7 +19,7 @@ class CardSpecialist extends StatelessWidget {
       padding: const EdgeInsets.all(19.0),
       child: Container(
         width: 300,
-        height: 350,
+        height: 360,
         decoration: BoxDecoration(
           color: kPrimary,
           borderRadius: BorderRadius.circular(15),
