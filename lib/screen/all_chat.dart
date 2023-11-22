@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:spectrum_speak/const.dart';
+import 'package:spectrum_speak/main.dart';
+import 'package:spectrum_speak/widgets/card_user_chat.dart';
 
 class AllChat extends StatefulWidget {
   const AllChat({super.key});
@@ -26,7 +28,20 @@ class _AllChatState extends State<AllChat> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {},
         backgroundColor: kDarkBlue,
-        child: const Icon(Icons.add_comment_rounded,color: kPrimary,),
+        child: const Icon(
+          Icons.add_comment_rounded,
+          color: kPrimary,
+        ),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 6),
+        child: ListView.builder(
+            itemCount: 20,
+            padding: const EdgeInsets.only(top: 8),
+            physics: const BouncingScrollPhysics(),
+            itemBuilder: (context, index) {
+              return const CardUserChat();
+            }),
       ),
     );
   }

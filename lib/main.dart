@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:spectrum_speak/firebase_options.dart';
-import 'package:spectrum_speak/screen/chat.dart';
+import 'package:spectrum_speak/screen/all_chat.dart';
 import 'package:spectrum_speak/screen/main_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:spectrum_speak/screen/splash_screen_chat.dart';
@@ -41,7 +41,7 @@ class MyApp extends StatelessWidget {
         textTheme: GoogleFonts.tinosTextTheme(),
       ),
       home: const Scaffold(
-        body: SplashChatScreen(),
+        body: MainPage(),
       ),
     );
   }

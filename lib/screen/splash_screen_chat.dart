@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:spectrum_speak/const.dart';
-import 'package:spectrum_speak/main.dart';
 import 'package:universal_platform/universal_platform.dart';
 
-import 'chat.dart';
+import 'all_chat.dart';
 
 class SplashChatScreen extends StatefulWidget {
-  const SplashChatScreen({Key? key}) : super(key: key);
+  const SplashChatScreen({super.key});
 
   @override
   State<SplashChatScreen> createState() => _SplashChatScreenState();
@@ -42,7 +41,6 @@ class _SplashChatScreenState extends State<SplashChatScreen> {
               fit: BoxFit.contain,
             ),
           ),
-          // Text
           Positioned(
             bottom: isWeb ? mq.height * 0.12 : mq.height * 0.2,
             width: mq.width,

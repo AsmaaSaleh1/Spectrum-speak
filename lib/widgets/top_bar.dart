@@ -3,14 +3,18 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:spectrum_speak/const.dart';
+import 'package:spectrum_speak/main.dart';
+import 'package:spectrum_speak/screen/all_chat.dart';
 import 'package:spectrum_speak/screen/main_page.dart';
 import 'package:spectrum_speak/screen/parent_profile.dart';
 import 'package:spectrum_speak/screen/search_page.dart';
+import 'package:spectrum_speak/screen/splash_screen_chat.dart';
+import 'package:universal_platform/universal_platform.dart';
+
+import 'card_user_chat.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
-  const CustomAppBar({
-    Key? key
-  }): super(key: key);
+  const CustomAppBar({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +32,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       actions: [
         IconButton(
           onPressed: () {
-            print('Message button pressed');
+            _showPopupMenu(context, 5);
           },
           icon: const Icon(
             CupertinoIcons.envelope_open,
@@ -121,10 +125,11 @@ class TopBar extends StatelessWidget {
                   borderColor: kPrimary.withOpacity(0.5),
                   radius: 90.0,
                   backgroundColor: kPrimary,
-                  onTap: (){
+                  onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => const ParentProfile()),
+                      MaterialPageRoute(
+                          builder: (context) => const ParentProfile()),
                     );
                   },
                   child: Image.asset('images/prof.png'),
@@ -226,4 +231,54 @@ class TopBar extends StatelessWidget {
       body: body,
     );
   }
+}
+
+void _showPopupMenu(BuildContext context, int numberOfCards) async {
+  final RenderBox overlay = Overlay.of(context).context.findRenderObject() as RenderBox;
+  final mq = MediaQuery.of(context).size;
+  final isWeb = UniversalPlatform.isWeb;
+  await showMenu(
+    color: kPrimary,
+    context: context,
+    position: RelativeRect.fromLTRB(
+      overlay.size.width - 50, // Adjust the value as needed
+      53, // Y position, set to 0 for top
+      overlay.size.width, // Right edge of the screen
+      MediaQuery.of(context).size.height, // Bottom edge of the screen
+    ),
+    items: [
+      PopupMenuItem(
+        padding: const EdgeInsets.all(0),
+        child: Container(
+          width: 300,
+          child: Column(
+            children: [
+              for (int i = 0; i < numberOfCards; i++)
+                const ListTile(
+                  contentPadding: EdgeInsets.zero,
+                  title: CardUserChat(),
+                ),
+              ListTile(
+                title: TextButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const SplashChatScreen()),
+                    );
+                  },
+                  child: Text(
+                      'Show All Messages',
+                    style: TextStyle(
+                      color: kDarkerColor,
+                      fontWeight: FontWeight.bold
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    ],
+  );
 }
