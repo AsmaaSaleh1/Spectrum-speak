@@ -94,10 +94,7 @@ class _EditSpecialistProfileState extends State<EditSpecialistProfile> {
                       foregroundColor: kDarkerColor,
                       backgroundColor: kPrimary,
                       onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => const SpecialistProfile()),
-                        );
+                        Navigator.pop(context);
                       },
                       buttonText: 'Cansel',
                       icon: const Icon(

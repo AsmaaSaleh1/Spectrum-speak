@@ -94,10 +94,7 @@ class _EditProfileState extends State<EditProfile> {
                       foregroundColor: kDarkerColor,
                       backgroundColor: kPrimary,
                       onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => const ParentProfile()),
-                        );
+                        Navigator.pop(context);
                       },
                       buttonText: 'Cansel',
                       icon: const Icon(
