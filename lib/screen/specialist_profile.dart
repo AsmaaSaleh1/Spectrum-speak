@@ -10,7 +10,7 @@ import 'package:spectrum_speak/units/review_add_from_user.dart';
 import 'package:spectrum_speak/widgets/top_bar.dart';
 
 class SpecialistProfile extends StatefulWidget {
-  const SpecialistProfile({Key? key}) : super(key: key);
+  const SpecialistProfile({super.key});
 
   @override
   State<SpecialistProfile> createState() => _SpecialistProfileState();

@@ -7,7 +7,7 @@ import 'package:spectrum_speak/widgets/shadow_teacher_information.dart';
 import 'package:spectrum_speak/widgets/top_bar.dart';
 
 class ShadowTeacherProfile extends StatefulWidget {
-  const ShadowTeacherProfile({Key? key}) : super(key: key);
+  const ShadowTeacherProfile({super.key});
 
   @override
   State<ShadowTeacherProfile> createState() => _ShadowTeacherProfileState();

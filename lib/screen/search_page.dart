@@ -5,7 +5,7 @@ import 'package:spectrum_speak/const.dart';
 import 'package:spectrum_speak/units/build_tab.dart';
 
 class Search extends StatefulWidget {
-  const Search({Key? key}) : super(key: key);
+  const Search({super.key});
 
   @override
   State<Search> createState() => _SearchState();

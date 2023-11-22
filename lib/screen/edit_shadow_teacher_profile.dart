@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:spectrum_speak/screen/shadow_teacher_profile.dart';
 import 'package:spectrum_speak/const.dart';
 import 'package:spectrum_speak/units/build_text_field.dart';
 import 'package:spectrum_speak/units/custom_button.dart';

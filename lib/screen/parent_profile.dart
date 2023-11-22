@@ -6,7 +6,7 @@ import 'package:spectrum_speak/widgets/stack_container_parent.dart';
 import 'package:spectrum_speak/widgets/parent_information.dart';
 
 class ParentProfile extends StatefulWidget {
-  const ParentProfile({Key? key}) : super(key: key);
+  const ParentProfile({super.key});
 
   @override
   State<ParentProfile> createState() => _ParentProfileState();

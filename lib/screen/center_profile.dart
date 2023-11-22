@@ -8,7 +8,7 @@ import 'package:spectrum_speak/widgets/center_information.dart';
 import 'package:spectrum_speak/widgets/top_bar.dart';
 
 class CenterProfile extends StatefulWidget {
-  const CenterProfile({Key? key}) : super(key: key);
+  const CenterProfile({super.key});
 
   @override
   State<CenterProfile> createState() => _CenterProfileState();
@@ -121,7 +121,7 @@ class _CenterProfileState extends State<CenterProfile> {
                     // Handle the message button press
                     print('Message button pressed');
                   },
-                  shape: CircleBorder(),
+                  shape: const CircleBorder(),
                   materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                   backgroundColor: kDarkBlue,
                   child: const Icon(

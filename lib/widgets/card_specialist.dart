@@ -9,9 +9,9 @@ class CardSpecialist extends StatelessWidget {
   final Color cardColor;
 
   const CardSpecialist({
-    Key? key,
+    super.key,
     this.cardColor = kDarkBlue,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +19,7 @@ class CardSpecialist extends StatelessWidget {
       padding: const EdgeInsets.all(19.0),
       child: Container(
         width: 300,
-        height: 360,
+        height: 380,
         decoration: BoxDecoration(
           color: kPrimary,
           borderRadius: BorderRadius.circular(15),

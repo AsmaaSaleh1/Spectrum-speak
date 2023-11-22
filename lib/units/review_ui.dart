@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 import 'package:spectrum_speak/const.dart';
 
-import 'package:spectrum_speak/widgets/SmoothStarRating.dart';
+import 'package:spectrum_speak/widgets/smooth_star_rating.dart';
 
 class ReviewUi extends StatelessWidget {
   final String image, name, date, comment;
@@ -13,7 +13,7 @@ class ReviewUi extends StatelessWidget {
   final bool isLess;
 
   const ReviewUi({
-    Key? key,
+    super.key,
     required this.image,
     required this.name,
     required this.date,
@@ -22,7 +22,7 @@ class ReviewUi extends StatelessWidget {
     required this.onTap,
     required this.onDelete,
     required this.isLess,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

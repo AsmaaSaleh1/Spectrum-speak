@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:spectrum_speak/firebase_options.dart';
-import 'package:spectrum_speak/screen/all_chat.dart';
 import 'package:spectrum_speak/screen/main_page.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:spectrum_speak/screen/splash_screen_chat.dart';
-import 'firebase_options.dart';
 import 'const.dart';
 late Size mq;
 void main() {
@@ -15,7 +12,7 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {

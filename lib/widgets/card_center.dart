@@ -11,19 +11,19 @@ class CenterCard extends StatelessWidget {
   final VoidCallback onTap;
   final bool isLess;
   const CenterCard({
-    Key? key,
+    super.key,
     this.cardColor = kDarkBlue,
     required this.about,
     required this.onTap,
     required this.isLess,
-  }) : super(key: key);
+  });
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(19.0),
       child: Container(
         width: 300,
-        height: 360,
+        height: 380,
         decoration: BoxDecoration(
           color: kPrimary,
           borderRadius: BorderRadius.circular(15),

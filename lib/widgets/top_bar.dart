@@ -3,13 +3,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:spectrum_speak/const.dart';
-import 'package:spectrum_speak/main.dart';
-import 'package:spectrum_speak/screen/all_chat.dart';
 import 'package:spectrum_speak/screen/main_page.dart';
 import 'package:spectrum_speak/screen/parent_profile.dart';
 import 'package:spectrum_speak/screen/search_page.dart';
 import 'package:spectrum_speak/screen/splash_screen_chat.dart';
-import 'package:universal_platform/universal_platform.dart';
 
 import 'card_user_chat.dart';
 
@@ -89,9 +86,9 @@ class TopBar extends StatelessWidget {
   final Widget body;
 
   const TopBar({
-    Key? key,
+    super.key,
     required this.body,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -235,8 +232,7 @@ class TopBar extends StatelessWidget {
 
 void _showPopupMenu(BuildContext context, int numberOfCards) async {
   final RenderBox overlay = Overlay.of(context).context.findRenderObject() as RenderBox;
-  final mq = MediaQuery.of(context).size;
-  final isWeb = UniversalPlatform.isWeb;
+
   await showMenu(
     color: kPrimary,
     context: context,
@@ -249,7 +245,7 @@ void _showPopupMenu(BuildContext context, int numberOfCards) async {
     items: [
       PopupMenuItem(
         padding: const EdgeInsets.all(0),
-        child: Container(
+        child: SizedBox(
           width: 300,
           child: Column(
             children: [

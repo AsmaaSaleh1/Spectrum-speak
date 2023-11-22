@@ -9,8 +9,8 @@ class RadioButtonSearch extends StatefulWidget {
   const RadioButtonSearch({
     required this.selectedSearch,
     required this.onSearchTypeChanged,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   State<RadioButtonSearch> createState() => _RadioButtonSearchState();

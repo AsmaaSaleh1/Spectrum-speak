@@ -5,7 +5,7 @@ class MainPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TopBar(
+    return const TopBar(
       body: Text("MAIN"),
     );
   }

@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:spectrum_speak/const.dart';
-import 'package:spectrum_speak/main.dart';
 import 'package:spectrum_speak/widgets/card_user_chat.dart';
 
 class AllChat extends StatefulWidget {

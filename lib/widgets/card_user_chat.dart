@@ -1,7 +1,6 @@
 import 'package:circular_profile_avatar/circular_profile_avatar.dart';
 import 'package:flutter/material.dart';
 import 'package:spectrum_speak/const.dart';
-import 'package:spectrum_speak/main.dart';
 import 'package:spectrum_speak/screen/chat_screen.dart';
 
 class CardUserChat extends StatefulWidget {
@@ -21,7 +20,7 @@ class _CardUserChatState extends State<CardUserChat> {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
       child: InkWell(
         onTap: () {
-          Navigator.push(context, MaterialPageRoute(builder:(_)=>ChatScreen()));
+          Navigator.push(context, MaterialPageRoute(builder:(_)=>const ChatScreen()));
         },
         child: ListTile(
           leading: CircularProfileAvatar(

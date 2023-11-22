@@ -8,11 +8,11 @@ class CenterInformation extends StatelessWidget {
   final VoidCallback onTap;
   final bool isLess;
   const CenterInformation({
-    Key? key,
+    super.key,
     required this.about,
     required this.onTap,
     required this.isLess,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) => LayoutBuilder(

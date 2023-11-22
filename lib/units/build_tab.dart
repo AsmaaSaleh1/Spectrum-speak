@@ -14,8 +14,8 @@ class MyTab extends StatefulWidget {
 
   const MyTab({
     required this.selectedSearch,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   State<MyTab> createState() => _MyTabState();
@@ -157,8 +157,8 @@ class _MyTabState extends State<MyTab> {
             ),
             SingleChildScrollView(
               physics: const NeverScrollableScrollPhysics(),
-              child: Container(
-                height: 5200, //TODO: make it not fixed
+              child: SizedBox(
+                height: 5500, //TODO: make it not fixed
                 child: TabBarView(
                   children: [
                     Column(

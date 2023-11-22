@@ -10,9 +10,9 @@ import 'package:spectrum_speak/units/custom_clipper.dart';
 class StackContainerShadowTeacher extends StatelessWidget {
   final bool isTeacherAvailable;
   const StackContainerShadowTeacher({
-    Key? key,
+    super.key,
     required this.isTeacherAvailable,
-  }) : super(key: key);
+  });
   @override
   Widget build(BuildContext context) {
     return SizedBox(

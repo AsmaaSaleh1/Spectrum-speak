@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:spectrum_speak/screen/center_profile.dart';
-import '../const.dart';
-import '../units/build_text_field.dart';
-import '../units/custom_button.dart';
+import 'package:spectrum_speak/const.dart';
+import 'package:spectrum_speak/units/build_text_field.dart';
+import 'package:spectrum_speak/units/custom_button.dart';
 
 class EditCenterProfile extends StatefulWidget {
   const EditCenterProfile({super.key});

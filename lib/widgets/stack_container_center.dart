@@ -6,7 +6,7 @@ import 'package:spectrum_speak/units/custom_button.dart';
 import 'package:spectrum_speak/units/custom_clipper.dart';
 
 class StackContainerCenter extends StatelessWidget {
-  const StackContainerCenter({Key? key}) : super(key: key);
+  const StackContainerCenter({super.key});
   @override
   Widget build(BuildContext context) {
     return SizedBox(

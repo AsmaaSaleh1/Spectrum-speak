@@ -2,7 +2,7 @@ import 'package:circular_profile_avatar/circular_profile_avatar.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:spectrum_speak/const.dart';
-import 'package:spectrum_speak/widgets/SmoothStarRating.dart';
+import 'package:spectrum_speak/widgets/smooth_star_rating.dart';
 
 import 'build_text_field.dart';
 import 'custom_button.dart';
@@ -13,13 +13,13 @@ class AddReview extends StatefulWidget {
   final double userRating; // Rename the property to avoid conflict
   final Function(double val) onRating;
   const AddReview({
-    Key? key,
+    super.key,
     required this.image,
     required this.name,
     //required this.comment,
     required this.userRating,
     required this.onRating,
-  }) : super(key: key);
+  });
 
   @override
   State<AddReview> createState() => _AddReviewState();
@@ -35,16 +35,12 @@ class _AddReviewState extends State<AddReview> {
     String formattedDate = formatter.format(now);
     double screenWidth = constraints.maxWidth;
     EdgeInsets contentPadding;
-    double linePadding;
     if (screenWidth >= 1200) {
       contentPadding = const EdgeInsets.symmetric(vertical: 20,horizontal: 110.0);
-      linePadding=110;
     } else if (screenWidth >= 800) {
       contentPadding = const EdgeInsets.symmetric(vertical: 20,horizontal:70.0);
-      linePadding=70;
     } else {
       contentPadding = const EdgeInsets.symmetric(vertical: 20,horizontal:20.0);
-      linePadding=20;
     }
     return Padding(
       padding: contentPadding,
