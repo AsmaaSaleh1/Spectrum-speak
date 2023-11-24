@@ -12,9 +12,13 @@ class SplashChatScreen extends StatefulWidget {
 }
 
 class _SplashChatScreenState extends State<SplashChatScreen> {
+  bool _isAnimate = false;
   @override
   void initState() {
     super.initState();
+    Future.delayed(const Duration(milliseconds: 500), () {
+      setState(() => _isAnimate = true);
+    });
     Future.delayed(const Duration(seconds: 3), () {
       Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (_) => const AllChat()));
@@ -30,11 +34,12 @@ class _SplashChatScreenState extends State<SplashChatScreen> {
       body: Stack(
         children: [
           // App Logo
-          Positioned(
-            top: isWeb ? mq.height * 0.12 : mq.height * 0.2,
-            left: isWeb ? mq.width * 0.25 : 0,
+          AnimatedPositioned(
+            top: _isAnimate ?(isWeb ? mq.height * 0.12 : mq.height * 0.2):mq.height * -0.5,
+            right: _isAnimate ?(isWeb ? mq.width * 0.25 : 0): mq.width * -0.5,
             width: isWeb ? mq.width * 0.5 : mq.width,
             height: mq.height * 0.5,
+            duration: const Duration(seconds: 2),
             child: Image.asset(
               'images/chatSplash.png',
               fit: BoxFit.contain,
