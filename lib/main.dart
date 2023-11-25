@@ -3,6 +3,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:spectrum_speak/firebase_options.dart';
 import 'package:spectrum_speak/screen/main_page.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:spectrum_speak/screen/sign_up.dart';
+import 'package:spectrum_speak/screen/welcome.dart';
 import 'const.dart';
 late Size mq;
 void main() {
@@ -38,7 +40,7 @@ class MyApp extends StatelessWidget {
         textTheme: GoogleFonts.tinosTextTheme(),
       ),
       home: const Scaffold(
-        body: MainPage(),
+        body: SignUp(),
       ),
     );
   }

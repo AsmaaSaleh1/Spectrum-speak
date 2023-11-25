@@ -12,3 +12,8 @@ Color kDarkerColor = Color.fromARGB(
   kDarkBlue.green ~/ 2, // Reduce the green component by half
   kDarkBlue.blue ~/ 2, // Reduce the blue component by half
 );
+
+const Color tdPlaceHolder = Color.fromRGBO(213, 213, 213, 1.0);
+const Color tdVideoBG = Color.fromRGBO(255, 255, 255, 1.0);
+const Color tdPurple = Color(0xffFFC40C);//#F6EE04
+const Color ktextfieldColor=Color(0xffffffff);
