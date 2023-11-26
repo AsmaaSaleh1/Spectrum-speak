@@ -118,8 +118,9 @@ class _AddReviewState extends State<AddReview> {
             height: 20,
           ),
           buildTextField(
-              "Comment", "They were cooperative and kind", false, isObscurePassword
+              null,"Comment", "They were cooperative and kind", false, isObscurePassword
           ),
+          const SizedBox(height: 25,),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [

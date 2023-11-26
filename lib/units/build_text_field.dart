@@ -2,20 +2,27 @@ import 'package:flutter/material.dart';
 
 import 'package:spectrum_speak/const.dart';
 
-Widget buildTextField(String labelText, String placeholder,
+Widget buildTextField(IconData? preIcon, String labelText, String placeholder,
     bool isPasswordTextField, bool isObscurePassword) {
   return Padding(
-    padding: const EdgeInsets.only(bottom: 30),
+    padding: const EdgeInsets.only(bottom: 0),
     child: TextField(
       obscureText: isPasswordTextField ? isObscurePassword : false,
       decoration: InputDecoration(
+        prefixIcon: preIcon != null
+            ? Icon(
+                preIcon,
+                color: kDarkerColor,
+              )
+            : null,
         suffixIcon: isPasswordTextField
             ? IconButton(
                 onPressed: () {},
                 icon: Icon(
                   Icons.remove_red_eye,
                   color: kDarkerColor,
-                ))
+                ),
+              )
             : null,
         contentPadding: const EdgeInsets.only(
           bottom: 5,

@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
-//TODO:Delete It if doesn't use it after some time
-enum Search { center, specialist, shadowTeacher }
+import 'package:spectrum_speak/const.dart';
+
+enum Category { parent, specialist, shadowTeacher }
 
 class RadioButtonSearch extends StatefulWidget {
-  final Search selectedSearch;
-  final ValueChanged<Search> onSearchTypeChanged;
+  final Category selected;
+  final ValueChanged<Category> onTypeChanged;
 
   const RadioButtonSearch({
-    required this.selectedSearch,
-    required this.onSearchTypeChanged,
+    required this.selected,
+    required this.onTypeChanged,
     super.key,
   });
 
@@ -17,53 +18,72 @@ class RadioButtonSearch extends StatefulWidget {
 }
 
 class _RadioButtonSearchState extends State<RadioButtonSearch> {
-  Search _character = Search.center;
+  Category _character = Category.parent;
   @override
   Widget build(BuildContext context) {
-    return Row(
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
       children: <Widget>[
-        Expanded(
-            child: ListTile(
-              title: const Text('Center'),
-              leading: Radio<Search>(
-                value: Search.center,
-                groupValue: _character,
-                onChanged: (Search? value) {
-                  setState(() {
-                    _character = value!;
-                  });
-                  widget.onSearchTypeChanged(_character); // Notify the parent about the change
-                },
-              ),
-            )),
-        Expanded(
-            child: ListTile(
-              title: const Text('Specialist'),
-              leading: Radio<Search>(
-                value: Search.specialist,
-                groupValue: _character,
-                onChanged: (Search? value) {
-                  setState(() {
-                    _character = value!;
-                  });
-                  widget.onSearchTypeChanged(_character); // Notify the parent about the change
-                },
-              ),
-            )),
-        Expanded(
-            child: ListTile(
-              title: const Text('Shadow Teacher'),
-              leading: Radio<Search>(
-                value: Search.shadowTeacher,
-                groupValue: _character,
-                onChanged: (Search? value) {
-                  setState(() {
-                    _character = value!;
-                  });
-                  widget.onSearchTypeChanged(_character); // Notify the parent about the change
-                },
-              ),
-            )),
+        ListTile(
+          contentPadding: EdgeInsets.zero,
+          title: const Text('Parent'),
+          leading: Radio<Category>(
+            visualDensity: const VisualDensity(
+              horizontal: VisualDensity.minimumDensity,
+              vertical: VisualDensity.minimumDensity,
+            ),
+            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            activeColor: kDarkerColor,
+            value: Category.parent,
+            groupValue: _character,
+            onChanged: (Category? value) {
+              setState(() {
+                _character = value!;
+              });
+              widget.onTypeChanged(_character); // Notify the parent about the change
+            },
+          ),
+        ),
+        ListTile(
+          contentPadding: EdgeInsets.zero,
+          title: const Text('Specialist'),
+          leading: Radio<Category>(
+            visualDensity: const VisualDensity(
+              horizontal: VisualDensity.minimumDensity,
+              vertical: VisualDensity.minimumDensity,
+            ),
+            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            activeColor: kDarkerColor,
+            value: Category.specialist,
+            groupValue: _character,
+            onChanged: (Category? value) {
+              setState(() {
+                _character = value!;
+              });
+              widget.onTypeChanged(_character); // Notify the parent about the change
+            },
+          ),
+        ),
+        ListTile(
+          contentPadding: EdgeInsets.zero,
+          title: const Text('Shadow Teacher'),
+          leading: Radio<Category>(
+            visualDensity: const VisualDensity(
+              horizontal: VisualDensity.minimumDensity,
+              vertical: VisualDensity.minimumDensity,
+            ),
+            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            activeColor: kDarkerColor,
+            value: Category.shadowTeacher,
+            groupValue: _character,
+            onChanged: (Category? value) {
+              setState(() {
+                _character = value!;
+              });
+              widget.onTypeChanged(_character); // Notify the parent about the change
+            },
+          ),
+        ),
       ],
     );
   }

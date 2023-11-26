@@ -14,6 +14,7 @@ class _LoginState extends State<Login> {
   final TextEditingController _passwordController = TextEditingController();
   bool _passwordVisible = false;
   bool _obscureText = true;
+
   @override
   void initState() {
     _passwordVisible = false;
@@ -61,7 +62,6 @@ class _LoginState extends State<Login> {
                   style: TextStyle(
                       color: Color(0xff0E5F88),
                       fontSize: 28,
-                      fontFamily: 'IstokWeb',
                       fontWeight: FontWeight.bold),
                 ),
               ),
@@ -159,7 +159,7 @@ class _LoginState extends State<Login> {
               ElevatedButton(
                 onPressed: null,
                 style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all(tdPurple),
+                  backgroundColor: MaterialStateProperty.all(kYellow),
                   fixedSize: MaterialStateProperty.all(const Size(315, 50)),
                   shape: MaterialStateProperty.all(
                     RoundedRectangleBorder(
@@ -194,7 +194,7 @@ class _LoginState extends State<Login> {
                     margin: const EdgeInsets.only(left: 31, top: 20, right: 20),
                     width: 120,
                     decoration: const BoxDecoration(
-                      border: Border(bottom: BorderSide(color: tdPurple)),
+                      border: Border(bottom: BorderSide(color: kYellow)),
                     ),
                     child: const Text(
                       ' ',
@@ -217,7 +217,7 @@ class _LoginState extends State<Login> {
                     margin: const EdgeInsets.only(left: 20, top: 20),
                     width: 120,
                     decoration: const BoxDecoration(
-                      border: Border(bottom: BorderSide(color: tdPurple)),
+                      border: Border(bottom: BorderSide(color: kYellow)),
                     ),
                     child: const Text(
                       ' ',
@@ -239,7 +239,7 @@ class _LoginState extends State<Login> {
                     backgroundColor:
                         MaterialStateProperty.all(Colors.transparent),
                     side: MaterialStateProperty.all(
-                        const BorderSide(color: tdPurple, width: 1)),
+                        const BorderSide(color: kYellow, width: 1)),
                     fixedSize: MaterialStateProperty.all(const Size(315, 50)),
                     shape: MaterialStateProperty.all(
                       RoundedRectangleBorder(

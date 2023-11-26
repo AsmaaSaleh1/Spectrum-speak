@@ -73,14 +73,19 @@ class _EditSpecialistProfileState extends State<EditSpecialistProfile> {
               padding: const EdgeInsets.all(20),
               child: Column(
                 children: [
-                  buildTextField("User Name", "Asmaa", false, isObscurePassword),
+                  buildTextField(null,"User Name", "Asmaa", false, isObscurePassword),
+                  const SizedBox(height: 25,),
                   buildTextField(
-                      "Location", "Palestine ,Nablus", false, isObscurePassword),
-                  buildTextField("Password", "********", true, isObscurePassword),
-                  buildTextField("Price in dollar", "100\$", false, isObscurePassword),
+                      null,"Location", "Palestine ,Nablus", false, isObscurePassword),
+                  const SizedBox(height: 25,),
+                  buildTextField(null,"Password", "********", true, isObscurePassword),
+                  const SizedBox(height: 25,),
+                  buildTextField(null,"Price in dollar", "100\$", false, isObscurePassword),
+                  const SizedBox(height: 25,),
                   buildTextField(
-                      "Emile", "asmaa@gmail.com", false, isObscurePassword),
-                  buildTextField("Phone", "0592101010", false, isObscurePassword),
+                      null,"Emile", "asmaa@gmail.com", false, isObscurePassword),
+                  const SizedBox(height: 25,),
+                  buildTextField(null,"Phone", "0592101010", false, isObscurePassword),
                 ],
               ),
             ),

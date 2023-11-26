@@ -77,15 +77,22 @@ class _EditShadowTeacherProfileState extends State<EditShadowTeacherProfile> {
               padding: const EdgeInsets.all(20),
               child: Column(
                 children: [
-                  buildTextField("Teacher Name", "Asmaa", false, isObscurePassword),
-                  buildTextField("Academic Qualification", "Master of special Education", false, isObscurePassword),
+                  buildTextField(null,"Teacher Name", "Asmaa", false, isObscurePassword),
+                  const SizedBox(height: 25,),
+                  buildTextField(null,"Academic Qualification", "Master of special Education", false, isObscurePassword),
+                  const SizedBox(height: 25,),
                   buildTextField(
-                      "Location", "Palestine ,Nablus", false, isObscurePassword),
-                  buildTextField("Birth Date", "7th Oct 2002", false, isObscurePassword),//TODO: make it calender
-                  buildTextField("Password", "********", true, isObscurePassword),
+                      null,"Location", "Palestine ,Nablus", false, isObscurePassword),
+                  const SizedBox(height: 25,),
+                  buildTextField(null,"Birth Date", "7th Oct 2002", false, isObscurePassword),//TODO: make it calender
+                  const SizedBox(height: 25,),
+                  buildTextField(null,"Password", "********", true, isObscurePassword),
+                  const SizedBox(height: 25,),
                   buildTextField(
-                      "Emile", "asmaa@gmail.com", false, isObscurePassword),
-                  buildTextField("Phone", "0592101010", false, isObscurePassword),
+                      null,"Emile", "asmaa@gmail.com", false, isObscurePassword),
+                  const SizedBox(height: 25,),
+                  buildTextField(null,"Phone", "0592101010", false, isObscurePassword),
+                  const SizedBox(height: 25,),
                   Row(
                     children: [
                       CustomDropDown(
