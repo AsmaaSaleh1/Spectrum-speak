@@ -155,7 +155,6 @@ class _SignUpState extends State<SignUp> {
                   ),
                   CustomDropDown(
                     items: const [
-                      'All',
                       'Nablus',
                       'Ramallah',
                       'Jerusalem',
@@ -164,6 +163,7 @@ class _SignUpState extends State<SignUp> {
                       'Hebron',
                       'Jenin',
                       'Tulkarm',
+                      'Other',
                     ],
                     selectedValue: selectedCity,
                     hint: 'Select City',
@@ -227,7 +227,6 @@ class _SignUpState extends State<SignUp> {
                 'Sign Up',
                 style: TextStyle(
                   color: kDarkerColor,
-                  //fontFamily: 'Inter',
                   fontSize: 23,
                   fontWeight: FontWeight.bold,
                 ),
@@ -238,7 +237,7 @@ class _SignUpState extends State<SignUp> {
               children: [
                 Container(
                   alignment: Alignment.topCenter,
-                  margin: const EdgeInsets.only(left: 31, top: 20, right: 20),
+                  margin: const EdgeInsets.only(top: 20, right: 20),
                   width: 150,
                   decoration: const BoxDecoration(
                     border: Border(bottom: BorderSide(color: kYellow)),

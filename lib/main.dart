@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:spectrum_speak/firebase_options.dart';
+import 'package:spectrum_speak/screen/login.dart';
 import 'package:spectrum_speak/screen/main_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:spectrum_speak/screen/sign_up.dart';
@@ -40,7 +41,7 @@ class MyApp extends StatelessWidget {
         textTheme: GoogleFonts.tinosTextTheme(),
       ),
       home: const Scaffold(
-        body: MainPage(),
+        body: Login(),
       ),
     );
   }
