@@ -43,6 +43,7 @@ dependencies:
   simple_icons: ^7.10.0
   universal_platform: ^1.0.0+1
   video_player: ^2.8.1
+  web_socket_channel: ^2.4.0
 
 
 dev_dependencies:

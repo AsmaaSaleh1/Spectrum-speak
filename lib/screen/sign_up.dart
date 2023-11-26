@@ -8,6 +8,7 @@ import 'package:spectrum_speak/units/build_text_field.dart';
 import 'login.dart';
 import 'follow_up_sign_up.dart';
 
+
 class SignUp extends StatefulWidget {
   const SignUp({super.key});
 

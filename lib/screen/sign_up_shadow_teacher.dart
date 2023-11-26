@@ -170,6 +170,9 @@ class _SignUpShadowTeacherState extends State<SignUpShadowTeacher> {
                   ),
                 ),
               ),
+              const SizedBox(
+                height: 25,
+              ),
             ],
           ),
         ),

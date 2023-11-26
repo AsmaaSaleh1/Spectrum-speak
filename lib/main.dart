@@ -44,7 +44,7 @@ class MyApp extends StatelessWidget {
         textTheme: GoogleFonts.tinosTextTheme(),
       ),
       home: const Scaffold(
-        body: AddChild(),
+        body: MainPage(),
       ),
     );
   }

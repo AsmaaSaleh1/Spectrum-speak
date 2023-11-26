@@ -112,6 +112,9 @@ class _SignUpSpecialistState extends State<SignUpSpecialist> {
                   ),
                 ),
               ),
+              const SizedBox(
+                height: 25,
+              ),
             ],
           ),
         ),

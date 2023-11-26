@@ -163,6 +163,9 @@ class _AddChildState extends State<AddChild> {
                   ),
                 ),
               ),
+              const SizedBox(
+                height: 25,
+              ),
             ],
           ),
         ),
