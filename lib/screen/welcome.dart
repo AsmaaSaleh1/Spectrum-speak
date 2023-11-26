@@ -52,25 +52,28 @@ class _WelcomeState extends State<Welcome> {
   @override
   Widget build(BuildContext context) {
     Timer(
-        const Duration(seconds: 2),
-        () => Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (BuildContext context) => const Login())));
+      const Duration(seconds: 2),
+      () => Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (BuildContext context) => const Login(),
+        ),
+      ),
+    );
     return Scaffold(
       backgroundColor: kPrimary,
-      body: Container(
-        alignment: Alignment.center,
-        width: 520,
-        margin: const EdgeInsets.only(
-          left: 30,
+      body: Center(
+        child: Container(
+          alignment: Alignment.center,
+          width: 520,
+          child: _controller.value.isInitialized
+              ? AspectRatio(
+                  aspectRatio: _controller.value.aspectRatio,
+                  child: VideoPlayer(
+                    _controller,
+                  ),
+                )
+              : Container(),
         ),
-        child: _controller.value.isInitialized
-            ? AspectRatio(
-                aspectRatio: _controller.value.aspectRatio,
-                child: VideoPlayer(
-                  _controller,
-                ),
-              )
-            : Container(),
       ),
     );
   }

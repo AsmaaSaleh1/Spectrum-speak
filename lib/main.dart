@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:spectrum_speak/firebase_options.dart';
+import 'package:spectrum_speak/screen/add_child.dart';
 import 'package:spectrum_speak/screen/login.dart';
 import 'package:spectrum_speak/screen/main_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:spectrum_speak/screen/sign_up.dart';
+import 'package:spectrum_speak/screen/sign_up_shadow_teacher.dart';
+import 'package:spectrum_speak/screen/sign_up_specialist.dart';
 import 'package:spectrum_speak/screen/welcome.dart';
 import 'const.dart';
 late Size mq;
@@ -41,7 +44,7 @@ class MyApp extends StatelessWidget {
         textTheme: GoogleFonts.tinosTextTheme(),
       ),
       home: const Scaffold(
-        body: Login(),
+        body: AddChild(),
       ),
     );
   }
