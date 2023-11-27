@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 
-import 'package:spectrum_speak/const.dart';
+import 'package:spectrum_speak/constant/const_color.dart';
 import 'login.dart';
 
 class Welcome extends StatefulWidget {

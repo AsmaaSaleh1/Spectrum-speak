@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:spectrum_speak/const.dart';
+import 'package:spectrum_speak/constant/const_color.dart';
 
 class CustomButton extends StatelessWidget {
   final Color foregroundColor;

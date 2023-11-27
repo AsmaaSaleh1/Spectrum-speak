@@ -4,7 +4,7 @@ import 'package:spectrum_speak/widgets/card_specialist.dart';
 import 'package:spectrum_speak/widgets/card_center.dart';
 import 'package:spectrum_speak/widgets/card_shadow_teacher.dart';
 
-import 'package:spectrum_speak/const.dart';
+import 'package:spectrum_speak/constant/const_color.dart';
 import 'build_drop_down_menu.dart';
 
 enum SearchEnum { center, specialist, shadowTeacher }

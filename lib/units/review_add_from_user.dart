@@ -1,7 +1,7 @@
 import 'package:circular_profile_avatar/circular_profile_avatar.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:spectrum_speak/const.dart';
+import 'package:spectrum_speak/constant/const_color.dart';
 import 'package:spectrum_speak/widgets/smooth_star_rating.dart';
 
 import 'build_text_field.dart';

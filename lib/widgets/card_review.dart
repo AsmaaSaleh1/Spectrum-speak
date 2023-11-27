@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:spectrum_speak/const.dart';
+import 'package:spectrum_speak/constant/const_color.dart';
 import 'package:spectrum_speak/units/review_ui.dart';
 
 class CardReview extends StatefulWidget {

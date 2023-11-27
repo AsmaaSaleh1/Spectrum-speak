@@ -9,7 +9,7 @@ import 'package:spectrum_speak/screen/sign_up.dart';
 import 'package:spectrum_speak/screen/sign_up_shadow_teacher.dart';
 import 'package:spectrum_speak/screen/sign_up_specialist.dart';
 import 'package:spectrum_speak/screen/welcome.dart';
-import 'const.dart';
+import 'constant/const_color.dart';
 late Size mq;
 void main() {
   WidgetsFlutterBinding.ensureInitialized();

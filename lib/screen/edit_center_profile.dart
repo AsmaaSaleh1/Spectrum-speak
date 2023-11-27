@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:spectrum_speak/const.dart';
+import 'package:spectrum_speak/constant/const_color.dart';
 import 'package:spectrum_speak/units/build_text_field.dart';
 import 'package:spectrum_speak/units/custom_button.dart';
 
@@ -15,7 +15,7 @@ class _EditCenterProfileState extends State<EditCenterProfile> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _centerNameController = TextEditingController();
   final TextEditingController _phoneNumberController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _aboutController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -81,8 +81,7 @@ class _EditCenterProfileState extends State<EditCenterProfile> {
                 children: [
                   buildTextField(null,"Center Name", "Asmaa", false, isObscurePassword,_centerNameController),
                   const SizedBox(height: 25,),
-                  buildTextField(null,"About", "The Centre for...", false, isObscurePassword,_passwordController),
-                  const SizedBox(height: 25,),
+                  buildTextField(null,"About", "The Centre for...", false, isObscurePassword,_aboutController),
                   const SizedBox(height: 25,),
                   buildTextField(
                       null,"Emile", "asmaa@gmail.com", false, isObscurePassword,_emailController),
