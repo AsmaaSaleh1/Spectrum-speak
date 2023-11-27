@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:spectrum_speak/constant/const_color.dart';
 
-enum Category { parent, specialist, shadowTeacher }
+enum Category { Parent, Specialist, ShadowTeacher }
 
 class RadioButtonSearch extends StatefulWidget {
   final Category selected;
@@ -18,7 +18,7 @@ class RadioButtonSearch extends StatefulWidget {
 }
 
 class _RadioButtonSearchState extends State<RadioButtonSearch> {
-  Category _character = Category.parent;
+  Category _character = Category.Parent;
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -34,7 +34,7 @@ class _RadioButtonSearchState extends State<RadioButtonSearch> {
             ),
             materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
             activeColor: kDarkerColor,
-            value: Category.parent,
+            value: Category.Parent,
             groupValue: _character,
             onChanged: (Category? value) {
               setState(() {
@@ -54,7 +54,7 @@ class _RadioButtonSearchState extends State<RadioButtonSearch> {
             ),
             materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
             activeColor: kDarkerColor,
-            value: Category.specialist,
+            value: Category.Specialist,
             groupValue: _character,
             onChanged: (Category? value) {
               setState(() {
@@ -74,7 +74,7 @@ class _RadioButtonSearchState extends State<RadioButtonSearch> {
             ),
             materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
             activeColor: kDarkerColor,
-            value: Category.shadowTeacher,
+            value: Category.ShadowTeacher,
             groupValue: _character,
             onChanged: (Category? value) {
               setState(() {
