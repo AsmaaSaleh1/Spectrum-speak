@@ -72,7 +72,7 @@ class _LoginState extends State<Login> {
                 width: 280,
                 height: 50,
                 child: buildTextField(Icons.mail, "Email Address",
-                    "Asmaa@gmail.com", false, isObscurePassword)),
+                    "Asmaa@gmail.com", false, isObscurePassword,_emailController)),
             const SizedBox(height: 10,),
             Container(
                 alignment: Alignment.center,
@@ -80,7 +80,7 @@ class _LoginState extends State<Login> {
                 width: 280,
                 height: 50,
                 child: buildTextField(Icons.lock_outline, "Password",
-                    "**********", true, isObscurePassword)),
+                    "**********", true, isObscurePassword,_passwordController)),
             Padding(
               padding: const EdgeInsets.only(top: 20),
               child: ElevatedButton(

@@ -12,6 +12,10 @@ class EditCenterProfile extends StatefulWidget {
 
 class _EditCenterProfileState extends State<EditCenterProfile> {
   bool isObscurePassword = true;
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _centerNameController = TextEditingController();
+  final TextEditingController _phoneNumberController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -75,17 +79,16 @@ class _EditCenterProfileState extends State<EditCenterProfile> {
               padding: const EdgeInsets.all(20),
               child: Column(
                 children: [
-                  buildTextField(null,"Center Name", "Asmaa", false, isObscurePassword),
+                  buildTextField(null,"Center Name", "Asmaa", false, isObscurePassword,_centerNameController),
                   const SizedBox(height: 25,),
-                  buildTextField(null,"About", "The Rehabilitation Centre for...", false, isObscurePassword),
+                  buildTextField(null,"About", "The Centre for...", false, isObscurePassword,_passwordController),
                   const SizedBox(height: 25,),
-                  buildTextField(
-                      null,"Location", "Palestine ,Nablus", false, isObscurePassword),
                   const SizedBox(height: 25,),
                   buildTextField(
-                      null,"Emile", "asmaa@gmail.com", false, isObscurePassword),
+                      null,"Emile", "asmaa@gmail.com", false, isObscurePassword,_emailController),
                   const SizedBox(height: 25,),
-                  buildTextField(null,"Phone", "0592101010", false, isObscurePassword),
+                  buildTextField(null,"Phone", "0592101010", false, isObscurePassword,_phoneNumberController),
+                  //TODO: Add location
                 ],
               ),
             ),

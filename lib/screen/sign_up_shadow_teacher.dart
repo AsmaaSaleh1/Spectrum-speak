@@ -18,6 +18,10 @@ class _SignUpShadowTeacherState extends State<SignUpShadowTeacher> {
   bool isObscurePassword = true;
   String? selectedGender;
   String? availability;
+  final TextEditingController _birthDateController = TextEditingController();
+  final TextEditingController _qualificationController= TextEditingController();
+  final TextEditingController _salaryController= TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -57,7 +61,7 @@ class _SignUpShadowTeacherState extends State<SignUpShadowTeacher> {
                 width: 280,
                 height: 50,
                 child: buildTextField(FontAwesomeIcons.graduationCap,"Academic Qualification",
-                    "Master of special Education", false, isObscurePassword),
+                    "Master of special Education", false, isObscurePassword,_qualificationController),
               ),
               Container(
                 alignment: Alignment.center,
@@ -65,7 +69,7 @@ class _SignUpShadowTeacherState extends State<SignUpShadowTeacher> {
                 width: 280,
                 height: 50,
                 child: buildTextField(FontAwesomeIcons.sackDollar, "Salary",
-                    "1000\$ (in one month)", false, isObscurePassword),
+                    "1000\$ (in one month)", false, isObscurePassword,_salaryController),
               ),
               Container(
                 alignment: Alignment.center,
@@ -77,7 +81,7 @@ class _SignUpShadowTeacherState extends State<SignUpShadowTeacher> {
                     "Birth Date",
                     "7th Oct 2002",
                     false,
-                    isObscurePassword), //TODO: make it calender
+                    isObscurePassword,_birthDateController), //TODO: make it calender
               ),
               Container(
                 alignment: Alignment.center,

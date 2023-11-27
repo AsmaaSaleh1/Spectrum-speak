@@ -18,6 +18,8 @@ class _AddChildState extends State<AddChild> {
   bool isObscurePassword = true;
   String? selectedGender;
   String? degreeOfAutism;
+  final TextEditingController _childName = TextEditingController();
+  final TextEditingController _childBirthDate = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -57,7 +59,7 @@ class _AddChildState extends State<AddChild> {
                 width: 280,
                 height: 50,
                 child: buildTextField(Icons.family_restroom,"Child Name",
-                    "Ahmad", false, isObscurePassword),
+                    "Ahmad", false, isObscurePassword,_childName),
               ),
               Container(
                 alignment: Alignment.center,
@@ -69,7 +71,7 @@ class _AddChildState extends State<AddChild> {
                     "Birth Date",
                     "7th Oct 2002",
                     false,
-                    isObscurePassword), //TODO: make it calender
+                    isObscurePassword,_childBirthDate), //TODO: make it calender
               ),
               Container(
                 alignment: Alignment.center,

@@ -26,6 +26,7 @@ class AddReview extends StatefulWidget {
 }
 
 class _AddReviewState extends State<AddReview> {
+  final TextEditingController _commentController = TextEditingController();
   bool isObscurePassword = true;
   @override
   Widget build(BuildContext context) => LayoutBuilder(
@@ -118,7 +119,7 @@ class _AddReviewState extends State<AddReview> {
             height: 20,
           ),
           buildTextField(
-              null,"Comment", "They were cooperative and kind", false, isObscurePassword
+              null,"Comment", "They were cooperative and kind", false, isObscurePassword,_commentController
           ),
           const SizedBox(height: 25,),
           Row(

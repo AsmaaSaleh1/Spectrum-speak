@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 import 'package:spectrum_speak/const.dart';
 import 'package:spectrum_speak/units/build_drop_down_menu.dart';
 import 'package:spectrum_speak/units/build_radio_button.dart';
@@ -28,9 +29,11 @@ class _SignUpState extends State<SignUp> {
   bool _obscureText2 = true;
   bool showText = false;
   String? selectedCity;
+  String responseData = '';
   @override
   void initState() {
     super.initState();
+    fetchData();
     _obscureText1 = true;
     _obscureText2 = true;
   }
@@ -58,7 +61,19 @@ class _SignUpState extends State<SignUp> {
       showText = true;
     });
   }
-
+  Future<void> fetchData() async {
+    final response = await http.get(Uri.parse('http://localhost:3000/'));
+    if (response.statusCode == 200) {
+      // If the server returns a 200 OK response, parse the data
+      setState(() {
+        responseData = json.decode(response.body).toString();
+      });
+    } else {
+      // If the server did not return a 200 OK response,
+      // throw an exception.
+      throw Exception('Failed to load data');
+    }
+  }
   @override
   Widget build(BuildContext context) {
     bool isObscurePassword = true;
@@ -95,35 +110,35 @@ class _SignUpState extends State<SignUp> {
                 width: 280,
                 height: 50,
                 child: buildTextField(Icons.mail, "Email Address",
-                    "Asmaa@gmail.com", false, isObscurePassword)),
+                    "Asmaa@gmail.com", false, isObscurePassword,_emailController)),
             Container(
                 alignment: Alignment.center,
                 margin: const EdgeInsets.only(bottom: 15),
                 width: 280,
                 height: 50,
                 child: buildTextField(Icons.person, "User Name", "Asmaa", false,
-                    isObscurePassword)),
+                    isObscurePassword,_usernameController)),
             Container(
                 alignment: Alignment.center,
                 margin: const EdgeInsets.only(bottom: 15),
                 width: 280,
                 height: 50,
                 child: buildTextField(Icons.phone, "Phone Number", "0592777777",
-                    false, isObscurePassword)),
+                    false, isObscurePassword,_phoneNumberController)),
             Container(
                 alignment: Alignment.center,
                 margin: const EdgeInsets.only(bottom: 15),
                 width: 280,
                 height: 50,
                 child: buildTextField(Icons.lock_outline, "Password",
-                    "**********", true, isObscurePassword)),
+                    "**********", true, isObscurePassword,_passwordController)),
             Container(
                 alignment: Alignment.center,
                 margin: const EdgeInsets.only(bottom: 15),
                 width: 280,
                 height: 50,
                 child: buildTextField(Icons.lock_reset_outlined,
-                    "Confirm Password", "**********", true, isObscurePassword)),
+                    "Confirm Password", "**********", true, isObscurePassword,_confirmPasswordController)),
             showText
                 ? Container(
                     margin: const EdgeInsets.only(left: 40),

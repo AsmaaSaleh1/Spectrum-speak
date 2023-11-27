@@ -12,6 +12,11 @@ class EditSpecialistProfile extends StatefulWidget {
 
 class _EditSpecialistProfileState extends State<EditSpecialistProfile> {
   bool isObscurePassword = true;
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _userNameController = TextEditingController();
+  final TextEditingController _phoneNumberController = TextEditingController();
+  final TextEditingController _priceController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -73,19 +78,17 @@ class _EditSpecialistProfileState extends State<EditSpecialistProfile> {
               padding: const EdgeInsets.all(20),
               child: Column(
                 children: [
-                  buildTextField(null,"User Name", "Asmaa", false, isObscurePassword),
+                  buildTextField(null,"User Name", "Asmaa", false, isObscurePassword,_userNameController),
+                  const SizedBox(height: 25,),
+                  buildTextField(null,"Password", "********", true, isObscurePassword,_passwordController),
+                  const SizedBox(height: 25,),
+                  buildTextField(null,"Price in dollar", "100\$", false, isObscurePassword,_priceController),
                   const SizedBox(height: 25,),
                   buildTextField(
-                      null,"Location", "Palestine ,Nablus", false, isObscurePassword),
+                      null,"Emile", "asmaa@gmail.com", false, isObscurePassword,_emailController),
                   const SizedBox(height: 25,),
-                  buildTextField(null,"Password", "********", true, isObscurePassword),
-                  const SizedBox(height: 25,),
-                  buildTextField(null,"Price in dollar", "100\$", false, isObscurePassword),
-                  const SizedBox(height: 25,),
-                  buildTextField(
-                      null,"Emile", "asmaa@gmail.com", false, isObscurePassword),
-                  const SizedBox(height: 25,),
-                  buildTextField(null,"Phone", "0592101010", false, isObscurePassword),
+                  buildTextField(null,"Phone", "0592101010", false, isObscurePassword,_phoneNumberController),
+                  //TODO:add location
                 ],
               ),
             ),

@@ -12,6 +12,11 @@ class EditProfile extends StatefulWidget {
 
 class _EditProfileState extends State<EditProfile> {
   bool isObscurePassword = true;
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _userNameController = TextEditingController();
+  final TextEditingController _phoneNumberController = TextEditingController();
+  final TextEditingController _birthDateController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -73,19 +78,17 @@ class _EditProfileState extends State<EditProfile> {
                 padding: const EdgeInsets.all(20),
               child: Column(
                 children: [
-                  buildTextField(null,"User Name", "Asmaa", false, isObscurePassword),
+                  buildTextField(null,"User Name", "Asmaa", false, isObscurePassword,_userNameController),
                   const SizedBox(height: 25,),
-                  buildTextField(null,"Birth Date", "7th Oct", false, isObscurePassword),
+                  buildTextField(null,"Birth Date", "7th Oct", false, isObscurePassword,_birthDateController),
                   const SizedBox(height: 25,),
-                  buildTextField(
-                      null,"Location", "Palestine ,Nablus", false, isObscurePassword),
-                  const SizedBox(height: 25,),
-                  buildTextField(null,"Password", "********", true, isObscurePassword),
+                  buildTextField(null,"Password", "********", true, isObscurePassword,_passwordController),
                   const SizedBox(height: 25,),
                   buildTextField(
-                      null,"Emile", "asmaa@gmail.com", false, isObscurePassword),
+                      null,"Emile", "asmaa@gmail.com", false, isObscurePassword,_emailController),
                   const SizedBox(height: 25,),
-                  buildTextField(null,"Phone", "0592101010", false, isObscurePassword),
+                  buildTextField(null,"Phone", "0592101010", false, isObscurePassword,_phoneNumberController),
+                  //TODO: Add location
                 ],
               ),
             ),

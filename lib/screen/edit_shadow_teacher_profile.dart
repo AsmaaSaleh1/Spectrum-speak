@@ -16,6 +16,13 @@ class _EditShadowTeacherProfileState extends State<EditShadowTeacherProfile> {
   bool isObscurePassword = true;
   String? selectedGender;
   String? availability;
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _userNameController = TextEditingController();
+  final TextEditingController _phoneNumberController = TextEditingController();
+  final TextEditingController _birthDateController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _qualificationController= TextEditingController();
+  final TextEditingController _salaryController= TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -77,21 +84,20 @@ class _EditShadowTeacherProfileState extends State<EditShadowTeacherProfile> {
               padding: const EdgeInsets.all(20),
               child: Column(
                 children: [
-                  buildTextField(null,"Teacher Name", "Asmaa", false, isObscurePassword),
+                  buildTextField(null,"Teacher Name", "Asmaa", false, isObscurePassword,_userNameController),
                   const SizedBox(height: 25,),
-                  buildTextField(null,"Academic Qualification", "Master of special Education", false, isObscurePassword),
+                  buildTextField(null,"Academic Qualification", "Master of special Education", false, isObscurePassword,_qualificationController),
                   const SizedBox(height: 25,),
-                  buildTextField(
-                      null,"Location", "Palestine ,Nablus", false, isObscurePassword),
+                  buildTextField(null,"Birth Date", "7th Oct 2002", false, isObscurePassword,_birthDateController),//TODO: make it calender
                   const SizedBox(height: 25,),
-                  buildTextField(null,"Birth Date", "7th Oct 2002", false, isObscurePassword),//TODO: make it calender
-                  const SizedBox(height: 25,),
-                  buildTextField(null,"Password", "********", true, isObscurePassword),
+                  buildTextField(null,"Password", "********", true, isObscurePassword,_passwordController),
                   const SizedBox(height: 25,),
                   buildTextField(
-                      null,"Emile", "asmaa@gmail.com", false, isObscurePassword),
+                      null,"Emile", "asmaa@gmail.com", false, isObscurePassword,_emailController),
                   const SizedBox(height: 25,),
-                  buildTextField(null,"Phone", "0592101010", false, isObscurePassword),
+                  buildTextField(null,"Phone", "0592101010", false, isObscurePassword,_phoneNumberController),
+                  const SizedBox(height: 25,),
+                  buildTextField(null, "Salary", "1000\$ (in one month)", false, isObscurePassword,_salaryController),
                   const SizedBox(height: 25,),
                   Row(
                     children: [
@@ -124,6 +130,7 @@ class _EditShadowTeacherProfileState extends State<EditShadowTeacherProfile> {
                       ),
                     ],
                   ),
+                  //TODO:add location
                 ],
               ),
             ),

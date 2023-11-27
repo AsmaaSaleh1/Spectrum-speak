@@ -16,6 +16,7 @@ class SignUpSpecialist extends StatefulWidget {
 class _SignUpSpecialistState extends State<SignUpSpecialist> {
   String? selectedSpecialist;
   bool isObscurePassword = true;
+  final TextEditingController _priceController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,7 +53,7 @@ class _SignUpSpecialistState extends State<SignUpSpecialist> {
                 margin: const EdgeInsets.only(bottom: 15),
                 width: 280,
                 height: 50,
-                child: buildTextField(FontAwesomeIcons.sackDollar, "Price", "100\$ (in one session)", false, isObscurePassword),),
+                child: buildTextField(FontAwesomeIcons.sackDollar, "Price", "100\$ (in one session)", false, isObscurePassword,_priceController),),
               Container(
                 alignment: Alignment.center,
                 margin: const EdgeInsets.only(bottom: 15),

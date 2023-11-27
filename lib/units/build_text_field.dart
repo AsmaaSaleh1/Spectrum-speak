@@ -3,10 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:spectrum_speak/const.dart';
 
 Widget buildTextField(IconData? preIcon, String labelText, String placeholder,
-    bool isPasswordTextField, bool isObscurePassword) {
+    bool isPasswordTextField, bool isObscurePassword,TextEditingController controller) {
   return Padding(
     padding: const EdgeInsets.only(bottom: 0),
     child: TextField(
+      controller: controller,
       obscureText: isPasswordTextField ? isObscurePassword : false,
       decoration: InputDecoration(
         prefixIcon: preIcon != null
