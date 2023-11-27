@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spectrum_speak/constant/const_color.dart';
+import 'package:spectrum_speak/screen/main_page.dart';
 import 'package:spectrum_speak/units/build_text_field.dart';
 import 'sign_up.dart';
-
+import 'package:spectrum_speak/rest/rest_api.dart';
 class Login extends StatefulWidget {
   const Login({super.key});
 
@@ -13,33 +15,25 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  bool _passwordVisible = false;
-  bool _obscureText = true;
-
+  late SharedPreferences _sharedPreferences;
+  bool _showErrorText = false;
+  bool _notValid = false;
+  bool _notCorrect = false;
   @override
   void initState() {
-    _passwordVisible = false;
-    _obscureText = true;
+    _showErrorText = false;
+    _notValid = false;
+    _notCorrect = false;
   }
-
-  void _toggle() {
-    setState(() {
-      _obscureText = !_obscureText;
-    });
+  String _errorMessage() {
+    if (_notValid) {
+      return 'All fields are required';
+    } else if (_notCorrect) {
+      return 'Email or password are not valid';
+    } else {
+      return 'Error'; // Return empty string if no error message should be displayed
+    }
   }
-
-  void _clearP() {
-    setState(() {
-      _passwordController.clear();
-    });
-  }
-
-  void _clearE() {
-    setState(() {
-      _emailController.clear();
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     bool isObscurePassword = true;
@@ -81,10 +75,36 @@ class _LoginState extends State<Login> {
                 height: 50,
                 child: buildTextField(Icons.lock_outline, "Password",
                     "**********", true, isObscurePassword,_passwordController)),
+            Visibility(
+              visible: _showErrorText,
+              child: Container(
+                margin: const EdgeInsets.only(top: 10),
+                child: Text(
+                  _errorMessage(),
+                  style: const TextStyle(
+                    color: Colors.red,
+                    fontSize: 16,
+                  ),
+                ),
+              ),
+            ),
             Padding(
               padding: const EdgeInsets.only(top: 20),
               child: ElevatedButton(
-                onPressed: null,
+                onPressed: () {
+                  _notCorrect=false;
+                  _notValid=false;
+                  _showErrorText=false;
+                  if (_emailController.text.isNotEmpty &&
+                      _passwordController.text.isNotEmpty) {
+                    doLogin(_emailController.text, _passwordController.text);
+                  } else {
+                    setState(() {
+                      _showErrorText = true;
+                      _notValid=true;
+                    });
+                  }
+                },
                 style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all(kYellow),
                   fixedSize: MaterialStateProperty.all(const Size(315, 50)),
@@ -200,5 +220,23 @@ class _LoginState extends State<Login> {
         ),
       ),
     );
+  }
+
+  doLogin(String email, String password) async{
+    _sharedPreferences = await SharedPreferences.getInstance();
+    var rest = await userLogin(email.trim(), password.trim());
+
+    if(rest['success']){
+      String userEmail= rest['data'][0]['Email'];
+      String userID= rest['data'][0]['UserID'].toString();
+      _sharedPreferences.setString('userID', userID);
+      _sharedPreferences.setString('userEmail', userEmail);
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (_)=>const MainPage()));
+    }else{
+      setState(() {
+        _showErrorText = true;
+        _notCorrect=true;
+      });
+    }
   }
 }

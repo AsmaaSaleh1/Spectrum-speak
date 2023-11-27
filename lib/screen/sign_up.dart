@@ -2,12 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'package:spectrum_speak/constant/const_color.dart';
+import 'package:spectrum_speak/rest/rest_api.dart';
+import 'package:spectrum_speak/screen/add_child.dart';
+import 'package:spectrum_speak/screen/sign_up_shadow_teacher.dart';
+import 'package:spectrum_speak/screen/sign_up_specialist.dart';
 import 'package:spectrum_speak/units/build_drop_down_menu.dart';
 import 'package:spectrum_speak/units/build_radio_button.dart';
 import 'package:spectrum_speak/units/build_text_field.dart';
 import 'login.dart';
 import 'follow_up_sign_up.dart';
-
 
 class SignUp extends StatefulWidget {
   const SignUp({super.key});
@@ -23,10 +26,11 @@ class _SignUpState extends State<SignUp> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController =
       TextEditingController();
-  Category _selected = Category.parent;
+  Category _selectedCategory = Category.Parent;
   bool _obscureText1 = true;
   bool _obscureText2 = true;
   bool showText = false;
+  bool _showErrorText = false;
   String? selectedCity;
   @override
   void initState() {
@@ -34,6 +38,7 @@ class _SignUpState extends State<SignUp> {
     _obscureText1 = true;
     _obscureText2 = true;
   }
+
   void _toggle1() {
     setState(() {
       _obscureText1 = !_obscureText1;
@@ -45,19 +50,6 @@ class _SignUpState extends State<SignUp> {
       _obscureText2 = !_obscureText2;
     });
   }
-
-  bool confirmation() {
-    if (_confirmPasswordController.text == _passwordController.text) {
-      return true;
-    }
-    return false;
-  }
-
-  void noMatch() {
-    setState(() {
-      showText = true;
-    });
-  }
   @override
   Widget build(BuildContext context) {
     bool isObscurePassword = true;
@@ -66,14 +58,17 @@ class _SignUpState extends State<SignUp> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Container(
-              alignment: Alignment.topCenter,
-              height: 210,
-              //margin: const EdgeInsets.only(left: 8, top: 45),
-              child: Image.asset(
-                'images/spectrumspeak.png',
-                width: 270.0,
-                height: 270.0,
+            Padding(
+              padding: const EdgeInsets.only(top: 20.0),
+              child: Container(
+                alignment: Alignment.topCenter,
+                height: 210,
+                //margin: const EdgeInsets.only(left: 8, top: 45),
+                child: Image.asset(
+                  'images/spectrumspeak.png',
+                  width: 270.0,
+                  height: 270.0,
+                ),
               ),
             ),
             Container(
@@ -93,40 +88,55 @@ class _SignUpState extends State<SignUp> {
                 margin: const EdgeInsets.only(bottom: 15),
                 width: 280,
                 height: 50,
-                child: buildTextField(Icons.mail, "Email Address",
-                    "Asmaa@gmail.com", false, isObscurePassword,_emailController)),
+                child: buildTextField(
+                    Icons.mail,
+                    "Email Address",
+                    "Asmaa@gmail.com",
+                    false,
+                    isObscurePassword,
+                    _emailController)),
             Container(
                 alignment: Alignment.center,
                 margin: const EdgeInsets.only(bottom: 15),
                 width: 280,
                 height: 50,
                 child: buildTextField(Icons.person, "User Name", "Asmaa", false,
-                    isObscurePassword,_usernameController)),
+                    isObscurePassword, _usernameController)),
             Container(
                 alignment: Alignment.center,
                 margin: const EdgeInsets.only(bottom: 15),
                 width: 280,
                 height: 50,
                 child: buildTextField(Icons.phone, "Phone Number", "0592777777",
-                    false, isObscurePassword,_phoneNumberController)),
+                    false, isObscurePassword, _phoneNumberController)),
             Container(
                 alignment: Alignment.center,
                 margin: const EdgeInsets.only(bottom: 15),
                 width: 280,
                 height: 50,
-                child: buildTextField(Icons.lock_outline, "Password",
-                    "**********", true, isObscurePassword,_passwordController)),
+                child: buildTextField(
+                    Icons.lock_outline,
+                    "Password",
+                    "**********",
+                    true,
+                    isObscurePassword,
+                    _passwordController)),
             Container(
                 alignment: Alignment.center,
                 margin: const EdgeInsets.only(bottom: 15),
                 width: 280,
                 height: 50,
-                child: buildTextField(Icons.lock_reset_outlined,
-                    "Confirm Password", "**********", true, isObscurePassword,_confirmPasswordController)),
+                child: buildTextField(
+                    Icons.lock_reset_outlined,
+                    "Confirm Password",
+                    "**********",
+                    true,
+                    isObscurePassword,
+                    _confirmPasswordController)),
             showText
                 ? Container(
                     margin: const EdgeInsets.only(left: 40),
-                    alignment: Alignment.centerLeft,
+                    alignment: Alignment.center,
                     child: const Text(
                       'Passwords do not match',
                       style: TextStyle(
@@ -178,7 +188,7 @@ class _SignUpState extends State<SignUp> {
             ),
             Container(
               alignment: Alignment.topLeft,
-              margin: const EdgeInsets.only(left:10, bottom: 5),
+              margin: const EdgeInsets.only(left: 10, bottom: 5),
               width: 280,
               child: Text(
                 "Choose Category",
@@ -192,26 +202,59 @@ class _SignUpState extends State<SignUp> {
             ),
             Container(
               alignment: Alignment.center,
-              margin: const EdgeInsets.only(left:10, bottom: 15),
+              margin: const EdgeInsets.only(left: 10, bottom: 15),
               width: 280,
               child: RadioButtonSearch(
-                selected: _selected,
+                selected: _selectedCategory,
                 onTypeChanged: (search) {
                   setState(
                     () {
-                      _selected = search;
+                      _selectedCategory = search;
                     },
                   );
                 },
               ),
             ),
+            Visibility(
+              visible: _showErrorText,
+              child: Container(
+                margin: const EdgeInsets.only(top: 10),
+                child: const Text(
+                  'All fields are required',
+                  style: TextStyle(
+                    color: Colors.red,
+                    fontSize: 16,
+                  ),
+                ),
+              ),
+            ),
             ElevatedButton(
               onPressed: () {
-                if (confirmation() == true) {
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => const FollowUpSignUp()));
+                _showErrorText = false;
+                if (_emailController.text.isNotEmpty &&
+                    _usernameController.text.isNotEmpty &&
+                    _phoneNumberController.text.isNotEmpty &&
+                    _passwordController.text.isNotEmpty &&
+                    _confirmPasswordController.text.isNotEmpty &&
+                    selectedCity != null) {
+                  if(_passwordController.text != _confirmPasswordController.text){
+                    setState(() {
+                      showText = true;
+                    });
+                  }else{
+                    doSignUp(
+                      _emailController.text,
+                      _usernameController.text,
+                      _phoneNumberController.text,
+                      _passwordController.text,
+                      selectedCity!,
+                      _selectedCategory,
+                    );
+                  }
                 } else {
-                  noMatch();
+                  setState(() {
+                    _showErrorText = true;
+                  });
                 }
               },
               style: ButtonStyle(
@@ -303,5 +346,23 @@ class _SignUpState extends State<SignUp> {
         ),
       ),
     );
+  }
+  doSignUp(String email, String userName, String phone, String password,
+      String selectedCity, Category selectedCategory) async {
+    var rest = await userSignUp(email.trim(), userName.trim(), phone.trim(),
+        password.trim(), selectedCity.trim(), selectedCategory.toString().split('.').last.trim());
+    if(rest['success']){
+      if(selectedCategory==Category.Parent){
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (_)=>const AddChild()));
+      }else if(selectedCategory==Category.ShadowTeacher){
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (_)=>const SignUpShadowTeacher()));
+      }else{
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (_)=>const SignUpSpecialist()));
+      }
+    }else{
+      setState(() {
+        _showErrorText = true;
+      });
+    }
   }
 }
