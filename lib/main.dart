@@ -76,7 +76,7 @@ class _MyAppState extends State<MyApp> {
         textTheme: GoogleFonts.tinosTextTheme(),
       ),
       home: const Scaffold(
-        body: EditShadowTeacherProfile(),
+        body: AddChild(),
       ),
     );
   }

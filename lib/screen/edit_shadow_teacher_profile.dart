@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:spectrum_speak/constant/const_color.dart';
+import 'package:spectrum_speak/units/build_date_text_field.dart';
 import 'package:spectrum_speak/units/build_text_field.dart';
 import 'package:spectrum_speak/units/custom_button.dart';
 
@@ -9,7 +10,8 @@ class EditShadowTeacherProfile extends StatefulWidget {
   const EditShadowTeacherProfile({super.key});
 
   @override
-  State<EditShadowTeacherProfile> createState() => _EditShadowTeacherProfileState();
+  State<EditShadowTeacherProfile> createState() =>
+      _EditShadowTeacherProfileState();
 }
 
 class _EditShadowTeacherProfileState extends State<EditShadowTeacherProfile> {
@@ -22,12 +24,13 @@ class _EditShadowTeacherProfileState extends State<EditShadowTeacherProfile> {
   final TextEditingController _phoneNumberController = TextEditingController();
   final TextEditingController _birthDateController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _qualificationController= TextEditingController();
-  final TextEditingController _salaryController= TextEditingController();
+  final TextEditingController _qualificationController =
+      TextEditingController();
+  final TextEditingController _salaryController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body:GestureDetector(
+      body: GestureDetector(
         onTap: () {
           FocusScope.of(context).unfocus();
         },
@@ -83,30 +86,77 @@ class _EditShadowTeacherProfileState extends State<EditShadowTeacherProfile> {
             ),
             Column(
               children: [
-                SizedBox(width: 300,
-                    height: 60,child: buildTextField(null,"Teacher Name", "Asmaa", false, isObscurePassword,_userNameController)),
-                const SizedBox(height: 10,),
-                SizedBox(width: 300,
-                    height: 60,child: buildTextField(null,"Academic Qualification", "Master of special Education", false, isObscurePassword,_qualificationController)),
-                const SizedBox(height: 10,),
-                SizedBox(width: 300,
-                    height: 60,child: buildTextField(null,"Birth Date", "7th Oct 2002", false, isObscurePassword,_birthDateController)),//TODO: make it calender
-                const SizedBox(height: 10,),
-                SizedBox(width: 300,
-                    height: 60,child: buildTextField(null,"Password", "********", true, isObscurePassword,_passwordController)),
-                const SizedBox(height: 10,),
-                SizedBox(width: 300,
-                  height: 60,
-                  child: buildTextField(
-                      null,"Emile", "asmaa@gmail.com", false, isObscurePassword,_emailController),
+                SizedBox(
+                    width: 300,
+                    height: 60,
+                    child: buildTextField(null, "Teacher Name", "Asmaa", false,
+                        isObscurePassword, _userNameController)),
+                const SizedBox(
+                  height: 10,
                 ),
-                const SizedBox(height: 10,),
-                SizedBox(width: 300,
-                    height: 60,child: buildTextField(null,"Phone", "0592101010", false, isObscurePassword,_phoneNumberController)),
-                const SizedBox(height: 10,),
-                SizedBox(width: 300,
-                    height: 60,child: buildTextField(null, "Salary", "1000\$ (in one month)", false, isObscurePassword,_salaryController)),
-                const SizedBox(height: 10,),
+                SizedBox(
+                    width: 300,
+                    height: 60,
+                    child: buildTextField(
+                        null,
+                        "Academic Qualification",
+                        "Master of special Education",
+                        false,
+                        isObscurePassword,
+                        _qualificationController)),
+                const SizedBox(
+                  height: 10,
+                ),
+                SizedBox(
+                    width: 300,
+                    height: 60,
+                    child: BuildDateTextField(
+                      labelText: 'Birth Date',
+                      placeholder: '7th Oct 2002',
+                      controller: _birthDateController,
+                    ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                SizedBox(
+                    width: 300,
+                    height: 60,
+                    child: buildTextField(null, "Password", "********", true,
+                        isObscurePassword, _passwordController)),
+                const SizedBox(
+                  height: 10,
+                ),
+                SizedBox(
+                  width: 300,
+                  height: 60,
+                  child: buildTextField(null, "Emile", "asmaa@gmail.com", false,
+                      isObscurePassword, _emailController),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                SizedBox(
+                    width: 300,
+                    height: 60,
+                    child: buildTextField(null, "Phone", "0592101010", false,
+                        isObscurePassword, _phoneNumberController)),
+                const SizedBox(
+                  height: 10,
+                ),
+                SizedBox(
+                    width: 300,
+                    height: 60,
+                    child: buildTextField(
+                        null,
+                        "Salary",
+                        "1000\$ (in one month)",
+                        false,
+                        isObscurePassword,
+                        _salaryController)),
+                const SizedBox(
+                  height: 10,
+                ),
                 SizedBox(
                   width: 300,
                   height: 60,
@@ -126,7 +176,9 @@ class _EditShadowTeacherProfileState extends State<EditShadowTeacherProfile> {
                           });
                         },
                       ),
-                      const SizedBox(width: 20,),
+                      const SizedBox(
+                        width: 20,
+                      ),
                       CustomDropDown(
                         items: const [
                           'Available',
@@ -143,7 +195,9 @@ class _EditShadowTeacherProfileState extends State<EditShadowTeacherProfile> {
                     ],
                   ),
                 ),
-                const SizedBox(height: 10,),
+                const SizedBox(
+                  height: 10,
+                ),
                 Container(
                   width: 300,
                   height: 60,
@@ -172,7 +226,8 @@ class _EditShadowTeacherProfileState extends State<EditShadowTeacherProfile> {
               ],
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 50.0,vertical: 20),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 50.0, vertical: 20),
               child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -204,7 +259,9 @@ class _EditShadowTeacherProfileState extends State<EditShadowTeacherProfile> {
                     ),
                   ]),
             ),
-            const SizedBox(height: 25,),
+            const SizedBox(
+              height: 25,
+            ),
           ],
         ),
       ),

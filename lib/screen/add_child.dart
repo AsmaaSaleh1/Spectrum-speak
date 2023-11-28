@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:spectrum_speak/constant/const_color.dart';
 import 'package:spectrum_speak/screen/main_page.dart';
+import 'package:spectrum_speak/units/build_date_text_field.dart';
 import 'package:spectrum_speak/units/build_drop_down_menu.dart';
 import 'package:spectrum_speak/units/build_text_field.dart';
 
@@ -28,51 +29,6 @@ class _AddChildState extends State<AddChild> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Align(
-                alignment: Alignment.topLeft,
-                child: Padding(
-                  padding:
-                  const EdgeInsets.only(left: 20,top: 30),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => const MainPage()),
-                          );
-                        },
-                        child: Row(
-                          children: [
-                            IconButton(
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(builder: (context) => const MainPage()),
-                                );
-                              },
-                              icon: Icon(
-                                FontAwesomeIcons.anglesLeft,
-                                size: 18,
-                                color: kDarkerColor,
-                              ),
-                            ),
-                            Text(
-                              "Skip",
-                              style: TextStyle(
-                                fontSize: 20.0,
-                                fontWeight: FontWeight.w700,
-                                color: kDarkerColor,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-
-                )),
             Container(
               alignment: Alignment.topCenter,
               height: 210,
@@ -108,12 +64,11 @@ class _AddChildState extends State<AddChild> {
               margin: const EdgeInsets.only(bottom: 5),
               width: 280,
               height: 50,
-              child: buildTextField(
-                  FontAwesomeIcons.cakeCandles,
-                  "Birth Date",
-                  "7th Oct 2002",
-                  false,
-                  isObscurePassword,_childBirthDate), //TODO: make it calender
+              child: BuildDateTextField(
+                labelText: 'Birth Date',
+                placeholder: '7th Oct 2002',
+                controller: _childBirthDate,
+              ),
             ),
             Container(
               alignment: Alignment.center,

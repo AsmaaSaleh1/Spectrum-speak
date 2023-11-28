@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:spectrum_speak/constant/const_color.dart';
+import 'package:spectrum_speak/units/build_date_text_field.dart';
 import 'package:spectrum_speak/units/build_drop_down_menu.dart';
 import 'package:spectrum_speak/units/build_text_field.dart';
 
@@ -75,12 +76,11 @@ class _SignUpShadowTeacherState extends State<SignUpShadowTeacher> {
               margin: const EdgeInsets.only(bottom: 5),
               width: 280,
               height: 50,
-              child: buildTextField(
-                  FontAwesomeIcons.cakeCandles,
-                  "Birth Date",
-                  "7th Oct 2002",
-                  false,
-                  isObscurePassword,_birthDateController), //TODO: make it calender
+              child: BuildDateTextField(
+                labelText: 'Birth Date',
+                placeholder: '7th Oct 2002',
+                controller: _birthDateController,
+              ),
             ),
             Container(
               alignment: Alignment.center,
