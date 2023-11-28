@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:spectrum_speak/constant/const_color.dart';
+import 'package:spectrum_speak/units/build_drop_down_menu.dart';
 import 'package:spectrum_speak/units/build_text_field.dart';
 import 'package:spectrum_speak/units/custom_button.dart';
 
@@ -16,10 +17,11 @@ class _EditCenterProfileState extends State<EditCenterProfile> {
   final TextEditingController _centerNameController = TextEditingController();
   final TextEditingController _phoneNumberController = TextEditingController();
   final TextEditingController _aboutController = TextEditingController();
+  String? selectedCity;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body:GestureDetector(
+      body: GestureDetector(
         onTap: () {
           FocusScope.of(context).unfocus();
         },
@@ -29,7 +31,7 @@ class _EditCenterProfileState extends State<EditCenterProfile> {
               child: Stack(
                 children: [
                   Padding(
-                    padding: const EdgeInsets.only(top: 20.0),
+                    padding: const EdgeInsets.only(top: 50.0, bottom: 20),
                     child: Container(
                       width: 250,
                       height: 140,
@@ -49,7 +51,6 @@ class _EditCenterProfileState extends State<EditCenterProfile> {
                           image: AssetImage('images/center.jpg'),
                         ),
                       ),
-
                     ),
                   ),
                   Positioned(
@@ -75,24 +76,68 @@ class _EditCenterProfileState extends State<EditCenterProfile> {
             const SizedBox(
               height: 30,
             ),
-            Padding(
-              padding: const EdgeInsets.all(20),
-              child: Column(
-                children: [
-                  buildTextField(null,"Center Name", "Asmaa", false, isObscurePassword,_centerNameController),
-                  const SizedBox(height: 25,),
-                  buildTextField(null,"About", "The Centre for...", false, isObscurePassword,_aboutController),
-                  const SizedBox(height: 25,),
-                  buildTextField(
-                      null,"Emile", "asmaa@gmail.com", false, isObscurePassword,_emailController),
-                  const SizedBox(height: 25,),
-                  buildTextField(null,"Phone", "0592101010", false, isObscurePassword,_phoneNumberController),
-                  //TODO: Add location
-                ],
-              ),
+            Column(
+              children: [
+                SizedBox(
+                    width: 300,
+                    height: 60,
+                    child: buildTextField(null, "Center Name", "Asmaa", false,
+                        isObscurePassword, _centerNameController)),
+                const SizedBox(
+                  height: 10,
+                ),
+                SizedBox(
+                    width: 300,
+                    height: 60,
+                    child: buildTextField(null, "About", "The Centre for...",
+                        false, isObscurePassword, _aboutController)),
+                const SizedBox(
+                  height: 10,
+                ),
+                SizedBox(
+                  width: 300,
+                  height: 60,
+                  child: buildTextField(null, "Emile", "asmaa@gmail.com", false,
+                      isObscurePassword, _emailController),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                SizedBox(
+                    width: 300,
+                    height: 60,
+                    child: buildTextField(null, "Phone", "0592101010", false,
+                        isObscurePassword, _phoneNumberController)),
+                const SizedBox(height: 10,),
+                Container(
+                  height: 60,
+                  width: 300,
+                  alignment: AlignmentDirectional.topStart,
+                  child: CustomDropDown(
+                    items: const [
+                      'Nablus',
+                      'Ramallah',
+                      'Jerusalem',
+                      'Bethlehem',
+                      'Qalqilya',
+                      'Hebron',
+                      'Jenin',
+                      'Tulkarm',
+                      'Other',
+                    ],
+                    selectedValue: selectedCity,
+                    hint: 'Select City',
+                    onChanged: (String? value) {
+                      setState(() {
+                        selectedCity = value;
+                      });
+                    },
+                  ),
+                ),
+              ],
             ),
             Padding(
-              padding: const EdgeInsets.all(20.0),
+              padding: const EdgeInsets.symmetric(horizontal: 50.0,vertical: 20),
               child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -123,6 +168,9 @@ class _EditCenterProfileState extends State<EditCenterProfile> {
                       iconColor: kGreen,
                     ),
                   ]),
+            ),
+            const SizedBox(
+              height: 25,
             ),
           ],
         ),

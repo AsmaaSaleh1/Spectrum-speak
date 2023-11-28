@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:spectrum_speak/constant/const_color.dart';
 import 'package:spectrum_speak/units/build_text_field.dart';
 import 'package:spectrum_speak/units/custom_button.dart';
+import 'package:spectrum_speak/units/build_drop_down_menu.dart';
 
 class EditSpecialistProfile extends StatefulWidget {
   const EditSpecialistProfile({super.key});
@@ -12,6 +13,7 @@ class EditSpecialistProfile extends StatefulWidget {
 
 class _EditSpecialistProfileState extends State<EditSpecialistProfile> {
   bool isObscurePassword = true;
+  String? selectedCity;
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _userNameController = TextEditingController();
   final TextEditingController _phoneNumberController = TextEditingController();
@@ -74,26 +76,55 @@ class _EditSpecialistProfileState extends State<EditSpecialistProfile> {
             const SizedBox(
               height: 30,
             ),
-            Padding(
-              padding: const EdgeInsets.all(20),
-              child: Column(
-                children: [
-                  buildTextField(null,"User Name", "Asmaa", false, isObscurePassword,_userNameController),
-                  const SizedBox(height: 25,),
-                  buildTextField(null,"Password", "********", true, isObscurePassword,_passwordController),
-                  const SizedBox(height: 25,),
-                  buildTextField(null,"Price in dollar", "100\$", false, isObscurePassword,_priceController),
-                  const SizedBox(height: 25,),
-                  buildTextField(
+            Column(
+              children: [
+                SizedBox(width: 300,
+                    height: 60,child: buildTextField(null,"User Name", "Asmaa", false, isObscurePassword,_userNameController)),
+                const SizedBox(height: 10,),
+                SizedBox(width: 300,
+                    height: 60,child: buildTextField(null,"Password", "********", true, isObscurePassword,_passwordController)),
+                const SizedBox(height: 10,),
+                SizedBox(width: 300,
+                    height: 60,child: buildTextField(null,"Price in dollar", "100\$", false, isObscurePassword,_priceController)),
+                const SizedBox(height: 10,),
+                SizedBox(width: 300,
+                  height: 60,
+                  child: buildTextField(
                       null,"Emile", "asmaa@gmail.com", false, isObscurePassword,_emailController),
-                  const SizedBox(height: 25,),
-                  buildTextField(null,"Phone", "0592101010", false, isObscurePassword,_phoneNumberController),
-                  //TODO:add location
-                ],
-              ),
+                ),
+                const SizedBox(height: 10,),
+                SizedBox(width: 300,
+                    height: 60,child: buildTextField(null,"Phone", "0592101010", false, isObscurePassword,_phoneNumberController)),
+                const SizedBox(height: 10,),
+                Container(
+                  height: 60,
+                  width: 300,
+                  alignment: AlignmentDirectional.topStart,
+                  child: CustomDropDown(
+                    items: const [
+                      'Nablus',
+                      'Ramallah',
+                      'Jerusalem',
+                      'Bethlehem',
+                      'Qalqilya',
+                      'Hebron',
+                      'Jenin',
+                      'Tulkarm',
+                      'Other',
+                    ],
+                    selectedValue: selectedCity,
+                    hint: 'Select City',
+                    onChanged: (String? value) {
+                      setState(() {
+                        selectedCity = value;
+                      });
+                    },
+                  ),
+                ),
+              ],
             ),
             Padding(
-              padding: const EdgeInsets.all(20.0),
+              padding: const EdgeInsets.symmetric(horizontal: 50.0,vertical: 20),
               child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [

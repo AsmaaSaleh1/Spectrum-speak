@@ -16,6 +16,7 @@ class _EditShadowTeacherProfileState extends State<EditShadowTeacherProfile> {
   bool isObscurePassword = true;
   String? selectedGender;
   String? availability;
+  String? selectedCity;
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _userNameController = TextEditingController();
   final TextEditingController _phoneNumberController = TextEditingController();
@@ -80,26 +81,37 @@ class _EditShadowTeacherProfileState extends State<EditShadowTeacherProfile> {
             const SizedBox(
               height: 30,
             ),
-            Padding(
-              padding: const EdgeInsets.all(20),
-              child: Column(
-                children: [
-                  buildTextField(null,"Teacher Name", "Asmaa", false, isObscurePassword,_userNameController),
-                  const SizedBox(height: 25,),
-                  buildTextField(null,"Academic Qualification", "Master of special Education", false, isObscurePassword,_qualificationController),
-                  const SizedBox(height: 25,),
-                  buildTextField(null,"Birth Date", "7th Oct 2002", false, isObscurePassword,_birthDateController),//TODO: make it calender
-                  const SizedBox(height: 25,),
-                  buildTextField(null,"Password", "********", true, isObscurePassword,_passwordController),
-                  const SizedBox(height: 25,),
-                  buildTextField(
+            Column(
+              children: [
+                SizedBox(width: 300,
+                    height: 60,child: buildTextField(null,"Teacher Name", "Asmaa", false, isObscurePassword,_userNameController)),
+                const SizedBox(height: 10,),
+                SizedBox(width: 300,
+                    height: 60,child: buildTextField(null,"Academic Qualification", "Master of special Education", false, isObscurePassword,_qualificationController)),
+                const SizedBox(height: 10,),
+                SizedBox(width: 300,
+                    height: 60,child: buildTextField(null,"Birth Date", "7th Oct 2002", false, isObscurePassword,_birthDateController)),//TODO: make it calender
+                const SizedBox(height: 10,),
+                SizedBox(width: 300,
+                    height: 60,child: buildTextField(null,"Password", "********", true, isObscurePassword,_passwordController)),
+                const SizedBox(height: 10,),
+                SizedBox(width: 300,
+                  height: 60,
+                  child: buildTextField(
                       null,"Emile", "asmaa@gmail.com", false, isObscurePassword,_emailController),
-                  const SizedBox(height: 25,),
-                  buildTextField(null,"Phone", "0592101010", false, isObscurePassword,_phoneNumberController),
-                  const SizedBox(height: 25,),
-                  buildTextField(null, "Salary", "1000\$ (in one month)", false, isObscurePassword,_salaryController),
-                  const SizedBox(height: 25,),
-                  Row(
+                ),
+                const SizedBox(height: 10,),
+                SizedBox(width: 300,
+                    height: 60,child: buildTextField(null,"Phone", "0592101010", false, isObscurePassword,_phoneNumberController)),
+                const SizedBox(height: 10,),
+                SizedBox(width: 300,
+                    height: 60,child: buildTextField(null, "Salary", "1000\$ (in one month)", false, isObscurePassword,_salaryController)),
+                const SizedBox(height: 10,),
+                SizedBox(
+                  width: 300,
+                  height: 60,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       CustomDropDown(
                         items: const [
@@ -130,12 +142,37 @@ class _EditShadowTeacherProfileState extends State<EditShadowTeacherProfile> {
                       ),
                     ],
                   ),
-                  //TODO:add location
-                ],
-              ),
+                ),
+                const SizedBox(height: 10,),
+                Container(
+                  width: 300,
+                  height: 60,
+                  alignment: AlignmentDirectional.center,
+                  child: CustomDropDown(
+                    items: const [
+                      'Nablus',
+                      'Ramallah',
+                      'Jerusalem',
+                      'Bethlehem',
+                      'Qalqilya',
+                      'Hebron',
+                      'Jenin',
+                      'Tulkarm',
+                      'Other',
+                    ],
+                    selectedValue: selectedCity,
+                    hint: 'Select City',
+                    onChanged: (String? value) {
+                      setState(() {
+                        selectedCity = value;
+                      });
+                    },
+                  ),
+                ),
+              ],
             ),
             Padding(
-              padding: const EdgeInsets.all(20.0),
+              padding: const EdgeInsets.symmetric(horizontal: 50.0,vertical: 20),
               child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -167,6 +204,7 @@ class _EditShadowTeacherProfileState extends State<EditShadowTeacherProfile> {
                     ),
                   ]),
             ),
+            const SizedBox(height: 25,),
           ],
         ),
       ),

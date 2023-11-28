@@ -5,6 +5,9 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spectrum_speak/firebase_options.dart';
 import 'package:spectrum_speak/screen/add_child.dart';
+import 'package:spectrum_speak/screen/edit_center_profile.dart';
+import 'package:spectrum_speak/screen/edit_profile.dart';
+import 'package:spectrum_speak/screen/edit_shadow_teacher_profile.dart';
 import 'package:spectrum_speak/screen/login.dart';
 import 'package:spectrum_speak/screen/main_page.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -73,7 +76,7 @@ class _MyAppState extends State<MyApp> {
         textTheme: GoogleFonts.tinosTextTheme(),
       ),
       home: const Scaffold(
-        body: SignUpSpecialist(),
+        body: EditShadowTeacherProfile(),
       ),
     );
   }
