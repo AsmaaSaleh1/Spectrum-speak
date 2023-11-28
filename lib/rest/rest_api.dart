@@ -26,3 +26,15 @@ Future userSignUp(String email, String userName, String phone, String password,
   var decodedData = jsonDecode(response.body);
   return decodedData;
 }
+//TODO: not tested until the shared key work
+Future specialistSignUp(String userId,double price, String selectedSpecialistCategory)async{
+  final response =
+  await http.post(Uri.parse('${Utils.baseUrl}/signUp/specialist/:user_id'), headers: {
+    "Accept": "application/json"
+  }, body: {
+    'Price': price.toString(),
+    "Category": selectedSpecialistCategory
+  });
+  var decodedData = jsonDecode(response.body);
+  return decodedData;
+}

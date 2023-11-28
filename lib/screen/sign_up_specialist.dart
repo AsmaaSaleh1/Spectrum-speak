@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:spectrum_speak/constant/const_color.dart';
+import 'package:spectrum_speak/rest/auth_manager.dart';
+import 'package:spectrum_speak/rest/rest_api.dart';
 import 'package:spectrum_speak/units/build_drop_down_menu.dart';
 import 'package:spectrum_speak/units/build_text_field.dart';
 
@@ -90,9 +92,19 @@ class _SignUpSpecialistState extends State<SignUpSpecialist> {
               ),
             ),
             ElevatedButton(
-              onPressed: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => const FollowUpSignUp()));
+              onPressed: () async{
+                String? userId = await AuthManager.getUserId();
+                print('Retrieved user ID: $userId');
+                if (userId != null) {
+                  // Call specialistSignUp with the user ID
+                  await specialistSignUp(userId,double.parse(_priceController.text), selectedSpecialist.toString());
+
+                  // Navigate to the next screen
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => const FollowUpSignUp()));
+                } else {
+                  // Handle the case where user ID is not available
+                  print('User ID not available');
+                }
               },
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.all(kYellow),

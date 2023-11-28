@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spectrum_speak/constant/const_color.dart';
+import 'package:spectrum_speak/rest/auth_manager.dart';
 import 'package:spectrum_speak/screen/main_page.dart';
+import 'package:spectrum_speak/screen/sign_up_specialist.dart';
 import 'package:spectrum_speak/units/build_text_field.dart';
 import 'sign_up.dart';
 import 'package:spectrum_speak/rest/rest_api.dart';
@@ -225,13 +227,11 @@ class _LoginState extends State<Login> {
   doLogin(String email, String password) async{
     _sharedPreferences = await SharedPreferences.getInstance();
     var rest = await userLogin(email.trim(), password.trim());
-
     if(rest['success']){
       String userEmail= rest['data'][0]['Email'];
       String userID= rest['data'][0]['UserID'].toString();
-      _sharedPreferences.setString('userID', userID);
-      _sharedPreferences.setString('userEmail', userEmail);
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (_)=>const MainPage()));
+      await AuthManager.storeUserData(userID, userEmail);
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (_)=>const SignUpSpecialist()));
     }else{
       setState(() {
         _showErrorText = true;
