@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'package:spectrum_speak/constant/const_color.dart';
+import 'package:spectrum_speak/rest/auth_manager.dart';
 import 'package:spectrum_speak/rest/rest_api.dart';
 import 'package:spectrum_speak/screen/add_child.dart';
 import 'package:spectrum_speak/screen/sign_up_shadow_teacher.dart';
@@ -9,9 +10,10 @@ import 'package:spectrum_speak/screen/sign_up_specialist.dart';
 import 'package:spectrum_speak/units/build_drop_down_menu.dart';
 import 'package:spectrum_speak/units/build_radio_button.dart';
 import 'package:spectrum_speak/units/build_text_field.dart';
+import 'package:spectrum_speak/units/validate_input_from_user.dart';
 import 'login.dart';
-import 'follow_up_sign_up.dart';
 
+//TODO: check if parent
 class SignUp extends StatefulWidget {
   const SignUp({super.key});
 
@@ -27,29 +29,43 @@ class _SignUpState extends State<SignUp> {
   final TextEditingController _confirmPasswordController =
       TextEditingController();
   Category _selectedCategory = Category.Parent;
-  bool _obscureText1 = true;
-  bool _obscureText2 = true;
-  bool showText = false;
+  bool _showTextPassword = false;
+  bool _showTextPasswordValid = false;
   bool _showErrorText = false;
+  bool _validEmail = false;
+  bool _existEmail = false;
+  bool _phoneError = false;
   String? selectedCity;
+  String messages() {
+    if (_validEmail) {
+      return "Not valid Email";
+    } else if (_existEmail) {
+      return "Already exist email";
+    } else if (_showTextPassword) {
+      return 'Passwords do not match';
+    } else if (_showTextPasswordValid) {
+      return 'Passwords not valid';
+    } else {
+      return "Error";
+    }
+  }
+
   @override
   void initState() {
     super.initState();
-    _obscureText1 = true;
-    _obscureText2 = true;
   }
 
-  void _toggle1() {
+  void resetErrorFlags() {
     setState(() {
-      _obscureText1 = !_obscureText1;
+      _showErrorText = false;
+      _showTextPassword = false;
+      _showTextPasswordValid = false;
+      _validEmail = false;
+      _existEmail = false;
+      _phoneError = false;
     });
   }
 
-  void _toggle2() {
-    setState(() {
-      _obscureText2 = !_obscureText2;
-    });
-  }
   @override
   Widget build(BuildContext context) {
     bool isObscurePassword = true;
@@ -84,17 +100,30 @@ class _SignUpState extends State<SignUp> {
               ),
             ),
             Container(
-                alignment: Alignment.center,
-                margin: const EdgeInsets.only(bottom: 15),
-                width: 280,
-                height: 50,
-                child: buildTextField(
-                    Icons.mail,
-                    "Email Address",
-                    "Asmaa@gmail.com",
-                    false,
-                    isObscurePassword,
-                    _emailController)),
+              alignment: Alignment.center,
+              margin: const EdgeInsets.only(bottom: 15),
+              width: 280,
+              height: 50,
+              child: buildTextField(
+                  Icons.mail,
+                  "Email Address",
+                  "Asmaa@gmail.com",
+                  false,
+                  isObscurePassword,
+                  _emailController),
+            ),
+            Visibility(
+              visible: _validEmail || _existEmail,
+              child: Container(
+                child: Text(
+                  messages(),
+                  style: const TextStyle(
+                    color: Colors.red,
+                    fontSize: 16,
+                  ),
+                ),
+              ),
+            ),
             Container(
                 alignment: Alignment.center,
                 margin: const EdgeInsets.only(bottom: 15),
@@ -109,6 +138,18 @@ class _SignUpState extends State<SignUp> {
                 height: 50,
                 child: buildTextField(Icons.phone, "Phone Number", "0592777777",
                     false, isObscurePassword, _phoneNumberController)),
+            Visibility(
+              visible: _phoneError,
+              child: Container(
+                child: const Text(
+                  'Not a number',
+                  style: TextStyle(
+                    color: Colors.red,
+                    fontSize: 16,
+                  ),
+                ),
+              ),
+            ),
             Container(
                 alignment: Alignment.center,
                 margin: const EdgeInsets.only(bottom: 15),
@@ -133,20 +174,37 @@ class _SignUpState extends State<SignUp> {
                     true,
                     isObscurePassword,
                     _confirmPasswordController)),
-            showText
-                ? Container(
-                    margin: const EdgeInsets.only(left: 40),
-                    alignment: Alignment.center,
-                    child: const Text(
-                      'Passwords do not match',
-                      style: TextStyle(
-                        color: Colors.red,
-                        fontSize: 15,
-                        //fontFamily: 'Poppins'
-                      ),
-                    ),
-                  )
-                : Container(child: null),
+            Visibility(
+              visible: _showTextPassword || _showTextPasswordValid,
+              child: Container(
+                margin: const EdgeInsets.only(left: 40),
+                alignment: Alignment.center,
+                child: Text(
+                  messages(),
+                  style: const TextStyle(
+                    color: Colors.red,
+                    fontSize: 15,
+                  ),
+                ),
+              ),
+            ),
+            Container(
+              width: 280,
+              height: 110,
+              padding: const EdgeInsets.all(5),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(color: Colors.grey.shade700),
+              ),
+              child: Text(
+                "Password must contain the following\n"
+                "  *A lowercase letter\n"
+                "  *An uppercase letter\n"
+                "  *A number\n"
+                "  *Minimum 8 characters\n",
+                style: TextStyle(color: Colors.grey.shade700, fontSize: 13,),
+              ),
+            ),
             Container(
               alignment: Alignment.center,
               margin: const EdgeInsets.only(bottom: 15),
@@ -218,7 +276,6 @@ class _SignUpState extends State<SignUp> {
             Visibility(
               visible: _showErrorText,
               child: Container(
-                margin: const EdgeInsets.only(top: 10),
                 child: const Text(
                   'All fields are required',
                   style: TextStyle(
@@ -229,33 +286,65 @@ class _SignUpState extends State<SignUp> {
               ),
             ),
             ElevatedButton(
-              onPressed: () {
-                _showErrorText = false;
-                if (_emailController.text.isNotEmpty &&
-                    _usernameController.text.isNotEmpty &&
-                    _phoneNumberController.text.isNotEmpty &&
-                    _passwordController.text.isNotEmpty &&
-                    _confirmPasswordController.text.isNotEmpty &&
-                    selectedCity != null) {
-                  if(_passwordController.text != _confirmPasswordController.text){
-                    setState(() {
-                      showText = true;
-                    });
-                  }else{
-                    doSignUp(
-                      _emailController.text,
-                      _usernameController.text,
-                      _phoneNumberController.text,
-                      _passwordController.text,
-                      selectedCity!,
-                      _selectedCategory,
-                    );
-                  }
-                } else {
+              onPressed: () async {
+                resetErrorFlags();
+                if (_emailController.text.isEmpty ||
+                    _usernameController.text.isEmpty ||
+                    _phoneNumberController.text.isEmpty ||
+                    _passwordController.text.isEmpty ||
+                    _confirmPasswordController.text.isEmpty ||
+                    selectedCity == null) {
                   setState(() {
                     _showErrorText = true;
                   });
+                  return;
                 }
+
+                if (!isValidEmail(_emailController.text)) {
+                  setState(() {
+                    _validEmail = true;
+                  });
+                  return;
+                }
+
+                if (await isEmailAlreadyExists(_emailController.text)) {
+                  setState(() {
+                    _existEmail = true;
+                  });
+                  return;
+                }
+
+                if (_passwordController.text !=
+                    _confirmPasswordController.text) {
+                  setState(() {
+                    _showTextPassword = true;
+                  });
+                  return;
+                }
+
+                if (!isPasswordValid(_passwordController.text)) {
+                  setState(() {
+                    _showTextPasswordValid = true;
+                  });
+                  return;
+                }
+
+                if (!isValidPhoneNumber(_phoneNumberController.text)) {
+                  setState(() {
+                    _phoneError = true;
+                  });
+                  return;
+                }
+
+                // If all conditions are met, proceed with signup
+                doSignUp(
+                  _emailController.text,
+                  _usernameController.text,
+                  _phoneNumberController.text,
+                  _passwordController.text,
+                  selectedCity!,
+                  _selectedCategory,
+                );
               },
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.all(kYellow),
@@ -347,19 +436,43 @@ class _SignUpState extends State<SignUp> {
       ),
     );
   }
+
+  doLoginForSignUp(
+      String email, String password, Category selectedCategory) async {
+    var rest = await userLogin(email.trim(), password.trim());
+    if (rest['success']) {
+      String userEmail = rest['data'][0]['Email'];
+      String userID = rest['data'][0]['UserID'].toString();
+      await AuthManager.storeUserData(userID, userEmail);
+      if (selectedCategory == Category.Parent) {
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (_) => const AddChild()));
+      } else if (selectedCategory == Category.ShadowTeacher) {
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (_) => const SignUpShadowTeacher()));
+      } else {
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (_) => const SignUpSpecialist()));
+      }
+    } else {
+      setState(() {
+        _showErrorText = true;
+      });
+    }
+  }
+
   doSignUp(String email, String userName, String phone, String password,
       String selectedCity, Category selectedCategory) async {
-    var rest = await userSignUp(email.trim(), userName.trim(), phone.trim(),
-        password.trim(), selectedCity.trim(), selectedCategory.toString().split('.').last.trim());
-    if(rest['success']){
-      if(selectedCategory==Category.Parent){
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (_)=>const AddChild()));
-      }else if(selectedCategory==Category.ShadowTeacher){
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (_)=>const SignUpShadowTeacher()));
-      }else{
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (_)=>const SignUpSpecialist()));
-      }
-    }else{
+    var rest = await userSignUp(
+        email.trim(),
+        userName.trim(),
+        phone.trim(),
+        password.trim(),
+        selectedCity.trim(),
+        selectedCategory.toString().split('.').last.trim());
+    if (rest['success']) {
+      doLoginForSignUp(email, password, selectedCategory);
+    } else {
       setState(() {
         _showErrorText = true;
       });

@@ -5,8 +5,8 @@ import 'package:spectrum_speak/rest/auth_manager.dart';
 import 'package:spectrum_speak/rest/rest_api.dart';
 import 'package:spectrum_speak/units/build_drop_down_menu.dart';
 import 'package:spectrum_speak/units/build_text_field.dart';
-
-import 'follow_up_sign_up.dart';
+import 'package:spectrum_speak/units/validate_input_from_user.dart';
+import 'main_page.dart';
 
 class SignUpSpecialist extends StatefulWidget {
   const SignUpSpecialist({super.key});
@@ -19,6 +19,8 @@ class _SignUpSpecialistState extends State<SignUpSpecialist> {
   String? selectedSpecialist;
   bool isObscurePassword = true;
   final TextEditingController _priceController = TextEditingController();
+  bool _showErrorText = false;
+  bool _showPriceError =false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,7 +29,9 @@ class _SignUpSpecialistState extends State<SignUpSpecialist> {
         child: Column(
           children: [
             Container(
-              padding: const EdgeInsets.only(top: 20,),
+              padding: const EdgeInsets.only(
+                top: 20,
+              ),
               alignment: Alignment.topCenter,
               height: 210,
               //margin: const EdgeInsets.only(left: 8, top: 45),
@@ -54,7 +58,27 @@ class _SignUpSpecialistState extends State<SignUpSpecialist> {
               margin: const EdgeInsets.only(bottom: 15),
               width: 280,
               height: 50,
-              child: buildTextField(FontAwesomeIcons.sackDollar, "Price", "100\$ (in one session)", false, isObscurePassword,_priceController),),
+              child: buildTextField(
+                  FontAwesomeIcons.sackDollar,
+                  "Price",
+                  "100\$ (in one session)",
+                  false,
+                  isObscurePassword,
+                  _priceController),
+            ),
+            Visibility(
+              visible: _showPriceError,
+              child: Container(
+                margin: const EdgeInsets.only(top: 10),
+                child: const Text(
+                  'Please enter a valid price (maximum 99999.99)',
+                  style: TextStyle(
+                    color: Colors.red,
+                    fontSize: 16,
+                  ),
+                ),
+              ),
+            ),
             Container(
               alignment: Alignment.center,
               margin: const EdgeInsets.only(bottom: 15),
@@ -63,11 +87,9 @@ class _SignUpSpecialistState extends State<SignUpSpecialist> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                   Padding(
-                    padding: const EdgeInsets.only(
-                        top: 20,
-                        right: 10,
-                        bottom: 0),
+                  Padding(
+                    padding:
+                        const EdgeInsets.only(top: 20, right: 10, bottom: 0),
                     child: Icon(
                       FontAwesomeIcons.userDoctor,
                       size: 25.0,
@@ -91,16 +113,44 @@ class _SignUpSpecialistState extends State<SignUpSpecialist> {
                 ],
               ),
             ),
+            Visibility(
+              visible: _showErrorText,
+              child: Container(
+                margin: const EdgeInsets.only(top: 10),
+                child: const Text(
+                  'All fields are required',
+                  style: TextStyle(
+                    color: Colors.red,
+                    fontSize: 16,
+                  ),
+                ),
+              ),
+            ),
             ElevatedButton(
-              onPressed: () async{
+              onPressed: () async {
                 String? userId = await AuthManager.getUserId();
-                print('Retrieved user ID: $userId');
+                _showErrorText=false;
+                _showPriceError=false;
                 if (userId != null) {
-                  // Call specialistSignUp with the user ID
-                  await specialistSignUp(userId,double.parse(_priceController.text), selectedSpecialist.toString());
+                  if(_priceController.text.isNotEmpty &&
+                      selectedSpecialist.toString().isNotEmpty){
+                    if(isDecimal(_priceController.text)){
+                      saveSpecialist(
+                          userId,
+                          _priceController.text,
+                          selectedSpecialist!
+                      );
+                    }else{
+                      setState(() {
+                        _showPriceError=true;
+                      });
+                    }
+                  }else {
+                    setState(() {
+                      _showErrorText = true;
+                    });
+                  }
 
-                  // Navigate to the next screen
-                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => const FollowUpSignUp()));
                 } else {
                   // Handle the case where user ID is not available
                   print('User ID not available');
@@ -131,5 +181,20 @@ class _SignUpSpecialistState extends State<SignUpSpecialist> {
         ),
       ),
     );
+  }
+
+  saveSpecialist(String userId, String price,String selectedSpecialist) async {
+    var rest = await specialistSignUp(userId,
+        double.parse(price),
+        selectedSpecialist);
+
+    if (rest['success']) {
+      Navigator.of(context).push(
+          MaterialPageRoute(builder: (context) => const MainPage()));
+    } else {
+      setState(() {
+        _showErrorText = true;
+      });
+    }
   }
 }

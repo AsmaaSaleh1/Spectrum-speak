@@ -17,7 +17,6 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  late SharedPreferences _sharedPreferences;
   bool _showErrorText = false;
   bool _notValid = false;
   bool _notCorrect = false;
@@ -225,13 +224,12 @@ class _LoginState extends State<Login> {
   }
 
   doLogin(String email, String password) async{
-    _sharedPreferences = await SharedPreferences.getInstance();
     var rest = await userLogin(email.trim(), password.trim());
     if(rest['success']){
       String userEmail= rest['data'][0]['Email'];
       String userID= rest['data'][0]['UserID'].toString();
       await AuthManager.storeUserData(userID, userEmail);
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (_)=>const SignUpSpecialist()));
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (_)=>const MainPage()));
     }else{
       setState(() {
         _showErrorText = true;
