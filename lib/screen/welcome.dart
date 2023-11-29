@@ -38,9 +38,6 @@ class _WelcomeState extends State<Welcome> {
 
     //add delay till video is complete
     await Future.delayed(const Duration(seconds: 4));
-
-    // navigating to home screen
-    Navigator.pushNamed(context, '/');
   }
 
   @override
@@ -52,12 +49,17 @@ class _WelcomeState extends State<Welcome> {
   @override
   Widget build(BuildContext context) {
     Timer(
-      const Duration(seconds: 2),
-      () => Navigator.of(context).pushReplacement(
-        MaterialPageRoute(
-          builder: (BuildContext context) => const Login(),
-        ),
-      ),
+      const Duration(seconds: 3),
+      () {
+        // check if the widget is still mounted before pushing replacement
+        if (mounted) {
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(
+              builder: (BuildContext context) => const Login(),
+            ),
+          );
+        }
+      },
     );
     return Scaffold(
       backgroundColor: kPrimary,
