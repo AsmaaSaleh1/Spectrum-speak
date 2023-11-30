@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'package:spectrum_speak/constant/const_color.dart';
+import 'package:spectrum_speak/models/user.dart';
 import 'package:spectrum_speak/rest/auth_manager.dart';
 import 'package:spectrum_speak/rest/rest_api.dart';
 import 'package:spectrum_speak/screen/add_child.dart';
@@ -28,7 +29,7 @@ class _SignUpState extends State<SignUp> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController =
       TextEditingController();
-  Category _selectedCategory = Category.Parent;
+  UserCategory _selectedCategory = UserCategory.Parent;
   bool _showTextPassword = false;
   bool _showTextPasswordValid = false;
   bool _showErrorText = false;
@@ -438,16 +439,16 @@ class _SignUpState extends State<SignUp> {
   }
 
   doLoginForSignUp(
-      String email, String password, Category selectedCategory) async {
+      String email, String password, UserCategory selectedCategory) async {
     var rest = await userLogin(email.trim(), password.trim());
     if (rest['success']) {
       String userEmail = rest['data'][0]['Email'];
       String userID = rest['data'][0]['UserID'].toString();
       await AuthManager.storeUserData(userID, userEmail);
-      if (selectedCategory == Category.Parent) {
+      if (selectedCategory == UserCategory.Parent) {
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (_) => const AddChild()));
-      } else if (selectedCategory == Category.ShadowTeacher) {
+      } else if (selectedCategory == UserCategory.ShadowTeacher) {
         Navigator.pushReplacement(context,
             MaterialPageRoute(builder: (_) => const SignUpShadowTeacher()));
       } else {
@@ -462,7 +463,7 @@ class _SignUpState extends State<SignUp> {
   }
 
   doSignUp(String email, String userName, String phone, String password,
-      String selectedCity, Category selectedCategory) async {
+      String selectedCity, UserCategory selectedCategory) async {
     var rest = await userSignUp(
         email.trim(),
         userName.trim(),

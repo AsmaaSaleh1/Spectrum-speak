@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:spectrum_speak/constant/const_color.dart';
+import 'package:spectrum_speak/models/user.dart';
 
-enum Category { Parent, Specialist, ShadowTeacher }
 
 class RadioButtonSearch extends StatefulWidget {
-  final Category selected;
-  final ValueChanged<Category> onTypeChanged;
+  final UserCategory selected;
+  final ValueChanged<UserCategory> onTypeChanged;
 
   const RadioButtonSearch({
     required this.selected,
@@ -18,7 +18,7 @@ class RadioButtonSearch extends StatefulWidget {
 }
 
 class _RadioButtonSearchState extends State<RadioButtonSearch> {
-  Category _character = Category.Parent;
+  UserCategory _character = UserCategory.Parent;
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -27,16 +27,16 @@ class _RadioButtonSearchState extends State<RadioButtonSearch> {
         ListTile(
           contentPadding: EdgeInsets.zero,
           title: const Text('Parent'),
-          leading: Radio<Category>(
+          leading: Radio<UserCategory>(
             visualDensity: const VisualDensity(
               horizontal: VisualDensity.minimumDensity,
               vertical: VisualDensity.minimumDensity,
             ),
             materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
             activeColor: kDarkerColor,
-            value: Category.Parent,
+            value: UserCategory.Parent,
             groupValue: _character,
-            onChanged: (Category? value) {
+            onChanged: (UserCategory? value) {
               setState(() {
                 _character = value!;
               });
@@ -47,16 +47,16 @@ class _RadioButtonSearchState extends State<RadioButtonSearch> {
         ListTile(
           contentPadding: EdgeInsets.zero,
           title: const Text('Specialist'),
-          leading: Radio<Category>(
+          leading: Radio<UserCategory>(
             visualDensity: const VisualDensity(
               horizontal: VisualDensity.minimumDensity,
               vertical: VisualDensity.minimumDensity,
             ),
             materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
             activeColor: kDarkerColor,
-            value: Category.Specialist,
+            value: UserCategory.Specialist,
             groupValue: _character,
-            onChanged: (Category? value) {
+            onChanged: (UserCategory? value) {
               setState(() {
                 _character = value!;
               });
@@ -67,16 +67,16 @@ class _RadioButtonSearchState extends State<RadioButtonSearch> {
         ListTile(
           contentPadding: EdgeInsets.zero,
           title: const Text('Shadow Teacher'),
-          leading: Radio<Category>(
+          leading: Radio<UserCategory>(
             visualDensity: const VisualDensity(
               horizontal: VisualDensity.minimumDensity,
               vertical: VisualDensity.minimumDensity,
             ),
             materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
             activeColor: kDarkerColor,
-            value: Category.ShadowTeacher,
+            value: UserCategory.ShadowTeacher,
             groupValue: _character,
-            onChanged: (Category? value) {
+            onChanged: (UserCategory? value) {
               setState(() {
                 _character = value!;
               });

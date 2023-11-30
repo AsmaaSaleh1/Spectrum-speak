@@ -73,6 +73,7 @@ Future childrenSignUp(String userId, String name, String birthDate,
   var decodedData = jsonDecode(response.body);
   return decodedData;
 }
+
 Future<bool> isEmailAlreadyExists(String email) async {
   final response=
       await http.post(Uri.parse('${Utils.baseUrl}/checkEmail'),headers: {
