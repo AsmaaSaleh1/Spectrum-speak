@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'package:spectrum_speak/constant/const_color.dart';
-import 'package:spectrum_speak/models/user.dart';
+import 'package:spectrum_speak/modules/user.dart';
 import 'package:spectrum_speak/rest/auth_manager.dart';
 import 'package:spectrum_speak/rest/rest_api.dart';
 import 'package:spectrum_speak/screen/add_child.dart';

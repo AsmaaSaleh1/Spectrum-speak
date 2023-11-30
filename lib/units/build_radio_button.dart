@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:spectrum_speak/constant/const_color.dart';
-import 'package:spectrum_speak/models/user.dart';
+import 'package:spectrum_speak/modules/user.dart';
 
 
 class RadioButtonSearch extends StatefulWidget {
