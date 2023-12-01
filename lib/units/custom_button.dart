@@ -11,14 +11,14 @@ class CustomButton extends StatelessWidget {
   final Color iconColor;
 
   const CustomButton({
-    super.key,
+    Key? key,
     required this.foregroundColor,
     required this.backgroundColor,
     required this.onPressed,
     required this.buttonText,
     required this.icon,
     required this.iconColor,
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -29,38 +29,42 @@ class CustomButton extends StatelessWidget {
         backgroundColor: backgroundColor,
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20), // Rounded button shape
+          borderRadius: BorderRadius.circular(20),
         ),
-        elevation: 0, // Remove default elevation
-        shadowColor: Colors.transparent, // Clear default shadow color
+        elevation: 0,
+        shadowColor: Colors.transparent,
       ).copyWith(
         shadowColor: MaterialStateProperty.resolveWith((states) {
           return kDarkBlue;
         }),
         elevation: MaterialStateProperty.resolveWith((states) {
           if (states.contains(MaterialState.pressed)) {
-            return 15; // Custom elevation on press
+            return 15;
           }
-          return 5; // Custom elevation when not pressed
+          return 5;
         }),
       ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(
-            icon.icon,
-            size: icon.size,
-            color: iconColor,
-          ),
-          const SizedBox(width: 8),
-          Text(
-            buttonText,
-            style: const TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
+      child: IntrinsicWidth(
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              icon.icon,
+              size: icon.size,
+              color: iconColor,
             ),
-          ),
-        ],
+            const SizedBox(width: 8),
+            Flexible(
+              child: Text(
+                buttonText,
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
