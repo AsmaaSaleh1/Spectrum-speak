@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spectrum_speak/firebase_options.dart';
 import 'package:spectrum_speak/screen/add_child.dart';
+import 'package:spectrum_speak/screen/add_profile_photo.dart';
 import 'package:spectrum_speak/screen/edit_center_profile.dart';
 import 'package:spectrum_speak/screen/edit_profile.dart';
 import 'package:spectrum_speak/screen/edit_shadow_teacher_profile.dart';
@@ -36,22 +37,7 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    //isLogin();
   }
-  // void isLogin() async {
-  //   _sharedPreferences = await SharedPreferences.getInstance();
-  //   Timer(const Duration(minutes: 10), () {
-  //     if (_sharedPreferences.getString('userID') == null &&
-  //         _sharedPreferences.getString('userEmail') == null) {
-  //       Navigator.pushReplacement(
-  //           context, MaterialPageRoute(builder: (_) => const Login()));
-  //     } else {
-  //       Navigator.pushReplacement(
-  //           context, MaterialPageRoute(builder: (_) => const MainPage()));
-  //     }
-  //   });
-  // }
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

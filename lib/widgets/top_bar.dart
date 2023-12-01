@@ -3,16 +3,19 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:spectrum_speak/constant/const_color.dart';
+import 'package:spectrum_speak/rest/auth_manager.dart';
+import 'package:spectrum_speak/rest/rest_api.dart';
 import 'package:spectrum_speak/screen/main_page.dart';
 import 'package:spectrum_speak/screen/parent_profile.dart';
 import 'package:spectrum_speak/screen/search_page.dart';
+import 'package:spectrum_speak/screen/shadow_teacher_profile.dart';
+import 'package:spectrum_speak/screen/specialist_profile.dart';
 import 'package:spectrum_speak/screen/splash_screen_chat.dart';
 
 import 'card_user_chat.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   const CustomAppBar({super.key});
-
   @override
   Widget build(BuildContext context) {
     return AppBar(
@@ -65,11 +68,32 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             borderColor: kPrimary.withOpacity(0.5),
             radius: 20.0,
             backgroundColor: kPrimary,
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const ParentProfile()),
-              );
+            onTap: () async {
+              String? userId = await AuthManager.getUserId();
+              String category = await getUserCategory(userId!);
+              switch (category) {
+                case "Parent":
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const ParentProfile()),
+                  );
+                  break;
+                case "Specialist":
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const SpecialistProfile()),
+                  );
+                  break;
+                case "ShadowTeacher":
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const ShadowTeacherProfile()),
+                  );
+                  break;
+                default:
+                  print("error in category");
+                  break;
+              }
             },
             child: Image.asset('images/prof.png'),
           ),
@@ -122,12 +146,32 @@ class TopBar extends StatelessWidget {
                   borderColor: kPrimary.withOpacity(0.5),
                   radius: 90.0,
                   backgroundColor: kPrimary,
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const ParentProfile()),
-                    );
+                  onTap: () async {
+                    String? userId = await AuthManager.getUserId();
+                    String category = await getUserCategory(userId!);
+                    switch (category) {
+                      case "Parent":
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => const ParentProfile()),
+                        );
+                        break;
+                      case "Specialist":
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => const SpecialistProfile()),
+                        );
+                        break;
+                      case "ShadowTeacher":
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => const ShadowTeacherProfile()),
+                        );
+                        break;
+                      default:
+                        print("error in category");
+                        break;
+                    }
                   },
                   child: Image.asset('images/prof.png'),
                 ),
@@ -136,10 +180,33 @@ class TopBar extends StatelessWidget {
               decoration: const BoxDecoration(
                 color: kDarkBlue,
               ),
-              onDetailsPressed: () => Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const ParentProfile()),
-              ),
+              onDetailsPressed: () async {
+                String? userId = await AuthManager.getUserId();
+                String category = await getUserCategory(userId!);
+                switch (category) {
+                  case "Parent":
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const ParentProfile()),
+                    );
+                    break;
+                  case "Specialist":
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const SpecialistProfile()),
+                    );
+                    break;
+                  case "ShadowTeacher":
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const ShadowTeacherProfile()),
+                    );
+                    break;
+                  default:
+                    print("error in category");
+                    break;
+                }
+              },
             ),
             ListTile(
               leading: Icon(

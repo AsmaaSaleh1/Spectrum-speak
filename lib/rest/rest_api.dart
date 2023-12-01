@@ -1,6 +1,8 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:spectrum_speak/constant/utils.dart';
+import 'package:spectrum_speak/modules/parent.dart';
+import 'package:spectrum_speak/modules/shadow_teacher.dart';
 
 Future userLogin(String email, String password) async {
   final response = await http.post(Uri.parse('${Utils.baseUrl}/login'),
@@ -75,18 +77,73 @@ Future childrenSignUp(String userId, String name, String birthDate,
 }
 
 Future<bool> isEmailAlreadyExists(String email) async {
-  final response=
-      await http.post(Uri.parse('${Utils.baseUrl}/checkEmail'),headers: {
-  "Accept": "application/json"
-  }, body: {
-    'Email':email,
-  },
+  final response = await http.post(
+    Uri.parse('${Utils.baseUrl}/checkEmail'),
+    headers: {"Accept": "application/json"},
+    body: {
+      'Email': email,
+    },
   );
   var decodedData = jsonDecode(response.body);
 
   if (response.statusCode == 200) {
     return decodedData['exists'];
-  }else{
+  } else {
     return false;
+  }
+}
+
+Future getUserCategory(String userId) async {
+  try {
+    final response = await http.get(
+      Uri.parse('${Utils.baseUrl}/user/category/$userId'),
+      headers: {"Accept": "application/json"},
+    );
+    var decodedData = jsonDecode(response.body);
+    if (decodedData['data'] is List && decodedData['data'].isNotEmpty) {
+      return decodedData['data'][0]['Category'];
+    } else {
+      print("Error: Unable to extract 'Category' from the JSON response.");
+      return '';
+    }
+  } catch (error) {
+    print("Error in getUserCategory: $error");
+    return null;
+  }
+}
+
+Future <ShadowTeacher?> profileShadowTeacher(String userId)async{
+  //TODO:test it
+  try {
+    final response = await http.get(
+      Uri.parse('${Utils.baseUrl}/profile/shadowTeacher/$userId'),
+      headers: {"Accept": "application/json"},
+    );
+    if (response.statusCode == 200) {
+      var decodedData = jsonDecode(response.body);
+      // Create and return a ShadowTeacher instance
+      return ShadowTeacher(
+        teacherID: decodedData['teacherID'],
+        userID: decodedData['userID'],
+        salary: decodedData['salary'],
+        birthDate: decodedData['birthDate'],
+        availability: decodedData['availability'],
+        qualification: decodedData['qualification'],
+        gender: decodedData['gender'],
+        userName: decodedData['userName'],
+        email: decodedData['email'],
+        password: decodedData['password'],
+        city: decodedData['city'],
+        phone: decodedData['phone'],
+        photo: decodedData['photo'],
+        category: decodedData['category'].toString() as UserCategory,
+      );
+    } else {
+      print("Error in profileShadowTeacher: ${response.statusCode}");
+      return null;
+    }
+  } catch (error) {
+    print("Error in profileShadowTeacher: $error");
+    return null;
   }
 }
