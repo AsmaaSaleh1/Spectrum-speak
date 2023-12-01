@@ -1,7 +1,7 @@
 
 enum UserCategory { Parent, Specialist, ShadowTeacher }
 
-class User {
+class Parent {
   final String userID;
   final String userName;
   final String email;
@@ -11,7 +11,7 @@ class User {
   final String photo;
   final UserCategory category;
 
-  User({
+  Parent({
     required this.userID,
     required this.userName,
     required this.email,
@@ -22,5 +22,8 @@ class User {
     required this.category,
   });
 
-
+  @override
+  String toString() {
+    return 'Parent{userID: $userID, userName: $userName, email: $email, password: $password, city: $city, phone: $phone, photo: $photo, category: $category}';
+  }
 }
