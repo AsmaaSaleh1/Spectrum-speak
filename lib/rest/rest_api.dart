@@ -113,30 +113,27 @@ Future getUserCategory(String userId) async {
 }
 
 Future <ShadowTeacher?> profileShadowTeacher(String userId)async{
-  //TODO:test it
   try {
     final response = await http.get(
       Uri.parse('${Utils.baseUrl}/profile/shadowTeacher/$userId'),
       headers: {"Accept": "application/json"},
     );
     if (response.statusCode == 200) {
-      var decodedData = jsonDecode(response.body);
+      var decodedData = jsonDecode(response.body)["data"][0];
       // Create and return a ShadowTeacher instance
+      print('Decoded Data: $decodedData');
       return ShadowTeacher(
-        teacherID: decodedData['teacherID'],
-        userID: decodedData['userID'],
-        salary: decodedData['salary'],
-        birthDate: decodedData['birthDate'],
-        availability: decodedData['availability'],
-        qualification: decodedData['qualification'],
+        userID: userId,
+        salary: double.parse(decodedData['Salary']),
+        birthDate: decodedData['BirthDate'],
+        availability: decodedData['Availability'],
+        qualification: decodedData['AcademicQualification'],
         gender: decodedData['gender'],
-        userName: decodedData['userName'],
-        email: decodedData['email'],
-        password: decodedData['password'],
-        city: decodedData['city'],
-        phone: decodedData['phone'],
-        photo: decodedData['photo'],
-        category: decodedData['category'].toString() as UserCategory,
+        userName: decodedData['Username'],
+        email: decodedData['Email'],
+        city: decodedData['City'],
+        phone: decodedData['Phone'],
+        category: UserCategory.values.firstWhere((e) => e.toString() == 'UserCategory.${decodedData['Category']}')
       );
     } else {
       print("Error in profileShadowTeacher: ${response.statusCode}");

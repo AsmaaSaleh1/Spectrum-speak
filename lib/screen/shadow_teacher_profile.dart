@@ -22,9 +22,7 @@ class _ShadowTeacherProfileState extends State<ShadowTeacherProfile> {
           const SingleChildScrollView(
             child: Column(
               children: <Widget>[
-                StackContainerShadowTeacher(
-                  isTeacherAvailable: true,
-                ),
+                StackContainerShadowTeacher(),
                 ShadowTeacherInformation(),
                 SizedBox(
                   height: 80,
