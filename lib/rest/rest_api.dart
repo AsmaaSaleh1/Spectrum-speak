@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:spectrum_speak/constant/utils.dart';
 import 'package:spectrum_speak/modules/parent.dart';
 import 'package:spectrum_speak/modules/shadow_teacher.dart';
+import 'package:spectrum_speak/modules/specialist.dart';
 
 Future userLogin(String email, String password) async {
   final response = await http.post(Uri.parse('${Utils.baseUrl}/login'),
@@ -36,7 +37,7 @@ Future specialistSignUp(
     "Accept": "application/json"
   }, body: {
     'Price': price.toString(),
-    "Category": selectedSpecialistCategory
+    "SpecialistCategory": selectedSpecialistCategory
   });
   var decodedData = jsonDecode(response.body);
   return decodedData;
@@ -134,6 +135,37 @@ Future <ShadowTeacher?> profileShadowTeacher(String userId)async{
         city: decodedData['City'],
         phone: decodedData['Phone'],
         category: UserCategory.values.firstWhere((e) => e.toString() == 'UserCategory.${decodedData['Category']}')
+      );
+    } else {
+      print("Error in profileShadowTeacher: ${response.statusCode}");
+      return null;
+    }
+  } catch (error) {
+    print("Error in profileShadowTeacher: $error");
+    return null;
+  }
+}
+
+Future <Specialist?> profileSpecialist(String userId)async{
+  try {
+    final response = await http.get(
+      Uri.parse('${Utils.baseUrl}/profile/Specialist/$userId'),
+      headers: {"Accept": "application/json"},
+    );
+    if (response.statusCode == 200) {
+      var decodedData = jsonDecode(response.body)["data"][0];
+      // Create and return a ShadowTeacher instance
+      print('Decoded Data: $decodedData');
+      return Specialist(
+          userID: userId,
+          userName: decodedData['Username'],
+          email: decodedData['Email'],
+          city: decodedData['City'],
+          phone: decodedData['Phone'],
+          category: UserCategory.values.firstWhere((e) => e.toString() == 'UserCategory.${decodedData['Category']}'),
+          specialistCategory: decodedData['SpecialistCategory'].toString(),
+          price: double.parse(decodedData['Price']),
+
       );
     } else {
       print("Error in profileShadowTeacher: ${response.statusCode}");

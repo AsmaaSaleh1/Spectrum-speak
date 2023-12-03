@@ -2,25 +2,25 @@ import 'package:spectrum_speak/modules/parent.dart';
 
 class Specialist{
   final String userID;
-  final String specialistCategory;
-  final double price;
   final String userName;
   final String email;
   final String city;
   final String phone;
   final String photo;
   final UserCategory category;
+  final String specialistCategory;
+  final double price;
 
   Specialist({
     required this.userID,
-    required this.specialistCategory,
-    required this.price,
     required this.userName,
     required this.email,
     required this.city,
     required this.phone,
-    required this.photo,
+    this.photo= '',
     required this.category,
+    required this.specialistCategory,
+    required this.price,
   });
 
   @override

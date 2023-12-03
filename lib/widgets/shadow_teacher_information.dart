@@ -37,12 +37,6 @@ class ShadowTeacherInformation extends StatelessWidget {
           } else if (snapshot.hasData) {
             // Build your UI with the fetched data
             ShadowTeacher shadowTeacher = snapshot.data!;
-            bool isTeacherAvailable;
-            if (shadowTeacher.availability == "Available") {
-              isTeacherAvailable = true;
-            } else {
-              isTeacherAvailable = false;
-            }
             return Padding(
               padding: contentPadding,
               child: IntrinsicHeight(
@@ -372,9 +366,9 @@ class ShadowTeacherInformation extends StatelessWidget {
             // Return a default UI if no data is available
             return const Text('No data available');
           }
-        });
+        },
+    );
   }
-
   Future<ShadowTeacher?> _getShadowTeacher() async {
     try {
       String? userId = await AuthManager.getUserId();
