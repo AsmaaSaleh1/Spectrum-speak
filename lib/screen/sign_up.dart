@@ -105,13 +105,12 @@ class _SignUpState extends State<SignUp> {
               margin: const EdgeInsets.only(bottom: 15),
               width: 280,
               height: 50,
-              child: buildTextField(
-                  Icons.mail,
-                  "Email Address",
-                  "Asmaa@gmail.com",
-                  false,
-                  isObscurePassword,
-                  _emailController),
+              child: CustomTextField(
+                  preIcon: Icons.mail,
+                  labelText: "Email Address",
+                  placeholder: "Asmaa@gmail.com",
+                  isPasswordTextField: false,
+                  controller: _emailController),
             ),
             Visibility(
               visible: _validEmail || _existEmail,
@@ -130,15 +129,23 @@ class _SignUpState extends State<SignUp> {
                 margin: const EdgeInsets.only(bottom: 15),
                 width: 280,
                 height: 50,
-                child: buildTextField(Icons.person, "User Name", "Asmaa", false,
-                    isObscurePassword, _usernameController)),
+                child: CustomTextField(
+                    preIcon: Icons.person,
+                    labelText: "User Name",
+                    placeholder: "Asmaa",
+                    isPasswordTextField: false,
+                    controller: _usernameController)),
             Container(
                 alignment: Alignment.center,
                 margin: const EdgeInsets.only(bottom: 15),
                 width: 280,
                 height: 50,
-                child: buildTextField(Icons.phone, "Phone Number", "0592777777",
-                    false, isObscurePassword, _phoneNumberController)),
+                child: CustomTextField(
+                    preIcon: Icons.phone,
+                    labelText: "Phone Number",
+                    placeholder: "0592777777",
+                    isPasswordTextField: false,
+                    controller: _phoneNumberController)),
             Visibility(
               visible: _phoneError,
               child: Container(
@@ -156,25 +163,23 @@ class _SignUpState extends State<SignUp> {
                 margin: const EdgeInsets.only(bottom: 15),
                 width: 280,
                 height: 50,
-                child: buildTextField(
-                    Icons.lock_outline,
-                    "Password",
-                    "**********",
-                    true,
-                    isObscurePassword,
-                    _passwordController)),
+                child: CustomTextField(
+                    preIcon: Icons.lock_outline,
+                    labelText: "Password",
+                    placeholder: "**********",
+                    isPasswordTextField: true,
+                    controller: _passwordController)),
             Container(
                 alignment: Alignment.center,
                 margin: const EdgeInsets.only(bottom: 15),
                 width: 280,
                 height: 50,
-                child: buildTextField(
-                    Icons.lock_reset_outlined,
-                    "Confirm Password",
-                    "**********",
-                    true,
-                    isObscurePassword,
-                    _confirmPasswordController)),
+                child: CustomTextField(
+                    preIcon: Icons.lock_reset_outlined,
+                    labelText: "Confirm Password",
+                    placeholder: "**********",
+                    isPasswordTextField: true,
+                    controller: _confirmPasswordController)),
             Visibility(
               visible: _showTextPassword || _showTextPasswordValid,
               child: Container(
@@ -203,7 +208,10 @@ class _SignUpState extends State<SignUp> {
                 "  *An uppercase letter\n"
                 "  *A number\n"
                 "  *Minimum 8 characters\n",
-                style: TextStyle(color: Colors.grey.shade700, fontSize: 13,),
+                style: TextStyle(
+                  color: Colors.grey.shade700,
+                  fontSize: 13,
+                ),
               ),
             ),
             Container(

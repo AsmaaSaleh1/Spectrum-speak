@@ -22,7 +22,7 @@ class _EditSpecialistProfileState extends State<EditSpecialistProfile> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body:GestureDetector(
+      body: GestureDetector(
         onTap: () {
           FocusScope.of(context).unfocus();
         },
@@ -78,24 +78,67 @@ class _EditSpecialistProfileState extends State<EditSpecialistProfile> {
             ),
             Column(
               children: [
-                SizedBox(width: 300,
-                    height: 60,child: buildTextField(null,"User Name", "Asmaa", false, isObscurePassword,_userNameController)),
-                const SizedBox(height: 10,),
-                SizedBox(width: 300,
-                    height: 60,child: buildTextField(null,"Password", "********", true, isObscurePassword,_passwordController)),
-                const SizedBox(height: 10,),
-                SizedBox(width: 300,
-                    height: 60,child: buildTextField(null,"Price in dollar", "100\$", false, isObscurePassword,_priceController)),
-                const SizedBox(height: 10,),
-                SizedBox(width: 300,
-                  height: 60,
-                  child: buildTextField(
-                      null,"Emile", "asmaa@gmail.com", false, isObscurePassword,_emailController),
+                SizedBox(
+                    width: 300,
+                    height: 60,
+                    child: CustomTextField(
+                        preIcon: null,
+                        labelText: "User Name",
+                        placeholder: "Asmaa",
+                        isPasswordTextField: false,
+                        controller: _userNameController)),
+                const SizedBox(
+                  height: 10,
                 ),
-                const SizedBox(height: 10,),
-                SizedBox(width: 300,
-                    height: 60,child: buildTextField(null,"Phone", "0592101010", false, isObscurePassword,_phoneNumberController)),
-                const SizedBox(height: 10,),
+                SizedBox(
+                    width: 300,
+                    height: 60,
+                    child: CustomTextField(
+                        preIcon: null,
+                        labelText: "Password",
+                        placeholder: "********",
+                        isPasswordTextField: true,
+                        controller: _passwordController)),
+                const SizedBox(
+                  height: 10,
+                ),
+                SizedBox(
+                    width: 300,
+                    height: 60,
+                    child: CustomTextField(
+                        preIcon: null,
+                        labelText: "Price in dollar",
+                        placeholder: "100\$",
+                        isPasswordTextField: false,
+                        controller: _priceController)),
+                const SizedBox(
+                  height: 10,
+                ),
+                SizedBox(
+                  width: 300,
+                  height: 60,
+                  child: CustomTextField(
+                      preIcon: null,
+                      labelText: "Email",
+                      placeholder: "asmaa@gmail.com",
+                      isPasswordTextField: false,
+                      controller: _emailController),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                SizedBox(
+                    width: 300,
+                    height: 60,
+                    child: CustomTextField(
+                        preIcon: null,
+                        labelText: "Phone",
+                        placeholder: "0592101010",
+                        isPasswordTextField: false,
+                        controller: _phoneNumberController)),
+                const SizedBox(
+                  height: 10,
+                ),
                 Container(
                   height: 60,
                   width: 300,
@@ -124,7 +167,8 @@ class _EditSpecialistProfileState extends State<EditSpecialistProfile> {
               ],
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 50.0,vertical: 20),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 50.0, vertical: 20),
               child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [

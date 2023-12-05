@@ -22,7 +22,7 @@ class _EditProfileState extends State<EditProfile> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-       body:GestureDetector(
+      body: GestureDetector(
         onTap: () {
           FocusScope.of(context).unfocus();
         },
@@ -78,24 +78,67 @@ class _EditProfileState extends State<EditProfile> {
             ),
             Column(
               children: [
-                SizedBox(width: 300,
-                    height: 60,child: buildTextField(null,"User Name", "Asmaa", false, isObscurePassword,_userNameController)),
-                const SizedBox(height: 25,),
-                SizedBox(width: 300,
-                    height: 60,child: buildTextField(null,"Birth Date", "7th Oct", false, isObscurePassword,_birthDateController)),
-                const SizedBox(height: 25,),
-                SizedBox(width: 300,
-                    height: 60,child: buildTextField(null,"Password", "********", true, isObscurePassword,_passwordController)),
-                const SizedBox(height: 25,),
-                SizedBox(width: 300,
-                  height: 60,
-                  child: buildTextField(
-                      null,"Emile", "asmaa@gmail.com", false, isObscurePassword,_emailController),
+                SizedBox(
+                    width: 300,
+                    height: 60,
+                    child: CustomTextField(
+                        preIcon: null,
+                        labelText: "User Name",
+                        placeholder: "Asmaa",
+                        isPasswordTextField: false,
+                        controller: _userNameController)),
+                const SizedBox(
+                  height: 25,
                 ),
-                const SizedBox(height: 25,),
-                SizedBox(width: 300,
-                    height: 60,child: buildTextField(null,"Phone", "0592101010", false, isObscurePassword,_phoneNumberController)),
-                const SizedBox(height: 25,),
+                SizedBox(
+                    width: 300,
+                    height: 60,
+                    child: CustomTextField(
+                        preIcon: null,
+                        labelText: "Birth Date",
+                        placeholder: "7th Oct",
+                        isPasswordTextField: false,
+                        controller: _birthDateController)),
+                const SizedBox(
+                  height: 25,
+                ),
+                SizedBox(
+                    width: 300,
+                    height: 60,
+                    child: CustomTextField(
+                        preIcon: null,
+                        labelText: "Password",
+                        placeholder: "********",
+                        isPasswordTextField: true,
+                        controller: _passwordController)),
+                const SizedBox(
+                  height: 25,
+                ),
+                SizedBox(
+                  width: 300,
+                  height: 60,
+                  child: CustomTextField(
+                      preIcon: null,
+                      labelText: "Email",
+                      placeholder: "asmaa@gmail.com",
+                      isPasswordTextField: false,
+                      controller: _emailController),
+                ),
+                const SizedBox(
+                  height: 25,
+                ),
+                SizedBox(
+                    width: 300,
+                    height: 60,
+                    child: CustomTextField(
+                        preIcon: null,
+                        labelText: "Phone",
+                        placeholder: "0592101010",
+                        isPasswordTextField: false,
+                        controller: _phoneNumberController)),
+                const SizedBox(
+                  height: 25,
+                ),
                 Container(
                   height: 60,
                   width: 300,
@@ -124,7 +167,8 @@ class _EditProfileState extends State<EditProfile> {
               ],
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 50.0,vertical: 20),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 50.0, vertical: 20),
               child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [

@@ -89,49 +89,35 @@ class _EditShadowTeacherProfileState extends State<EditShadowTeacherProfile> {
                 SizedBox(
                     width: 300,
                     height: 60,
-                    child: buildTextField(null, "Teacher Name", "Asmaa", false,
-                        isObscurePassword, _userNameController)),
+                    child: CustomTextField(
+                        preIcon: null,
+                        labelText: "Teacher Name",
+                        placeholder: "Asmaa",
+                        isPasswordTextField:false,
+                        controller: _userNameController)),
                 const SizedBox(
                   height: 10,
                 ),
                 SizedBox(
                     width: 300,
                     height: 60,
-                    child: buildTextField(
-                        null,
-                        "Academic Qualification",
-                        "Master of special Education",
-                        false,
-                        isObscurePassword,
-                        _qualificationController)),
-                const SizedBox(
-                  height: 10,
-                ),
-                SizedBox(
-                    width: 300,
-                    height: 60,
-                    child: BuildDateTextField(
-                      labelText: 'Birth Date',
-                      placeholder: '7th Oct 2002',
-                      controller: _birthDateController,
-                    ),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                SizedBox(
-                    width: 300,
-                    height: 60,
-                    child: buildTextField(null, "Password", "********", true,
-                        isObscurePassword, _passwordController)),
+                    child: CustomTextField(
+                        preIcon: null,
+                        labelText: "Academic Qualification",
+                        placeholder: "Master of special Education",
+                        isPasswordTextField: false,
+                        controller: _qualificationController)),
                 const SizedBox(
                   height: 10,
                 ),
                 SizedBox(
                   width: 300,
                   height: 60,
-                  child: buildTextField(null, "Emile", "asmaa@gmail.com", false,
-                      isObscurePassword, _emailController),
+                  child: BuildDateTextField(
+                    labelText: 'Birth Date',
+                    placeholder: '7th Oct 2002',
+                    controller: _birthDateController,
+                  ),
                 ),
                 const SizedBox(
                   height: 10,
@@ -139,21 +125,49 @@ class _EditShadowTeacherProfileState extends State<EditShadowTeacherProfile> {
                 SizedBox(
                     width: 300,
                     height: 60,
-                    child: buildTextField(null, "Phone", "0592101010", false,
-                        isObscurePassword, _phoneNumberController)),
+                    child: CustomTextField(
+                        preIcon: null,
+                        labelText: "Password",
+                        placeholder: "********",
+                        isPasswordTextField: true,
+                        controller: _passwordController)),
+                const SizedBox(
+                  height: 10,
+                ),
+                SizedBox(
+                  width: 300,
+                  height: 60,
+                  child: CustomTextField(
+                      preIcon: null,
+                      labelText: "Email",
+                      placeholder: "asmaa@gmail.com",
+                      isPasswordTextField: false,
+                      controller: _emailController),
+                ),
                 const SizedBox(
                   height: 10,
                 ),
                 SizedBox(
                     width: 300,
                     height: 60,
-                    child: buildTextField(
-                        null,
-                        "Salary",
-                        "1000\$ (in one month)",
-                        false,
-                        isObscurePassword,
-                        _salaryController)),
+                    child: CustomTextField(
+                        preIcon: null,
+                        labelText: "Phone",
+                        placeholder: "0592101010",
+                        isPasswordTextField: false,
+                        controller: _phoneNumberController)),
+                const SizedBox(
+                  height: 10,
+                ),
+                SizedBox(
+                    width: 300,
+                    height: 60,
+                    child: CustomTextField(
+                        preIcon: null,
+                        labelText: "Salary",
+                        placeholder: "1000\$ (in one month)",
+                        isPasswordTextField: false,
+                        controller: _salaryController)),
                 const SizedBox(
                   height: 10,
                 ),

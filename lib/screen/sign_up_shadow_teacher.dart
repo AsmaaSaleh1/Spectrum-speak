@@ -65,26 +65,24 @@ class _SignUpShadowTeacherState extends State<SignUpShadowTeacher> {
               margin: const EdgeInsets.only(bottom: 15),
               width: 280,
               height: 50,
-              child: buildTextField(
-                  FontAwesomeIcons.graduationCap,
-                  "Academic Qualification",
-                  "Master of special Education",
-                  false,
-                  isObscurePassword,
-                  _qualificationController),
+              child: CustomTextField(
+                  preIcon: FontAwesomeIcons.graduationCap,
+                  labelText:"Academic Qualification",
+                  placeholder:"Master of special Education",
+                  isPasswordTextField:false,
+                  controller:_qualificationController),
             ),
             Container(
               alignment: Alignment.center,
               margin: const EdgeInsets.only(bottom: 15),
               width: 280,
               height: 50,
-              child: buildTextField(
-                  FontAwesomeIcons.sackDollar,
-                  "Salary",
-                  "1000\$ (in one month)",
-                  false,
-                  isObscurePassword,
-                  _salaryController),
+              child: CustomTextField(
+                  preIcon: FontAwesomeIcons.sackDollar,
+                  labelText:"Salary",
+                  placeholder:"1000\$ (in one month)",
+                  isPasswordTextField:false,
+                  controller:_salaryController),
             ),
             Visibility(
               visible: _showSalaryError,

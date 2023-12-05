@@ -58,13 +58,12 @@ class _SignUpSpecialistState extends State<SignUpSpecialist> {
               margin: const EdgeInsets.only(bottom: 15),
               width: 280,
               height: 50,
-              child: buildTextField(
-                  FontAwesomeIcons.sackDollar,
-                  "Price",
-                  "100\$ (in one session)",
-                  false,
-                  isObscurePassword,
-                  _priceController),
+              child: CustomTextField(
+                  preIcon:FontAwesomeIcons.sackDollar,
+                  labelText:"Price",
+                  placeholder:"100\$ (in one session)",
+                  isPasswordTextField:false,
+                  controller:_priceController),
             ),
             Visibility(
               visible: _showPriceError,

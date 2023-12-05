@@ -3,8 +3,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:spectrum_speak/constant/const_color.dart';
-import 'package:spectrum_speak/modules/shadow_teacher.dart';
-import 'package:spectrum_speak/modules/specialist.dart';
 import 'package:spectrum_speak/rest/auth_manager.dart';
 import 'package:spectrum_speak/rest/rest_api.dart';
 import 'package:spectrum_speak/screen/login.dart';
@@ -338,12 +336,12 @@ class TopBar extends StatelessWidget {
         return Tuple2(email, userName);
       } else {
         print('UserId is null');
-        return Tuple2(null, null);
+        return const Tuple2(null, null);
       }
     } catch (error) {
       // Handle errors here
       print('Error in _getShadowTeacher: $error');
-      return Tuple2(null, null);
+      return const Tuple2(null, null);
     }
   }
 

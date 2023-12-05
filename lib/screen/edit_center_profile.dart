@@ -81,24 +81,36 @@ class _EditCenterProfileState extends State<EditCenterProfile> {
                 SizedBox(
                     width: 300,
                     height: 60,
-                    child: buildTextField(null, "Center Name", "Asmaa", false,
-                        isObscurePassword, _centerNameController)),
+                    child: CustomTextField(
+                        preIcon: null,
+                        labelText: "Center Name",
+                        placeholder: "Asmaa",
+                        isPasswordTextField: false,
+                        controller: _centerNameController)),
                 const SizedBox(
                   height: 10,
                 ),
                 SizedBox(
                     width: 300,
                     height: 60,
-                    child: buildTextField(null, "About", "The Centre for...",
-                        false, isObscurePassword, _aboutController)),
+                    child: CustomTextField(
+                        preIcon: null,
+                        labelText: "About",
+                        placeholder: "The Centre for...",
+                        isPasswordTextField: false,
+                        controller: _aboutController)),
                 const SizedBox(
                   height: 10,
                 ),
                 SizedBox(
                   width: 300,
                   height: 60,
-                  child: buildTextField(null, "Emile", "asmaa@gmail.com", false,
-                      isObscurePassword, _emailController),
+                  child: CustomTextField(
+                      preIcon: null,
+                      labelText: "Email",
+                      placeholder: "asmaa@gmail.com",
+                      isPasswordTextField: false,
+                      controller: _emailController),
                 ),
                 const SizedBox(
                   height: 10,
@@ -106,9 +118,15 @@ class _EditCenterProfileState extends State<EditCenterProfile> {
                 SizedBox(
                     width: 300,
                     height: 60,
-                    child: buildTextField(null, "Phone", "0592101010", false,
-                        isObscurePassword, _phoneNumberController)),
-                const SizedBox(height: 10,),
+                    child: CustomTextField(
+                        preIcon: null,
+                        labelText: "Phone",
+                        placeholder: "0592101010",
+                        isPasswordTextField: false,
+                        controller: _phoneNumberController)),
+                const SizedBox(
+                  height: 10,
+                ),
                 Container(
                   height: 60,
                   width: 300,
@@ -137,7 +155,8 @@ class _EditCenterProfileState extends State<EditCenterProfile> {
               ],
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 50.0,vertical: 20),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 50.0, vertical: 20),
               child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [

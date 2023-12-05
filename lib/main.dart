@@ -1,20 +1,10 @@
-import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spectrum_speak/firebase_options.dart';
-import 'package:spectrum_speak/screen/add_child.dart';
-import 'package:spectrum_speak/screen/add_profile_photo.dart';
-import 'package:spectrum_speak/screen/edit_center_profile.dart';
-import 'package:spectrum_speak/screen/edit_profile.dart';
-import 'package:spectrum_speak/screen/edit_shadow_teacher_profile.dart';
-import 'package:spectrum_speak/screen/login.dart';
-import 'package:spectrum_speak/screen/main_page.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:spectrum_speak/screen/sign_up.dart';
-import 'package:spectrum_speak/screen/sign_up_shadow_teacher.dart';
-import 'package:spectrum_speak/screen/sign_up_specialist.dart';
+import 'package:spectrum_speak/screen/add_profile_photo.dart';
 import 'package:spectrum_speak/screen/welcome.dart';
 import 'constant/const_color.dart';
 

@@ -60,8 +60,12 @@ class _AddChildState extends State<AddChild> {
               margin: const EdgeInsets.only(bottom: 15),
               width: 280,
               height: 50,
-              child: buildTextField(Icons.family_restroom, "Child Name",
-                  "Ahmad", false, isObscurePassword, _childName),
+              child: CustomTextField(
+                  preIcon: Icons.family_restroom,
+                  labelText: "Child Name",
+                  placeholder: "Ahmad",
+                  isPasswordTextField: false,
+                  controller: _childName),
             ),
             Container(
               alignment: Alignment.center,

@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spectrum_speak/constant/const_color.dart';
 import 'package:spectrum_speak/rest/auth_manager.dart';
 import 'package:spectrum_speak/screen/main_page.dart';
-import 'package:spectrum_speak/screen/sign_up_specialist.dart';
 import 'package:spectrum_speak/units/build_text_field.dart';
 import 'sign_up.dart';
 import 'package:spectrum_speak/rest/rest_api.dart';
+
 class Login extends StatefulWidget {
   const Login({super.key});
 
@@ -26,6 +25,7 @@ class _LoginState extends State<Login> {
     _notValid = false;
     _notCorrect = false;
   }
+
   String _errorMessage() {
     if (_notValid) {
       return 'All fields are required';
@@ -35,6 +35,7 @@ class _LoginState extends State<Login> {
       return 'Error'; // Return empty string if no error message should be displayed
     }
   }
+
   @override
   Widget build(BuildContext context) {
     bool isObscurePassword = true;
@@ -66,16 +67,26 @@ class _LoginState extends State<Login> {
                 margin: const EdgeInsets.only(bottom: 15),
                 width: 280,
                 height: 50,
-                child: buildTextField(Icons.mail, "Email Address",
-                    "Asmaa@gmail.com", false, isObscurePassword,_emailController)),
-            const SizedBox(height: 10,),
+                child: CustomTextField(
+                    preIcon: Icons.mail,
+                    labelText: "Email Address",
+                    placeholder: "Asmaa@gmail.com",
+                    isPasswordTextField: false,
+                    controller: _emailController)),
+            const SizedBox(
+              height: 10,
+            ),
             Container(
                 alignment: Alignment.center,
                 margin: const EdgeInsets.only(bottom: 15),
                 width: 280,
                 height: 50,
-                child: buildTextField(Icons.lock_outline, "Password",
-                    "**********", true, isObscurePassword,_passwordController)),
+                child: CustomTextField(
+                    preIcon: Icons.lock_outline,
+                    labelText: "Password",
+                    placeholder: "**********",
+                    isPasswordTextField: true,
+                    controller: _passwordController)),
             Visibility(
               visible: _showErrorText,
               child: Container(
@@ -93,16 +104,16 @@ class _LoginState extends State<Login> {
               padding: const EdgeInsets.only(top: 20),
               child: ElevatedButton(
                 onPressed: () {
-                  _notCorrect=false;
-                  _notValid=false;
-                  _showErrorText=false;
+                  _notCorrect = false;
+                  _notValid = false;
+                  _showErrorText = false;
                   if (_emailController.text.isNotEmpty &&
                       _passwordController.text.isNotEmpty) {
                     doLogin(_emailController.text, _passwordController.text);
                   } else {
                     setState(() {
                       _showErrorText = true;
-                      _notValid=true;
+                      _notValid = true;
                     });
                   }
                 },
@@ -130,9 +141,9 @@ class _LoginState extends State<Login> {
               child: const Text(
                 'Forgot Password?',
                 style: TextStyle(
-                    color: kDarkBlue,
-                    decoration: TextDecoration.underline,
-                    fontSize: 15,
+                  color: kDarkBlue,
+                  decoration: TextDecoration.underline,
+                  fontSize: 15,
                 ),
               ),
             ),
@@ -195,8 +206,7 @@ class _LoginState extends State<Login> {
                   );
                 },
                 style: ButtonStyle(
-                  backgroundColor:
-                      MaterialStateProperty.all(kBlue),
+                  backgroundColor: MaterialStateProperty.all(kBlue),
                   fixedSize: MaterialStateProperty.all(const Size(315, 50)),
                   shape: MaterialStateProperty.all(
                     RoundedRectangleBorder(
@@ -223,17 +233,18 @@ class _LoginState extends State<Login> {
     );
   }
 
-  doLogin(String email, String password) async{
+  doLogin(String email, String password) async {
     var rest = await userLogin(email.trim(), password.trim());
-    if(rest['success']){
-      String userEmail= rest['data'][0]['Email'];
-      String userID= rest['data'][0]['UserID'].toString();
+    if (rest['success']) {
+      String userEmail = rest['data'][0]['Email'];
+      String userID = rest['data'][0]['UserID'].toString();
       await AuthManager.storeUserData(userID, userEmail);
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (_)=>const MainPage()));
-    }else{
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (_) => const MainPage()));
+    } else {
       setState(() {
         _showErrorText = true;
-        _notCorrect=true;
+        _notCorrect = true;
       });
     }
   }

@@ -1,5 +1,4 @@
 import 'dart:io' show File;
-import 'dart:typed_data' show Uint8List;
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
