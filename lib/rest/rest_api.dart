@@ -176,3 +176,5 @@ Future <Specialist?> profileSpecialist(String userId)async{
     return null;
   }
 }
+
+//TODO: handle the null from the database in shadowTeacher and specialist profile
