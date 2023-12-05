@@ -11,4 +11,12 @@ class AuthManager {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getString('userID');
   }
+  static Future<String?> getUserEmail() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString('userEmail');
+  }
+  static Future<void> clearUserData() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.clear();
+  }
 }
