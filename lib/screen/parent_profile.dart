@@ -6,6 +6,8 @@ import 'package:spectrum_speak/widgets/card_item.dart';
 import 'package:spectrum_speak/widgets/stack_container_parent.dart';
 import 'package:spectrum_speak/widgets/parent_information.dart';
 
+import 'add_child.dart';
+
 class ParentProfile extends StatefulWidget {
   const ParentProfile({super.key});
 
@@ -76,7 +78,10 @@ class _ParentProfileState extends State<ParentProfile> {
                           child: CustomButton(
                               foregroundColor: kDarkerColor,
                               backgroundColor: kBlue,
-                              onPressed: () {},
+                              onPressed: () {
+                                Navigator.pushReplacement(
+                                    context, MaterialPageRoute(builder: (_) => const AddChild(comeFromSignUp: false,)));
+                              },
                               buttonText: "Add Child",
                               icon: Icon(Icons.add_box_outlined),
                               iconColor: kPrimary),

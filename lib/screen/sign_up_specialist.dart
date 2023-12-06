@@ -28,17 +28,19 @@ class _SignUpSpecialistState extends State<SignUpSpecialist> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Container(
+            Padding(
               padding: const EdgeInsets.only(
                 top: 20,
               ),
-              alignment: Alignment.topCenter,
-              height: 210,
-              //margin: const EdgeInsets.only(left: 8, top: 45),
-              child: Image.asset(
-                'images/spectrumspeak.png',
-                width: 270.0,
-                height: 270.0,
+              child: Container(
+                alignment: Alignment.topCenter,
+                height: 210,
+                //margin: const EdgeInsets.only(left: 8, top: 45),
+                child: Image.asset(
+                  'images/spectrumspeak.png',
+                  width: 270.0,
+                  height: 270.0,
+                ),
               ),
             ),
             Container(

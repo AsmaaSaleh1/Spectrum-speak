@@ -454,7 +454,7 @@ class _SignUpState extends State<SignUp> {
       await AuthManager.storeUserData(userID, userEmail);
       if (selectedCategory == UserCategory.Parent) {
         Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (_) => const AddChild()));
+            context, MaterialPageRoute(builder: (_) => const AddChild(comeFromSignUp: true,)));
       } else if (selectedCategory == UserCategory.ShadowTeacher) {
         Navigator.pushReplacement(context,
             MaterialPageRoute(builder: (_) => const SignUpShadowTeacher()));

@@ -4,13 +4,15 @@ import 'package:spectrum_speak/constant/const_color.dart';
 import 'package:spectrum_speak/rest/auth_manager.dart';
 import 'package:spectrum_speak/rest/rest_api.dart';
 import 'package:spectrum_speak/screen/main_page.dart';
+import 'package:spectrum_speak/screen/parent_profile.dart';
 import 'package:spectrum_speak/units/build_date_text_field.dart';
 import 'package:spectrum_speak/units/build_drop_down_menu.dart';
 import 'package:spectrum_speak/units/build_text_field.dart';
 import 'package:spectrum_speak/units/validate_input_from_user.dart';
 
 class AddChild extends StatefulWidget {
-  const AddChild({super.key});
+  final bool comeFromSignUp;
+  const AddChild({super.key, required this.comeFromSignUp});
 
   @override
   State<AddChild> createState() => _AddChildState();
@@ -31,14 +33,19 @@ class _AddChildState extends State<AddChild> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Container(
-              alignment: Alignment.topCenter,
-              height: 210,
-              //margin: const EdgeInsets.only(left: 8, top: 45),
-              child: Image.asset(
-                'images/spectrumspeak.png',
-                width: 270.0,
-                height: 270.0,
+            Padding(
+              padding: const EdgeInsets.only(
+                top: 100,
+              ),
+              child: Container(
+                alignment: Alignment.topCenter,
+                height: 210,
+                //margin: const EdgeInsets.only(left: 8, top: 45),
+                child: Image.asset(
+                  'images/spectrumspeak.png',
+                  width: 270.0,
+                  height: 270.0,
+                ),
               ),
             ),
             Container(
@@ -234,8 +241,11 @@ class _AddChildState extends State<AddChild> {
     var rest =
         await childrenSignUp(userId, name, birthDate, gender, degreeOfAutism);
     if (rest['success']) {
-      Navigator.of(context)
-          .push(MaterialPageRoute(builder: (context) => const MainPage()));
+      if(widget.comeFromSignUp){
+        Navigator.of(context).push(MaterialPageRoute(builder: (context) => const MainPage()));
+      }else{
+        Navigator.of(context).push(MaterialPageRoute(builder: (context) => const ParentProfile()));
+      }
     } else {
       setState(() {
         _showErrorText = true;
