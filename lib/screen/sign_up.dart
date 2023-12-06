@@ -14,7 +14,6 @@ import 'package:spectrum_speak/units/build_text_field.dart';
 import 'package:spectrum_speak/units/validate_input_from_user.dart';
 import 'login.dart';
 
-//TODO: check if parent
 class SignUp extends StatefulWidget {
   const SignUp({super.key});
 
@@ -266,21 +265,21 @@ class _SignUpState extends State<SignUp> {
                 ),
               ),
             ),
-            // Container(
-            //   alignment: Alignment.center,
-            //   margin: const EdgeInsets.only(left: 10, bottom: 15),
-            //   width: 280,
-            //   child: RadioButtonSearch(
-            //     selected: _selectedCategory,
-            //     onTypeChanged: (search) {
-            //       setState(
-            //         () {
-            //           _selectedCategory = search;
-            //         },
-            //       );
-            //     },
-            //   ),
-            // ),
+            Container(
+              alignment: Alignment.center,
+              margin: const EdgeInsets.only(left: 10, bottom: 15),
+              width: 280,
+              child: RadioButtonSearch(
+                selected: _selectedCategory,
+                onTypeChanged: (search) {
+                  setState(
+                    () {
+                      _selectedCategory = search;
+                    },
+                  );
+                },
+              ),
+            ),
             Visibility(
               visible: _showErrorText,
               child: Container(
@@ -295,6 +294,7 @@ class _SignUpState extends State<SignUp> {
             ),
             ElevatedButton(
               onPressed: () async {
+                print("Selected category in RadioButtonSearch: $_selectedCategory");
                 resetErrorFlags();
                 if (_emailController.text.isEmpty ||
                     _usernameController.text.isEmpty ||
@@ -478,6 +478,7 @@ class _SignUpState extends State<SignUp> {
         password.trim(),
         selectedCity.trim(),
         selectedCategory.toString().split('.').last.trim());
+    print("Selected category in SignUp: $selectedCategory");
     if (rest['success']) {
       doLoginForSignUp(email, password, selectedCategory);
     } else {

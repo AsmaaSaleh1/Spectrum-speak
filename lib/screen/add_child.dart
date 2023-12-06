@@ -9,8 +9,6 @@ import 'package:spectrum_speak/units/build_drop_down_menu.dart';
 import 'package:spectrum_speak/units/build_text_field.dart';
 import 'package:spectrum_speak/units/validate_input_from_user.dart';
 
-import 'follow_up_sign_up.dart';
-
 class AddChild extends StatefulWidget {
   const AddChild({super.key});
 
@@ -83,7 +81,7 @@ class _AddChildState extends State<AddChild> {
               child: Container(
                 margin: const EdgeInsets.only(top: 10),
                 child: const Text(
-                  'Please enter a valid date (yyyy-mm-dd)',
+                  'Please enter a valid date (dd-mm-yyyy)',
                   style: TextStyle(
                     color: Colors.red,
                     fontSize: 16,
@@ -199,9 +197,6 @@ class _AddChildState extends State<AddChild> {
                       _showErrorText = true;
                     });
                   }
-                  // Navigate to the next screen
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => const FollowUpSignUp()));
                 } else {
                   // Handle the case where user ID is not available
                   print('User ID not available');

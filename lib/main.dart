@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spectrum_speak/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:spectrum_speak/screen/add_profile_photo.dart';
+import 'package:spectrum_speak/screen/parent_profile.dart';
 import 'package:spectrum_speak/screen/welcome.dart';
 import 'constant/const_color.dart';
 
@@ -52,7 +53,7 @@ class _MyAppState extends State<MyApp> {
         textTheme: GoogleFonts.tinosTextTheme(),
       ),
       home: const Scaffold(
-        body: Welcome(),
+        body: ParentProfile(),
       ),
     );
   }

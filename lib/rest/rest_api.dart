@@ -64,10 +64,9 @@ Future shadowTeacherSignUp(String userId, String salary, String birthDate,
 Future childrenSignUp(String userId, String name, String birthDate,
     String gender, String degreeOfAutism) async {
   final response =
-      await http.post(Uri.parse('${Utils.baseUrl}/signUp/children'), headers: {
+      await http.post(Uri.parse('${Utils.baseUrl}/signUp/children/$userId'), headers: {
     "Accept": "application/json"
   }, body: {
-    'UserId': userId,
     'Name': name,
     'BirthDate': birthDate,
     'Gender': gender,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:spectrum_speak/constant/const_color.dart';
+import 'package:spectrum_speak/units/custom_button.dart';
 import 'package:spectrum_speak/widgets/top_bar.dart';
 import 'package:spectrum_speak/widgets/card_item.dart';
 import 'package:spectrum_speak/widgets/stack_container_parent.dart';
@@ -60,12 +61,29 @@ class _ParentProfileState extends State<ParentProfile> {
                           children: <Widget>[
                             CardItem(),
                             CardItem(),
+                            CardItem(),
+                            CardItem(),
+                            CardItem(),
+                            CardItem(),
                             // Add more CardItems as needed
                           ],
                         ),
                       ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: linePadding, vertical: 10),
+                        child: Align(
+                          alignment: AlignmentDirectional.centerEnd,
+                          child: CustomButton(
+                              foregroundColor: kDarkerColor,
+                              backgroundColor: kBlue,
+                              onPressed: () {},
+                              buttonText: "Add Child",
+                              icon: Icon(Icons.add_box_outlined),
+                              iconColor: kPrimary),
+                        ),
+                      ),
                       const SizedBox(
-                        height: 80,
+                        height: 70,
                       ),
                     ],
                   ),
