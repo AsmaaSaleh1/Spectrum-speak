@@ -324,14 +324,10 @@ class TopBar extends StatelessWidget {
   Future<Tuple2<String?, String?>> _getEmailAndName() async {
     try {
       String? userId = await AuthManager.getUserId();
-      print('UserId: $userId');
-
       // Check if userId is not null before calling profileShadowTeacher
       if (userId != null) {
         var email = await AuthManager.getUserEmail();
         var userName = await getUserName(userId);
-        print('email and userName result: $email $userName');
-
         // Return a tuple of email and userName
         return Tuple2(email, userName);
       } else {

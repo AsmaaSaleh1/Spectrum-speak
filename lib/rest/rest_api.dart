@@ -140,7 +140,6 @@ Future <ShadowTeacher?> profileShadowTeacher(String userId)async{
     if (response.statusCode == 200) {
       var decodedData = jsonDecode(response.body)["data"][0];
       // Create and return a ShadowTeacher instance
-      print('Decoded Data: $decodedData');
       return ShadowTeacher(
         userID: userId,
         salary: double.parse(decodedData['Salary']),
@@ -173,7 +172,6 @@ Future <Specialist?> profileSpecialist(String userId)async{
     if (response.statusCode == 200) {
       var decodedData = jsonDecode(response.body)["data"][0];
       // Create and return a ShadowTeacher instance
-      print('Decoded Data: $decodedData');
       return Specialist(
           userID: userId,
           userName: decodedData['Username'],
@@ -193,6 +191,43 @@ Future <Specialist?> profileSpecialist(String userId)async{
     print("Error in profileShadowTeacher: $error");
     return null;
   }
+}
+
+Future <Parent?> profileParent(String userId)async{
+  try {
+    final response = await http.get(
+      Uri.parse('${Utils.baseUrl}/profile/parent/$userId'),
+      headers: {"Accept": "application/json"},
+    );
+    if (response.statusCode == 200) {
+      var decodedData = jsonDecode(response.body)["data"][0];
+      // Create and return a ShadowTeacher instance
+      return Parent(
+        userID: userId,
+        userName: decodedData['Username'],
+        email: decodedData['Email'],
+        city: decodedData['City'],
+        phone: decodedData['Phone'],
+        category: UserCategory.values.firstWhere((e) => e.toString() == 'UserCategory.${decodedData['Category']}'),
+      );
+    } else {
+      print("Error in profile Parent: ${response.statusCode}");
+      return null;
+    }
+  } catch (error) {
+    print("Error in profile Parent: $error");
+    return null;
+  }
+}
+
+Future <String?> countOfChildForParent(String userId)async{
+  final response = await http.get(
+    Uri.parse('${Utils.baseUrl}/childCount/$userId'),
+    headers: {"Accept": "application/json"},
+  );
+  var decodedData = jsonDecode(response.body)["message"][0];
+  print(decodedData);
+  return decodedData;
 }
 
 //TODO: handle the null from the database in shadowTeacher and specialist profile

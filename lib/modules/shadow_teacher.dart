@@ -25,7 +25,7 @@ class ShadowTeacher {
     required this.email,
     required this.city,
     required this.phone,
-    this.photo = "images/prof.png",
+    this.photo = "",
     required this.category,
   });
 
