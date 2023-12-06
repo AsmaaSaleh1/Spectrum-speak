@@ -14,11 +14,12 @@ class RadioButtonSearch extends StatefulWidget {
   });
 
   @override
-  State<RadioButtonSearch> createState() => _RadioButtonSearchState();
+  State<RadioButtonSearch> createState() => _RadioButtonSearchState(selected);
 }
 
 class _RadioButtonSearchState extends State<RadioButtonSearch> {
-  UserCategory _character = UserCategory.Parent;
+  UserCategory _character;
+  _RadioButtonSearchState(UserCategory? selected):_character=selected??UserCategory.Parent;
   @override
   Widget build(BuildContext context) {
     return Column(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:spectrum_speak/units/build_text_field.dart';
 import 'package:spectrum_speak/widgets/top_bar.dart';
 import 'package:spectrum_speak/constant/const_color.dart';
 import 'package:spectrum_speak/units/build_tab.dart';
@@ -13,7 +14,7 @@ class Search extends StatefulWidget {
 
 class _SearchState extends State<Search> {
   SearchEnum selectedSearch = SearchEnum.center;
-
+  final TextEditingController _searchController=TextEditingController();
   void onSearchTypeChanged(SearchEnum newValue) {
     setState(() {
       selectedSearch = newValue;
@@ -56,40 +57,7 @@ class _SearchState extends State<Search> {
                       ),
                     ),
                   ),
-                  TextField(
-                    decoration: InputDecoration(
-                      filled: true,
-                      contentPadding: const EdgeInsets.only(
-                        bottom: 10,
-                        left: 8,
-                      ),
-                      labelText: "Search",
-                      labelStyle: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w700,
-                        color: kDarkerColor,
-                      ),
-                      floatingLabelBehavior: FloatingLabelBehavior.always,
-                      hintText: "eg: Al-Amal center",
-                      hintStyle: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w400,
-                        color: Colors.grey,
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(20.0),
-                        borderSide: BorderSide(
-                          color: Colors.grey.shade700,
-                        ),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(20.0),
-                        borderSide: BorderSide(
-                          color: kDarkerColor,
-                        ),
-                      ),
-                    ),
-                  ),
+                  CustomTextField(labelText: "Search", placeholder: "eg: Al-Amal center", isPasswordTextField: false, controller: _searchController),
                   Padding(
                     padding: const EdgeInsets.all(5.0),
                     child: MyTab(

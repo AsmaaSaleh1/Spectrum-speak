@@ -11,7 +11,7 @@ import 'constant/const_color.dart';
 late Size mq;
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  _initializeFirebase();
+  //_initializeFirebase();
   runApp(const MyApp());
 }
 
@@ -58,8 +58,8 @@ class _MyAppState extends State<MyApp> {
   }
 }
 
-_initializeFirebase() async {
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
-}
+// _initializeFirebase() async {
+//   await Firebase.initializeApp(
+//     options: DefaultFirebaseOptions.currentPlatform,
+//   );
+// }

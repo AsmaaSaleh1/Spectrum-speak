@@ -69,7 +69,6 @@ class _SignUpState extends State<SignUp> {
 
   @override
   Widget build(BuildContext context) {
-    bool isObscurePassword = true;
     return Scaffold(
       backgroundColor: kPrimary,
       body: SingleChildScrollView(
@@ -267,21 +266,21 @@ class _SignUpState extends State<SignUp> {
                 ),
               ),
             ),
-            Container(
-              alignment: Alignment.center,
-              margin: const EdgeInsets.only(left: 10, bottom: 15),
-              width: 280,
-              child: RadioButtonSearch(
-                selected: _selectedCategory,
-                onTypeChanged: (search) {
-                  setState(
-                    () {
-                      _selectedCategory = search;
-                    },
-                  );
-                },
-              ),
-            ),
+            // Container(
+            //   alignment: Alignment.center,
+            //   margin: const EdgeInsets.only(left: 10, bottom: 15),
+            //   width: 280,
+            //   child: RadioButtonSearch(
+            //     selected: _selectedCategory,
+            //     onTypeChanged: (search) {
+            //       setState(
+            //         () {
+            //           _selectedCategory = search;
+            //         },
+            //       );
+            //     },
+            //   ),
+            // ),
             Visibility(
               visible: _showErrorText,
               child: Container(
@@ -323,6 +322,13 @@ class _SignUpState extends State<SignUp> {
                   return;
                 }
 
+                if (!isValidPhoneNumber(_phoneNumberController.text)) {
+                  setState(() {
+                    _phoneError = true;
+                  });
+                  return;
+                }
+
                 if (_passwordController.text !=
                     _confirmPasswordController.text) {
                   setState(() {
@@ -334,13 +340,6 @@ class _SignUpState extends State<SignUp> {
                 if (!isPasswordValid(_passwordController.text)) {
                   setState(() {
                     _showTextPasswordValid = true;
-                  });
-                  return;
-                }
-
-                if (!isValidPhoneNumber(_phoneNumberController.text)) {
-                  setState(() {
-                    _phoneError = true;
                   });
                   return;
                 }
