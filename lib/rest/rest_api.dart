@@ -1,3 +1,4 @@
+
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:spectrum_speak/constant/utils.dart';
@@ -220,14 +221,30 @@ Future <Parent?> profileParent(String userId)async{
   }
 }
 
-Future <String?> countOfChildForParent(String userId)async{
-  final response = await http.get(
-    Uri.parse('${Utils.baseUrl}/childCount/$userId'),
-    headers: {"Accept": "application/json"},
-  );
-  var decodedData = jsonDecode(response.body)["message"][0];
-  print(decodedData);
-  return decodedData;
+Future<int?> countOfChildForParent(String userId) async {
+  try {
+    final response = await http.get(
+      Uri.parse('${Utils.baseUrl}/childCount/$userId'),
+      headers: {"Accept": "application/json"},
+    );
+
+    var decodedData = jsonDecode(response.body);
+    print(decodedData);
+    if (decodedData['message'] >=0) {
+      // Access the 'message' key for the count
+      int count = decodedData['message'];
+      print("count: $count");
+
+      return count;
+    } else {
+      //print("Error decoding data from /childCount/$userId");
+      return null;
+    }
+  } catch (error) {
+    print('Error in countOfChildForParent: $error');
+    return null;
+  }
 }
+
 
 //TODO: handle the null from the database in shadowTeacher and specialist profile
