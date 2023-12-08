@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:spectrum_speak/constant/const_color.dart';
 import 'package:spectrum_speak/rest/auth_manager.dart';
-import 'package:spectrum_speak/rest/rest_api.dart';
+import 'package:spectrum_speak/rest/rest_api_signUp.dart';
 import 'package:spectrum_speak/units/build_date_text_field.dart';
 import 'package:spectrum_speak/units/build_drop_down_menu.dart';
 import 'package:spectrum_speak/units/build_text_field.dart';
@@ -21,13 +21,11 @@ class _SignUpShadowTeacherState extends State<SignUpShadowTeacher> {
   bool isObscurePassword = true;
   String? selectedGender;
   String? availability;
-  final TextEditingController _birthDateController = TextEditingController();
   final TextEditingController _qualificationController =
       TextEditingController();
   final TextEditingController _salaryController = TextEditingController();
   bool _showErrorText = false;
   bool _showSalaryError = false;
-  bool _showDateError = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -90,30 +88,6 @@ class _SignUpShadowTeacherState extends State<SignUpShadowTeacher> {
                 margin: const EdgeInsets.only(top: 10),
                 child: const Text(
                   'Please enter a valid salary (maximum 99999.99)',
-                  style: TextStyle(
-                    color: Colors.red,
-                    fontSize: 16,
-                  ),
-                ),
-              ),
-            ),
-            Container(
-              alignment: Alignment.center,
-              margin: const EdgeInsets.only(bottom: 5),
-              width: 280,
-              height: 50,
-              child: BuildDateTextField(
-                labelText: 'Birth Date',
-                placeholder: '7th Oct 2002',
-                controller: _birthDateController,
-              ),
-            ),
-            Visibility(
-              visible: _showDateError,
-              child: Container(
-                margin: const EdgeInsets.only(top: 10),
-                child: const Text(
-                  'Please enter a valid date (yyyy-mm-dd)',
                   style: TextStyle(
                     color: Colors.red,
                     fontSize: 16,
@@ -204,30 +178,21 @@ class _SignUpShadowTeacherState extends State<SignUpShadowTeacher> {
             ElevatedButton(
               onPressed: () async {
                 String? userId = await AuthManager.getUserId();
-                _showDateError = false;
                 _showSalaryError = false;
                 _showErrorText = false;
                 if (userId != null) {
                   if (_salaryController.text.isNotEmpty &&
-                      _birthDateController.text.isNotEmpty &&
                       availability.toString().isNotEmpty &&
                       _qualificationController.text.isNotEmpty &&
                       selectedGender.toString().isNotEmpty) {
                     if (isDecimal(_salaryController.text)) {
-                      if (isDate(_birthDateController.text)) {
                         saveShadowTeacher(
                           userId,
                           _salaryController.text,
-                          _birthDateController.text,
                           availability!,
                           _qualificationController.text,
                           selectedGender!,
                         );
-                      } else {
-                        setState(() {
-                          _showDateError = true;
-                        });
-                      }
                     } else {
                       setState(() {
                         _showSalaryError = true;
@@ -270,15 +235,14 @@ class _SignUpShadowTeacherState extends State<SignUpShadowTeacher> {
     );
   }
 
-  saveShadowTeacher(String userId, String salary, String birthDate,
+  saveShadowTeacher(String userId, String salary,
       String availability, String qualification, String gender) async {
     var rest = await shadowTeacherSignUp(
       userId,
       salary,
-      birthDate,
       availability,
       qualification,
-      gender,
+      gender
     );
     if (rest['success']) {
       Navigator.of(context)

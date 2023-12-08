@@ -4,7 +4,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:spectrum_speak/constant/const_color.dart';
 import 'package:spectrum_speak/modules/parent.dart';
 import 'package:spectrum_speak/rest/auth_manager.dart';
-import 'package:spectrum_speak/rest/rest_api.dart';
+import 'package:spectrum_speak/rest/rest_api_signUp.dart';
+import 'package:spectrum_speak/rest/rest_api_profile.dart';
 
 class ParentInformation extends StatelessWidget {
   const ParentInformation({Key? key});
@@ -88,7 +89,7 @@ class ParentInformation extends StatelessWidget {
                                 color: kDarkerColor,
                               ),
                               const SizedBox(
-                                height: 10.0,
+                                height: 15.0,
                               ),
                               Icon(
                                 FontAwesomeIcons.locationDot,
@@ -96,7 +97,7 @@ class ParentInformation extends StatelessWidget {
                                 color: kDarkerColor,
                               ),
                               const SizedBox(
-                                height: 10.0,
+                                height: 15.0,
                               ),
                               Icon(
                                 FontAwesomeIcons.children,

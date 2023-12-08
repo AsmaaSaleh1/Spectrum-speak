@@ -15,7 +15,6 @@ class EditShadowTeacherProfile extends StatefulWidget {
 }
 
 class _EditShadowTeacherProfileState extends State<EditShadowTeacherProfile> {
-  bool isObscurePassword = true;
   String? selectedGender;
   String? availability;
   String? selectedCity;
@@ -23,7 +22,6 @@ class _EditShadowTeacherProfileState extends State<EditShadowTeacherProfile> {
   final TextEditingController _userNameController = TextEditingController();
   final TextEditingController _phoneNumberController = TextEditingController();
   final TextEditingController _birthDateController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _qualificationController =
       TextEditingController();
   final TextEditingController _salaryController = TextEditingController();
@@ -94,7 +92,7 @@ class _EditShadowTeacherProfileState extends State<EditShadowTeacherProfile> {
                         labelText: "Teacher Name",
                         placeholder: "Asmaa",
                         isPasswordTextField:false,
-                        controller: _userNameController)),
+                        controller: _userNameController,),),
                 const SizedBox(
                   height: 10,
                 ),
@@ -106,7 +104,7 @@ class _EditShadowTeacherProfileState extends State<EditShadowTeacherProfile> {
                         labelText: "Academic Qualification",
                         placeholder: "Master of special Education",
                         isPasswordTextField: false,
-                        controller: _qualificationController)),
+                        controller: _qualificationController,),),
                 const SizedBox(
                   height: 10,
                 ),
@@ -123,18 +121,6 @@ class _EditShadowTeacherProfileState extends State<EditShadowTeacherProfile> {
                   height: 10,
                 ),
                 SizedBox(
-                    width: 300,
-                    height: 60,
-                    child: CustomTextField(
-                        preIcon: null,
-                        labelText: "Password",
-                        placeholder: "********",
-                        isPasswordTextField: true,
-                        controller: _passwordController)),
-                const SizedBox(
-                  height: 10,
-                ),
-                SizedBox(
                   width: 300,
                   height: 60,
                   child: CustomTextField(
@@ -142,7 +128,9 @@ class _EditShadowTeacherProfileState extends State<EditShadowTeacherProfile> {
                       labelText: "Email",
                       placeholder: "asmaa@gmail.com",
                       isPasswordTextField: false,
-                      controller: _emailController),
+                      controller: _emailController,
+                    disable: true,
+                  ),
                 ),
                 const SizedBox(
                   height: 10,
@@ -238,6 +226,22 @@ class _EditShadowTeacherProfileState extends State<EditShadowTeacherProfile> {
                   ),
                 ),
               ],
+            ),
+            const SizedBox(height: 5,),
+            Align(
+              alignment: Alignment.center,
+              child: Container(
+                width: 250,
+                height: 50,
+                child: CustomButton(
+                  foregroundColor: kDarkerColor,
+                  backgroundColor: kBlue,
+                  onPressed: () {},
+                  buttonText: "Change Password",
+                  icon: Icon(Icons.key_sharp),
+                  iconColor: kPrimary,
+                ),
+              ),
             ),
             Padding(
               padding:

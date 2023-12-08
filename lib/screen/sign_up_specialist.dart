@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:spectrum_speak/constant/const_color.dart';
 import 'package:spectrum_speak/rest/auth_manager.dart';
-import 'package:spectrum_speak/rest/rest_api.dart';
+import 'package:spectrum_speak/rest/rest_api_signUp.dart';
 import 'package:spectrum_speak/units/build_drop_down_menu.dart';
 import 'package:spectrum_speak/units/build_text_field.dart';
 import 'package:spectrum_speak/units/validate_input_from_user.dart';
@@ -30,7 +30,7 @@ class _SignUpSpecialistState extends State<SignUpSpecialist> {
           children: [
             Padding(
               padding: const EdgeInsets.only(
-                top: 20,
+                top: 100,
               ),
               child: Container(
                 alignment: Alignment.topCenter,

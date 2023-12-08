@@ -13,7 +13,7 @@ class Child{
     required this.childName,
     required this.birthDate,
     required this.gender,
-    required this.photo,
+    this.photo= '',
     required this.degreeOfAutism,
   });
 }

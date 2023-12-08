@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:spectrum_speak/constant/const_color.dart';
 import 'package:spectrum_speak/rest/auth_manager.dart';
-import 'package:spectrum_speak/rest/rest_api.dart';
+import 'package:spectrum_speak/rest/rest_api_signUp.dart';
 import 'package:spectrum_speak/screen/main_page.dart';
 import 'package:spectrum_speak/screen/parent_profile.dart';
 import 'package:spectrum_speak/units/build_date_text_field.dart';
@@ -33,9 +33,74 @@ class _AddChildState extends State<AddChild> {
       body: SingleChildScrollView(
         child: Column(
           children: [
+            widget.comeFromSignUp
+                ? Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 30, vertical: 50),
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const MainPage()),
+                        );
+                      },
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.keyboard_double_arrow_left,
+                            color: kDarkerColor,
+                            size: 18,
+                          ),
+                          const SizedBox(
+                            width: 10,
+                          ),
+                          Text(
+                            "Skip",
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: kDarkerColor,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  )
+                : Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 30, vertical: 50),
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const ParentProfile()),
+                        );
+                      },
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.keyboard_double_arrow_left,
+                            color: kDarkerColor,
+                            size: 18,
+                          ),
+                          const SizedBox(
+                            width: 10,
+                          ),
+                          Text(
+                            "Back to profile",
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: kDarkerColor,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
             Padding(
               padding: const EdgeInsets.only(
-                top: 100,
+                top: 20,
               ),
               child: Container(
                 alignment: Alignment.topCenter,
@@ -241,10 +306,12 @@ class _AddChildState extends State<AddChild> {
     var rest =
         await childrenSignUp(userId, name, birthDate, gender, degreeOfAutism);
     if (rest['success']) {
-      if(widget.comeFromSignUp){
-        Navigator.of(context).push(MaterialPageRoute(builder: (context) => const MainPage()));
-      }else{
-        Navigator.of(context).push(MaterialPageRoute(builder: (context) => const ParentProfile()));
+      if (widget.comeFromSignUp) {
+        Navigator.of(context)
+            .push(MaterialPageRoute(builder: (context) => const MainPage()));
+      } else {
+        Navigator.of(context).push(
+            MaterialPageRoute(builder: (context) => const ParentProfile()));
       }
     } else {
       setState(() {

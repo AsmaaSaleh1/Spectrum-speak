@@ -3,7 +3,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:spectrum_speak/constant/const_color.dart';
 import 'package:spectrum_speak/modules/specialist.dart';
 import 'package:spectrum_speak/rest/auth_manager.dart';
-import 'package:spectrum_speak/rest/rest_api.dart';
+import 'package:spectrum_speak/rest/rest_api_signUp.dart';
+import 'package:spectrum_speak/rest/rest_api_profile.dart';
 
 class SpecialistInformation extends StatelessWidget {
   const SpecialistInformation({super.key});

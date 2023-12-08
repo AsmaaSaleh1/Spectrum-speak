@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:intl/intl.dart';
 import 'package:spectrum_speak/constant/const_color.dart';
 import 'package:spectrum_speak/modules/shadow_teacher.dart';
 import 'package:spectrum_speak/rest/auth_manager.dart';
-import 'package:spectrum_speak/rest/rest_api.dart';
+import 'package:spectrum_speak/rest/rest_api_profile.dart';
 
 //TODO: make it suitable at all width size (like I make in About in CenterProfile) specially Academic Qualification
 class ShadowTeacherInformation extends StatelessWidget {
@@ -243,7 +244,7 @@ class ShadowTeacherInformation extends StatelessWidget {
                                     height: 10.0,
                                   ),
                                   Text(
-                                    shadowTeacher.birthDate,
+                                    calculateAge(shadowTeacher.birthDate).toString(),
                                     style: TextStyle(
                                       fontSize: 15.0,
                                       fontWeight: FontWeight.bold,
@@ -386,6 +387,28 @@ class ShadowTeacherInformation extends StatelessWidget {
       // Handle errors here
       print('Error in _getShadowTeacher: $error');
       return null;
+    }
+  }
+  int calculateAge(String birthDate) {
+    try {
+      DateTime currentDate = DateTime.now();
+      DateTime parsedBirthDate = DateFormat('dd-MM-yyyy').parse(birthDate);
+
+      // Calculate age
+      int age = currentDate.year - parsedBirthDate.year;
+
+      // Check if the birthday has occurred this year
+      if (currentDate.month < parsedBirthDate.month ||
+          (currentDate.month == parsedBirthDate.month &&
+              currentDate.day < parsedBirthDate.day)) {
+        age--;
+      }
+
+      return age;
+    } catch (e) {
+      // Handle invalid date format
+      print('Error: Invalid date format. Please provide a valid yyyy-mm-dd.');
+      return -1; // Return a sentinel value or throw an exception as needed
     }
   }
 }

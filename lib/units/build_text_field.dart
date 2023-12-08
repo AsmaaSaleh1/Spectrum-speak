@@ -7,13 +7,16 @@ class CustomTextField extends StatefulWidget {
   final String placeholder;
   final bool isPasswordTextField;
   final TextEditingController controller;
+  final bool disable;
   const CustomTextField(
       {super.key,
       this.preIcon,
       required this.labelText,
       required this.placeholder,
       required this.isPasswordTextField,
-      required this.controller});
+      required this.controller,
+        this.disable=false,
+      });
 
   @override
   State<CustomTextField> createState() => _CustomTextFieldState();
@@ -29,6 +32,8 @@ class _CustomTextFieldState extends State<CustomTextField> {
         controller: widget.controller,
         obscureText: widget.isPasswordTextField ? isObscurePassword : false,
         decoration: InputDecoration(
+          filled: widget.disable,
+          fillColor: Colors.grey.shade400,
           prefixIcon: widget.preIcon != null
               ? Icon(
                   widget.preIcon,
@@ -83,6 +88,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
           fontWeight: FontWeight.w700,
           color: kDarkerColor,
         ),
+        readOnly: widget.disable,
       ),
     );
   }

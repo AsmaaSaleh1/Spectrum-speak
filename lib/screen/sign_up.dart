@@ -4,10 +4,12 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:spectrum_speak/constant/const_color.dart';
 import 'package:spectrum_speak/modules/parent.dart';
 import 'package:spectrum_speak/rest/auth_manager.dart';
-import 'package:spectrum_speak/rest/rest_api.dart';
+import 'package:spectrum_speak/rest/rest_api_login.dart';
+import 'package:spectrum_speak/rest/rest_api_signUp.dart';
 import 'package:spectrum_speak/screen/add_child.dart';
 import 'package:spectrum_speak/screen/sign_up_shadow_teacher.dart';
 import 'package:spectrum_speak/screen/sign_up_specialist.dart';
+import 'package:spectrum_speak/units/build_date_text_field.dart';
 import 'package:spectrum_speak/units/build_drop_down_menu.dart';
 import 'package:spectrum_speak/units/build_radio_button.dart';
 import 'package:spectrum_speak/units/build_text_field.dart';
@@ -25,6 +27,7 @@ class _SignUpState extends State<SignUp> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _phoneNumberController = TextEditingController();
+  final TextEditingController _birthDateController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController =
       TextEditingController();
@@ -35,6 +38,7 @@ class _SignUpState extends State<SignUp> {
   bool _validEmail = false;
   bool _existEmail = false;
   bool _phoneError = false;
+  bool _showDateError = false;
   String? selectedCity;
   String messages() {
     if (_validEmail) {
@@ -63,6 +67,7 @@ class _SignUpState extends State<SignUp> {
       _validEmail = false;
       _existEmail = false;
       _phoneError = false;
+      _showDateError = false;
     });
   }
 
@@ -74,7 +79,7 @@ class _SignUpState extends State<SignUp> {
         child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.only(top: 20.0),
+              padding: const EdgeInsets.only(top: 70.0),
               child: Container(
                 alignment: Alignment.topCenter,
                 height: 210,
@@ -149,6 +154,30 @@ class _SignUpState extends State<SignUp> {
               child: Container(
                 child: const Text(
                   'Not a number',
+                  style: TextStyle(
+                    color: Colors.red,
+                    fontSize: 16,
+                  ),
+                ),
+              ),
+            ),
+            Container(
+              alignment: Alignment.center,
+              margin: const EdgeInsets.only(bottom: 15),
+              width: 280,
+              height: 50,
+              child: BuildDateTextField(
+                labelText: 'Birth Date',
+                placeholder: '7th Oct 2002',
+                controller: _birthDateController,
+              ),
+            ),
+            Visibility(
+              visible: _showDateError,
+              child: Container(
+                margin: const EdgeInsets.only(top: 10),
+                child: const Text(
+                  'Please enter a valid date (yyyy-mm-dd)',
                   style: TextStyle(
                     color: Colors.red,
                     fontSize: 16,
@@ -298,14 +327,15 @@ class _SignUpState extends State<SignUp> {
                 resetErrorFlags();
                 if (_emailController.text.isEmpty ||
                     _usernameController.text.isEmpty ||
+                    _birthDateController.text.isEmpty ||
                     _phoneNumberController.text.isEmpty ||
                     _passwordController.text.isEmpty ||
                     _confirmPasswordController.text.isEmpty ||
                     selectedCity == null) {
-                  setState(() {
-                    _showErrorText = true;
-                  });
-                  return;
+                    setState(() {
+                      _showErrorText = true;
+                    });
+                    return;
                 }
 
                 if (!isValidEmail(_emailController.text)) {
@@ -325,6 +355,13 @@ class _SignUpState extends State<SignUp> {
                 if (!isValidPhoneNumber(_phoneNumberController.text)) {
                   setState(() {
                     _phoneError = true;
+                  });
+                  return;
+                }
+
+                if (!isDate(_birthDateController.text)) {
+                  setState(() {
+                    _showDateError = true;
                   });
                   return;
                 }
@@ -350,6 +387,7 @@ class _SignUpState extends State<SignUp> {
                   _usernameController.text,
                   _phoneNumberController.text,
                   _passwordController.text,
+                  _birthDateController.text,
                   selectedCity!,
                   _selectedCategory,
                 );
@@ -469,13 +507,14 @@ class _SignUpState extends State<SignUp> {
     }
   }
 
-  doSignUp(String email, String userName, String phone, String password,
+  doSignUp(String email, String userName, String phone, String password,String birthDate,
       String selectedCity, UserCategory selectedCategory) async {
     var rest = await userSignUp(
         email.trim(),
         userName.trim(),
         phone.trim(),
         password.trim(),
+        birthDate,
         selectedCity.trim(),
         selectedCategory.toString().split('.').last.trim());
     print("Selected category in SignUp: $selectedCategory");

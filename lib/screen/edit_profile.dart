@@ -79,38 +79,16 @@ class _EditProfileState extends State<EditProfile> {
             Column(
               children: [
                 SizedBox(
-                    width: 300,
-                    height: 60,
-                    child: CustomTextField(
-                        preIcon: null,
-                        labelText: "User Name",
-                        placeholder: "Asmaa",
-                        isPasswordTextField: false,
-                        controller: _userNameController)),
-                const SizedBox(
-                  height: 25,
+                  width: 300,
+                  height: 60,
+                  child: CustomTextField(
+                    preIcon: null,
+                    labelText: "User Name",
+                    placeholder: "Asmaa",
+                    isPasswordTextField: false,
+                    controller: _userNameController,
+                  ),
                 ),
-                SizedBox(
-                    width: 300,
-                    height: 60,
-                    child: CustomTextField(
-                        preIcon: null,
-                        labelText: "Birth Date",
-                        placeholder: "7th Oct",
-                        isPasswordTextField: false,
-                        controller: _birthDateController)),
-                const SizedBox(
-                  height: 25,
-                ),
-                SizedBox(
-                    width: 300,
-                    height: 60,
-                    child: CustomTextField(
-                        preIcon: null,
-                        labelText: "Password",
-                        placeholder: "********",
-                        isPasswordTextField: true,
-                        controller: _passwordController)),
                 const SizedBox(
                   height: 25,
                 ),
@@ -118,26 +96,43 @@ class _EditProfileState extends State<EditProfile> {
                   width: 300,
                   height: 60,
                   child: CustomTextField(
-                      preIcon: null,
-                      labelText: "Email",
-                      placeholder: "asmaa@gmail.com",
-                      isPasswordTextField: false,
-                      controller: _emailController),
+                    preIcon: null,
+                    labelText: "Birth Date",
+                    placeholder: "7th Oct",
+                    isPasswordTextField: false,
+                    controller: _birthDateController,
+                  ),
                 ),
                 const SizedBox(
                   height: 25,
                 ),
                 SizedBox(
-                    width: 300,
-                    height: 60,
-                    child: CustomTextField(
-                        preIcon: null,
-                        labelText: "Phone",
-                        placeholder: "0592101010",
-                        isPasswordTextField: false,
-                        controller: _phoneNumberController)),
+                  width: 300,
+                  height: 60,
+                  child: CustomTextField(
+                    preIcon: null,
+                    labelText: "Email",
+                    placeholder: "asmaa@gmail.com",
+                    isPasswordTextField: false,
+                    controller: _emailController,
+                  ),
+                ),
                 const SizedBox(
                   height: 25,
+                ),
+                SizedBox(
+                  width: 300,
+                  height: 60,
+                  child: CustomTextField(
+                    preIcon: null,
+                    labelText: "Phone",
+                    placeholder: "0592101010",
+                    isPasswordTextField: false,
+                    controller: _phoneNumberController,
+                  ),
+                ),
+                const SizedBox(
+                  height: 20,
                 ),
                 Container(
                   height: 60,
@@ -165,6 +160,24 @@ class _EditProfileState extends State<EditProfile> {
                   ),
                 ),
               ],
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            Align(
+              alignment: Alignment.center,
+              child: Container(
+                width: 250,
+                height: 50,
+                child: CustomButton(
+                  foregroundColor: kDarkerColor,
+                  backgroundColor: kBlue,
+                  onPressed: () {},
+                  buttonText: "Change Password",
+                  icon: Icon(Icons.key_sharp),
+                  iconColor: kPrimary,
+                ),
+              ),
             ),
             Padding(
               padding:

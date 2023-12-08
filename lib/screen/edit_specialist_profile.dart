@@ -166,6 +166,21 @@ class _EditSpecialistProfileState extends State<EditSpecialistProfile> {
                 ),
               ],
             ),
+            Align(
+              alignment: Alignment.center,
+              child: Container(
+                width: 250,
+                height: 50,
+                child: CustomButton(
+                  foregroundColor: kDarkerColor,
+                  backgroundColor: kBlue,
+                  onPressed: () {},
+                  buttonText: "Change Password",
+                  icon: Icon(Icons.key_sharp),
+                  iconColor: kPrimary,
+                ),
+              ),
+            ),
             Padding(
               padding:
                   const EdgeInsets.symmetric(horizontal: 50.0, vertical: 20),
