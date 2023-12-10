@@ -1,6 +1,7 @@
 import 'package:circular_profile_avatar/circular_profile_avatar.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:intl/intl.dart';
 import 'package:spectrum_speak/constant/const_color.dart';
 import 'package:spectrum_speak/modules/specialist.dart';
 import 'package:spectrum_speak/rest/auth_manager.dart';
@@ -52,7 +53,7 @@ class StackContainerSpecialist extends StatelessWidget {
                         ),
                         const SizedBox(height: 4.0),
                         Text(
-                          specialist.userName,
+                          toBeginningOfSentenceCase(specialist.userName) ?? "",
                           style: TextStyle(
                             fontSize: 25.0,
                             fontWeight: FontWeight.bold,
@@ -73,7 +74,7 @@ class StackContainerSpecialist extends StatelessWidget {
                                 width: 3,
                               ),
                               Text(
-                                specialist.specialistCategory,
+                                toBeginningOfSentenceCase(specialist.specialistCategory)??"",
                                 style: TextStyle(
                                   fontSize: 15.0,
                                   color: Colors.grey[700],

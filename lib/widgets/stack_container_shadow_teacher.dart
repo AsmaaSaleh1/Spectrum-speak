@@ -2,6 +2,7 @@ import 'package:circular_profile_avatar/circular_profile_avatar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:intl/intl.dart';
 import 'package:spectrum_speak/constant/const_color.dart';
 import 'package:spectrum_speak/modules/shadow_teacher.dart';
 import 'package:spectrum_speak/rest/auth_manager.dart';
@@ -61,7 +62,7 @@ class StackContainerShadowTeacher extends StatelessWidget {
                         ),
                         const SizedBox(height: 4.0),
                         Text(
-                          shadowTeacher.userName,
+                          toBeginningOfSentenceCase(shadowTeacher.userName) ?? "",
                           style: TextStyle(
                             fontSize: 25.0,
                             fontWeight: FontWeight.bold,
@@ -82,7 +83,7 @@ class StackContainerShadowTeacher extends StatelessWidget {
                                 width: 3,
                               ),
                               Text(
-                                shadowTeacher.qualification,
+                                toBeginningOfSentenceCase(shadowTeacher.qualification) ?? "",
                                 style: TextStyle(
                                   fontSize: 15.0,
                                   color: Colors.grey[700],

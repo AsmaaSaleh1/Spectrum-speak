@@ -9,11 +9,13 @@ class Specialist{
   final String photo;
   final UserCategory category;
   final String specialistCategory;
+  final String birthDate;
   final double price;
 
   Specialist({
     required this.userID,
     required this.userName,
+    required this.birthDate,
     required this.email,
     required this.city,
     required this.phone,

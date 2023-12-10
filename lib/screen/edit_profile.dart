@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:spectrum_speak/constant/const_color.dart';
+import 'package:spectrum_speak/modules/parent.dart';
+import 'package:spectrum_speak/rest/auth_manager.dart';
+import 'package:spectrum_speak/rest/rest_api_profile.dart';
+import 'package:spectrum_speak/screen/parent_profile.dart';
+import 'package:spectrum_speak/units/build_date_text_field.dart';
 import 'package:spectrum_speak/units/build_text_field.dart';
 import 'package:spectrum_speak/units/custom_button.dart';
 import 'package:spectrum_speak/units/build_drop_down_menu.dart';
+import 'package:spectrum_speak/units/validate_input_from_user.dart';
 
 class EditProfile extends StatefulWidget {
   const EditProfile({super.key});
@@ -12,13 +18,32 @@ class EditProfile extends StatefulWidget {
 }
 
 class _EditProfileState extends State<EditProfile> {
-  bool isObscurePassword = true;
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _userNameController = TextEditingController();
   final TextEditingController _phoneNumberController = TextEditingController();
   final TextEditingController _birthDateController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   String? selectedCity;
+  bool _phoneError = false;
+  bool _showDateError = false;
+  bool _showErrorText = false;
+
+  @override
+  void initState() {
+    super.initState();
+    // Call your method to fetch user data from the database
+    _getParentData().then((parentData) {
+      // Update text controllers with fetched data
+      setState(() {
+        _userNameController.text = parentData!.userName;
+        _birthDateController.text = parentData.birthDate;
+        _emailController.text = parentData.email;
+        _phoneNumberController.text = parentData.phone;
+        selectedCity = parentData.city;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -95,12 +120,23 @@ class _EditProfileState extends State<EditProfile> {
                 SizedBox(
                   width: 300,
                   height: 60,
-                  child: CustomTextField(
-                    preIcon: null,
-                    labelText: "Birth Date",
-                    placeholder: "7th Oct",
-                    isPasswordTextField: false,
+                  child: BuildDateTextField(
+                    labelText: 'Birth Date',
+                    placeholder: '7th Oct 2002',
                     controller: _birthDateController,
+                  ),
+                ),
+                Visibility(
+                  visible: _showDateError,
+                  child: Container(
+                    margin: const EdgeInsets.only(top: 10),
+                    child: const Text(
+                      'Please enter a valid date (yyyy-mm-dd)',
+                      style: TextStyle(
+                        color: Colors.red,
+                        fontSize: 16,
+                      ),
+                    ),
                   ),
                 ),
                 const SizedBox(
@@ -115,6 +151,7 @@ class _EditProfileState extends State<EditProfile> {
                     placeholder: "asmaa@gmail.com",
                     isPasswordTextField: false,
                     controller: _emailController,
+                    disable: true,
                   ),
                 ),
                 const SizedBox(
@@ -129,6 +166,18 @@ class _EditProfileState extends State<EditProfile> {
                     placeholder: "0592101010",
                     isPasswordTextField: false,
                     controller: _phoneNumberController,
+                  ),
+                ),
+                Visibility(
+                  visible: _phoneError,
+                  child: Container(
+                    child: const Text(
+                      'Not a number',
+                      style: TextStyle(
+                        color: Colors.red,
+                        fontSize: 16,
+                      ),
+                    ),
                   ),
                 ),
                 const SizedBox(
@@ -160,6 +209,18 @@ class _EditProfileState extends State<EditProfile> {
                   ),
                 ),
               ],
+            ),
+            Visibility(
+              visible: _showErrorText,
+              child: Container(
+                child: const Text(
+                  'All fields are required',
+                  style: TextStyle(
+                    color: Colors.red,
+                    fontSize: 16,
+                  ),
+                ),
+              ),
             ),
             const SizedBox(
               height: 20,
@@ -203,6 +264,39 @@ class _EditProfileState extends State<EditProfile> {
                       backgroundColor: kPrimary,
                       onPressed: () {
                         // Handle the edit profile action here
+                        _phoneError = false;
+                        _showDateError = false;
+                        _showErrorText = false;
+                        if (_userNameController.text.isEmpty ||
+                            _birthDateController.text.isEmpty ||
+                            _phoneNumberController.text.isEmpty ||
+                            selectedCity == null) {
+                          setState(() {
+                            _showErrorText = true;
+                          });
+                          return;
+                        }
+
+                        if (!isDate(_birthDateController.text)) {
+                          setState(() {
+                            _showDateError = true;
+                          });
+                          return;
+                        }
+
+                        if (!isValidPhoneNumber(_phoneNumberController.text)) {
+                          setState(() {
+                            _phoneError = true;
+                          });
+                          return;
+                        }
+
+                        doEditProfile(
+                          _userNameController.text,
+                          _phoneNumberController.text,
+                          _birthDateController.text,
+                          selectedCity!,
+                        );
                       },
                       buttonText: 'Save',
                       icon: const Icon(
@@ -220,5 +314,51 @@ class _EditProfileState extends State<EditProfile> {
         ),
       ),
     );
+  }
+
+  Future<Parent?> _getParentData() async {
+    try {
+      String? userId = await AuthManager.getUserId();
+      if (userId != null) {
+        Parent? parent = await profileParent(userId);
+        return parent;
+      } else {
+        print('UserId is null');
+        return null;
+      }
+    } catch (error) {
+      print('Error in _getParentData: $error');
+      return null;
+    }
+  }
+
+  Future doEditProfile(String userName, String phone, String birthDate,
+      String selectedCity) async {
+    try {
+      String? userID = await AuthManager.getUserId();
+      if (userID != null) {
+        var rest = await editProfileParent(
+          userID,
+          userName.trim(),
+          phone.trim(),
+          birthDate,
+          selectedCity.trim(),
+        );
+        if (rest['success']) {
+          Navigator.pushReplacement(
+              context, MaterialPageRoute(builder: (_) => ParentProfile()));
+        } else {
+          setState(() {
+            _showErrorText = true;
+          });
+        }
+      } else {
+        print('UserId is null');
+        return null;
+      }
+    } catch (error) {
+      print('Error in doEditProfile: $error');
+      return null;
+    }
   }
 }

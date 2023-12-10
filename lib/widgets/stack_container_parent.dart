@@ -1,6 +1,7 @@
 import 'package:circular_profile_avatar/circular_profile_avatar.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:intl/intl.dart';
 import 'package:spectrum_speak/constant/const_color.dart';
 import 'package:spectrum_speak/modules/parent.dart';
 import 'package:spectrum_speak/rest/auth_manager.dart';
@@ -52,7 +53,7 @@ class StackContainerParent extends StatelessWidget {
                         ),
                         const SizedBox(height: 4.0),
                         Text(
-                          parent.userName,
+                          toBeginningOfSentenceCase(parent.userName)??"",
                           style: TextStyle(
                             fontSize: 25.0,
                             fontWeight: FontWeight.bold,

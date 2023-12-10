@@ -8,11 +8,13 @@ class Parent {
   final String city;
   final String phone;
   final String photo;
+  final String birthDate;
   final UserCategory category;
 
   Parent({
     required this.userID,
     required this.userName,
+    required this.birthDate,
     required this.email,
     required this.city,
     required this.phone,
