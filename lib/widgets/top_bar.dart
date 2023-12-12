@@ -5,6 +5,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:spectrum_speak/constant/const_color.dart';
 import 'package:spectrum_speak/rest/auth_manager.dart';
 import 'package:spectrum_speak/rest/rest_api_menu.dart';
+import 'package:spectrum_speak/rest/rest_api_profile_delete.dart';
 import 'package:spectrum_speak/rest/rest_api_signUp.dart';
 import 'package:spectrum_speak/screen/login.dart';
 import 'package:spectrum_speak/screen/main_page.dart';
@@ -14,7 +15,6 @@ import 'package:spectrum_speak/screen/shadow_teacher_profile.dart';
 import 'package:spectrum_speak/screen/specialist_profile.dart';
 import 'package:spectrum_speak/screen/splash_screen_chat.dart';
 import 'package:tuple/tuple.dart';
-
 
 import 'card_user_chat.dart';
 
@@ -79,19 +79,22 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                 case "Parent":
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const ParentProfile()),
+                    MaterialPageRoute(
+                        builder: (context) => const ParentProfile()),
                   );
                   break;
                 case "Specialist":
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const SpecialistProfile()),
+                    MaterialPageRoute(
+                        builder: (context) => const SpecialistProfile()),
                   );
                   break;
                 case "ShadowTeacher":
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const ShadowTeacherProfile()),
+                    MaterialPageRoute(
+                        builder: (context) => const ShadowTeacherProfile()),
                   );
                   break;
                 default:
@@ -167,24 +170,31 @@ class TopBar extends StatelessWidget {
                           backgroundColor: kPrimary,
                           onTap: () async {
                             String? userId = await AuthManager.getUserId();
-                            String category = await getUserCategory(userId!);
+                            String category =
+                                await getUserCategory(userId!);
                             switch (category) {
                               case "Parent":
                                 Navigator.push(
                                   context,
-                                  MaterialPageRoute(builder: (context) => const ParentProfile()),
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const ParentProfile()),
                                 );
                                 break;
                               case "Specialist":
                                 Navigator.push(
                                   context,
-                                  MaterialPageRoute(builder: (context) => const SpecialistProfile()),
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const SpecialistProfile()),
                                 );
                                 break;
                               case "ShadowTeacher":
                                 Navigator.push(
                                   context,
-                                  MaterialPageRoute(builder: (context) => const ShadowTeacherProfile()),
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const ShadowTeacherProfile()),
                                 );
                                 break;
                               default:
@@ -206,19 +216,25 @@ class TopBar extends StatelessWidget {
                           case "Parent":
                             Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (context) => const ParentProfile()),
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      const ParentProfile()),
                             );
                             break;
                           case "Specialist":
                             Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (context) => const SpecialistProfile()),
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      const SpecialistProfile()),
                             );
                             break;
                           case "ShadowTeacher":
                             Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (context) => const ShadowTeacherProfile()),
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      const ShadowTeacherProfile()),
                             );
                             break;
                           default:
@@ -242,7 +258,8 @@ class TopBar extends StatelessWidget {
                       ),
                       onTap: () => Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => const MainPage()),
+                        MaterialPageRoute(
+                            builder: (context) => const MainPage()),
                       ),
                     ),
                     ListTile(
@@ -260,7 +277,8 @@ class TopBar extends StatelessWidget {
                       ),
                       onTap: () => Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => const Search()),
+                        MaterialPageRoute(
+                            builder: (context) => const Search()),
                       ),
                     ),
                     ListTile(
@@ -306,9 +324,36 @@ class TopBar extends StatelessWidget {
                           fontSize: 17,
                         ),
                       ),
-                      onTap: () async{
+                      onTap: () async {
                         await AuthManager.clearUserData();
-                        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> const Login()));
+                        Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const Login()));
+                      },
+                    ),
+                    Divider(
+                      color: Colors.grey[700],
+                      height: 1,
+                    ),
+                    ListTile(
+                      leading: Icon(
+                        FontAwesomeIcons.trashCan,
+                        color: kDarkerColor,
+                        size: 22,
+                      ),
+                      title: const Text(
+                        "Destroy account",
+                        style: TextStyle(
+                          fontWeight: FontWeight.w700,
+                          fontSize: 17,
+                        ),
+                      ),
+                      onTap: () async {
+                        bool confirmed = await _showDestroyAccountConfirmation(context);
+                        if (confirmed){
+                          _destroy(context);
+                        }
                       },
                     ),
                   ],
@@ -322,6 +367,7 @@ class TopBar extends StatelessWidget {
           }
         });
   }
+
   Future<Tuple2<String?, String?>> _getEmailAndName() async {
     try {
       String? userId = await AuthManager.getUserId();
@@ -342,10 +388,71 @@ class TopBar extends StatelessWidget {
     }
   }
 
+  Future _destroy(BuildContext context)async{
+    try{
+      String? userId = await AuthManager.getUserId();
+      if (userId != null) {
+        String category = await getUserCategory(userId);
+        switch (category) {
+          case "Parent":
+            deleteParent(userId);
+            break;
+          case "Specialist":
+            deleteSpecialist(userId);
+            break;
+          case "ShadowTeacher":
+            deleteShadowTeacher(userId);
+            break;
+          default:
+            print("error in category");
+            return;
+        }
+        await AuthManager.clearUserData();
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => const Login()),
+        );
+      } else {
+        print('UserId is null');
+      }
+    }catch(error){
+
+    }
+  }
+
+  Future<bool> _showDestroyAccountConfirmation(BuildContext context) async {
+    return await showDialog<bool>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Warning"),
+          content: Text("Are you sure you want to destroy your account? This action cannot be undone."),
+          icon: Icon(Icons.warning_amber,size: 45,color: kYellow,),
+          actions: <Widget>[
+            TextButton(
+              child: Text("Cancel"),
+              onPressed: () {
+                Navigator.of(context).pop(false); // Close the dialog and return false
+              },
+            ),
+            TextButton(
+              child: Text("Yes"),
+              onPressed: () {
+                Navigator.of(context).pop(true); // Close the dialog and return true
+              },
+            ),
+          ],
+        );
+      },
+    ) ?? false; // Return false if the user dismisses the dialog without making a choice
+  }
 }
 
+
 void _showPopupMenu(BuildContext context, int numberOfCards) async {
-  final RenderBox overlay = Overlay.of(context).context.findRenderObject() as RenderBox;
+  final RenderBox overlay =
+      Overlay.of(context).context.findRenderObject() as RenderBox;
 
   await showMenu(
     color: kPrimary,
@@ -373,15 +480,14 @@ void _showPopupMenu(BuildContext context, int numberOfCards) async {
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => const SplashChatScreen()),
+                      MaterialPageRoute(
+                          builder: (context) => const SplashChatScreen()),
                     );
                   },
                   child: Text(
-                      'Show All Messages',
+                    'Show All Messages',
                     style: TextStyle(
-                      color: kDarkerColor,
-                      fontWeight: FontWeight.bold
-                    ),
+                        color: kDarkerColor, fontWeight: FontWeight.bold),
                   ),
                 ),
               ),

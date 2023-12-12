@@ -170,7 +170,7 @@ class CardItem extends StatelessWidget {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text('Confirmation'),
-          content: Text('Are you sure you want to delete this child?'),
+          content: Text('Are you sure you want to delete this child? This action cannot be undone.'),
           icon: Icon(Icons.warning_amber,size: 45,color: kYellow,),
           actions: <Widget>[
             TextButton(
