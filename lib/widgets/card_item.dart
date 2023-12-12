@@ -1,7 +1,11 @@
 import 'package:circular_profile_avatar/circular_profile_avatar.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import 'package:spectrum_speak/constant/const_color.dart';
+import 'package:spectrum_speak/rest/rest_api_profile_delete.dart';
+import 'package:spectrum_speak/screen/edit_child_card.dart';
+import 'package:spectrum_speak/screen/parent_profile.dart';
 
 class CardItem extends StatelessWidget {
   final String childId;
@@ -80,7 +84,7 @@ class CardItem extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.all(3.0),
                       child: Text(
-                        userName,
+                        toBeginningOfSentenceCase(userName)??"",
                         style: TextStyle(
                           fontSize: 20.0,
                           fontWeight: FontWeight.bold,
@@ -125,17 +129,30 @@ class CardItem extends StatelessWidget {
             Positioned(
               top: 1,
               right: 1,
-              child: PopupMenuButton(
+              child: PopupMenuButton<String>(
                 color: kPrimary,
                 icon: Icon(
                   Icons.more_vert,
                   color: kDarkerColor,
                 ),
-                itemBuilder: (BuildContext context) => <PopupMenuEntry>[
-                  PopupMenuItem(
+                onSelected: (String value) async {
+                  if (value == 'Edit') {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (_) => EditChildCard(childId: childId)),
+                    );
+                  } else if (value == 'Delete') {
+                    // Handle delete logic
+                    showDeleteConfirmationDialog(context);
+                  }
+                },
+                itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+                  PopupMenuItem<String>(
+                    value: 'Edit',
                     child: Text('Edit'),
                   ),
-                  PopupMenuItem(
+                  PopupMenuItem<String>(
+                    value: 'Delete',
                     child: Text('Delete'),
                   ),
                   // Add more PopupMenuItems as needed
@@ -145,6 +162,38 @@ class CardItem extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+  Future<void> showDeleteConfirmationDialog(BuildContext context) async {
+    return showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Confirmation'),
+          content: Text('Are you sure you want to delete this child?'),
+          icon: Icon(Icons.warning_amber,size: 45,color: kYellow,),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+              },
+              child: Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () async {
+                // Perform delete logic
+                await deleteChild(childId);
+
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (_) => ParentProfile()),
+                );
+              },
+              child: Text('Delete'),
+            ),
+          ],
+        );
+      },
     );
   }
 }

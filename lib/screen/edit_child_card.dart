@@ -1,51 +1,43 @@
 import 'package:flutter/material.dart';
 import 'package:spectrum_speak/constant/const_color.dart';
-import 'package:spectrum_speak/modules/specialist.dart';
+import 'package:spectrum_speak/modules/child.dart';
 import 'package:spectrum_speak/rest/auth_manager.dart';
 import 'package:spectrum_speak/rest/rest_api_profile.dart';
 import 'package:spectrum_speak/rest/rest_api_profile_edit.dart';
-import 'package:spectrum_speak/screen/specialist_profile.dart';
+import 'package:spectrum_speak/screen/parent_profile.dart';
 import 'package:spectrum_speak/units/build_date_text_field.dart';
+import 'package:spectrum_speak/units/build_drop_down_menu.dart';
 import 'package:spectrum_speak/units/build_text_field.dart';
 import 'package:spectrum_speak/units/custom_button.dart';
-import 'package:spectrum_speak/units/build_drop_down_menu.dart';
 import 'package:spectrum_speak/units/validate_input_from_user.dart';
 
-class EditSpecialistProfile extends StatefulWidget {
-  const EditSpecialistProfile({super.key});
+class EditChildCard extends StatefulWidget {
+  final String childId;
+  const EditChildCard({super.key, required this.childId});
 
   @override
-  State<EditSpecialistProfile> createState() => _EditSpecialistProfileState();
+  State<EditChildCard> createState() => _EditChildCardState();
 }
 
-class _EditSpecialistProfileState extends State<EditSpecialistProfile> {
-  String? selectedCity;
-  String? selectedSpecialist;
-  final TextEditingController _emailController = TextEditingController();
+class _EditChildCardState extends State<EditChildCard> {
   final TextEditingController _userNameController = TextEditingController();
   final TextEditingController _birthDateController = TextEditingController();
-  final TextEditingController _phoneNumberController = TextEditingController();
-  final TextEditingController _priceController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
-
-  bool _phoneError = false;
+  String? selectedGender;
+  String? degreeOfAutism;
   bool _showDateError = false;
   bool _showErrorText = false;
-  bool _showPriceError = false;
+
   @override
   void initState() {
     super.initState();
     // Call your method to fetch user data from the database
-    _getSpecialistData().then((specialistData) {
+    _getChildData().then((childData) {
       // Update text controllers with fetched data
       setState(() {
-        _userNameController.text = specialistData!.userName;
-        _birthDateController.text = specialistData.birthDate;
-        _priceController.text = specialistData.price.toString();
-        _emailController.text = specialistData.email;
-        _phoneNumberController.text = specialistData.phone;
-        selectedCity = specialistData.city;
-        selectedSpecialist = specialistData.specialistCategory;
+        _userNameController.text = childData!.childName;
+        _birthDateController.text = childData.birthDate;
+        selectedGender = childData.gender;
+        degreeOfAutism = childData.degreeOfAutism;
       });
     });
   }
@@ -63,7 +55,7 @@ class _EditSpecialistProfileState extends State<EditSpecialistProfile> {
               child: Stack(
                 children: [
                   Padding(
-                    padding: const EdgeInsets.only(top: 50.0),
+                    padding: const EdgeInsets.only(top: 110.0),
                     child: Container(
                       width: 130,
                       height: 130,
@@ -113,11 +105,11 @@ class _EditSpecialistProfileState extends State<EditSpecialistProfile> {
                   width: 300,
                   height: 60,
                   child: CustomTextField(
-                      preIcon: null,
-                      labelText: "User Name",
-                      placeholder: "Asmaa",
-                      isPasswordTextField: false,
-                      controller: _userNameController),
+                    labelText: "Child Name",
+                    placeholder: "Asmaa",
+                    isPasswordTextField: false,
+                    controller: _userNameController,
+                  ),
                 ),
                 const SizedBox(
                   height: 10,
@@ -147,114 +139,41 @@ class _EditSpecialistProfileState extends State<EditSpecialistProfile> {
                 const SizedBox(
                   height: 10,
                 ),
-                SizedBox(
-                  width: 300,
-                  height: 60,
-                  child: CustomTextField(
-                    preIcon: null,
-                    labelText: "Email",
-                    placeholder: "asmaa@gmail.com",
-                    isPasswordTextField: false,
-                    controller: _emailController,
-                    disable: true,
-                  ),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                SizedBox(
-                  width: 300,
-                  height: 60,
-                  child: CustomTextField(
-                    preIcon: null,
-                    labelText: "Price in dollar",
-                    placeholder: "100\$",
-                    isPasswordTextField: false,
-                    controller: _priceController,
-                  ),
-                ),
-                Visibility(
-                  visible: _showPriceError,
-                  child: Container(
-                    margin: const EdgeInsets.only(top: 10),
-                    child: const Text(
-                      'Please enter a valid price (maximum 99999.99)',
-                      style: TextStyle(
-                        color: Colors.red,
-                        fontSize: 16,
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                SizedBox(
-                  width: 300,
-                  height: 60,
-                  child: CustomTextField(
-                      preIcon: null,
-                      labelText: "Phone",
-                      placeholder: "0592101010",
-                      isPasswordTextField: false,
-                      controller: _phoneNumberController),
-                ),
-                Visibility(
-                  visible: _phoneError,
-                  child: Container(
-                    child: const Text(
-                      'Not a number',
-                      style: TextStyle(
-                        color: Colors.red,
-                        fontSize: 16,
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
                 Container(
-                  height: 60,
+                  alignment: Alignment.center,
+                  margin: const EdgeInsets.only(bottom: 15),
                   width: 300,
-                  alignment: AlignmentDirectional.topStart,
+                  height: 60,
                   child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       CustomDropDown(
                         items: const [
-                          'Nablus',
-                          'Ramallah',
-                          'Jerusalem',
-                          'Bethlehem',
-                          'Qalqilya',
-                          'Hebron',
-                          'Jenin',
-                          'Tulkarm',
-                          'Other',
+                          'Male',
+                          'Female',
                         ],
-                        selectedValue: selectedCity,
-                        hint: 'Select City',
+                        selectedValue: selectedGender,
+                        hint: 'Select Gender',
                         onChanged: (String? value) {
                           setState(() {
-                            selectedCity = value;
+                            selectedGender = value;
                           });
                         },
                       ),
-                      const SizedBox(
-                        width: 20,
-                      ),
                       CustomDropDown(
                         items: const [
-                          'Audio & Speech',
-                          'Rehabilitation',
-                          'Psychiatrists'
+                          'ASD Level 1',
+                          'ASD Level 2',
+                          'ASD Level 3',
                         ],
-                        selectedValue: selectedSpecialist,
-                        hint: 'Select Category',
+                        selectedValue: degreeOfAutism,
+                        hint: 'ASD Level',
                         onChanged: (String? value) {
-                          setState(() {
-                            selectedSpecialist = value;
-                          });
+                          setState(
+                            () {
+                              degreeOfAutism = value;
+                            },
+                          );
                         },
                       ),
                     ],
@@ -274,21 +193,6 @@ class _EditSpecialistProfileState extends State<EditSpecialistProfile> {
                 ),
               ],
             ),
-            Align(
-              alignment: Alignment.center,
-              child: Container(
-                width: 250,
-                height: 50,
-                child: CustomButton(
-                  foregroundColor: kDarkerColor,
-                  backgroundColor: kBlue,
-                  onPressed: () {},
-                  buttonText: "Change Password",
-                  icon: Icon(Icons.key_sharp),
-                  iconColor: kPrimary,
-                ),
-              ),
-            ),
             Padding(
               padding:
                   const EdgeInsets.symmetric(horizontal: 50.0, vertical: 20),
@@ -299,7 +203,8 @@ class _EditSpecialistProfileState extends State<EditSpecialistProfile> {
                       foregroundColor: kDarkerColor,
                       backgroundColor: kPrimary,
                       onPressed: () {
-                        Navigator.pop(context);
+                        Navigator.pushReplacement(context,
+                            MaterialPageRoute(builder: (_) => ParentProfile()));
                       },
                       buttonText: 'Cansel',
                       icon: const Icon(
@@ -313,16 +218,12 @@ class _EditSpecialistProfileState extends State<EditSpecialistProfile> {
                       backgroundColor: kPrimary,
                       onPressed: () {
                         // Handle the edit profile action here
-                        _phoneError = false;
                         _showDateError = false;
                         _showErrorText = false;
-                        _showPriceError = false;
                         if (_userNameController.text.isEmpty ||
                             _birthDateController.text.isEmpty ||
-                            _priceController.text.isEmpty ||
-                            _phoneNumberController.text.isEmpty ||
-                            selectedCity == null ||
-                            selectedSpecialist == null) {
+                            selectedGender == null ||
+                            degreeOfAutism == null) {
                           setState(() {
                             _showErrorText = true;
                           });
@@ -335,28 +236,11 @@ class _EditSpecialistProfileState extends State<EditSpecialistProfile> {
                           });
                           return;
                         }
-
-                        if (!isDecimal(_priceController.text)) {
-                          setState(() {
-                            _showPriceError = true;
-                          });
-                          return;
-                        }
-
-                        if (!isValidPhoneNumber(_phoneNumberController.text)) {
-                          setState(() {
-                            _phoneError = true;
-                          });
-                          return;
-                        }
-
-                        doEditProfile(
+                        doEditCard(
                           _userNameController.text,
-                          _phoneNumberController.text,
                           _birthDateController.text,
-                          selectedCity!,
-                          selectedSpecialist!,
-                          double.parse(_priceController.text),
+                          selectedGender!,
+                          degreeOfAutism!,
                         );
                       },
                       buttonText: 'Save',
@@ -368,45 +252,39 @@ class _EditSpecialistProfileState extends State<EditSpecialistProfile> {
                     ),
                   ]),
             ),
+            const SizedBox(
+              height: 25,
+            ),
           ],
         ),
       ),
     );
   }
 
-  Future<Specialist?> _getSpecialistData() async {
+  Future<Child?> _getChildData() async {
     try {
-      String? userId = await AuthManager.getUserId();
-      if (userId != null) {
-        Specialist? parent = await profileSpecialist(userId);
-        return parent;
-      } else {
-        print('UserId is null');
-        return null;
-      }
+      Child? child = await getChildByID(widget.childId);
+      return child;
     } catch (error) {
-      print('Error in _getParentData: $error');
+      print('Error in _getChildData: $error');
       return null;
     }
   }
 
-  Future doEditProfile(String userName, String phone, String birthDate,
-      String selectedCity, String specialistCategory, double price) async {
+  Future doEditCard(
+    String childName,
+    String birthDate,
+    String gender,
+    String degreeOfAutism,
+  ) async {
     try {
       String? userID = await AuthManager.getUserId();
       if (userID != null) {
-        var rest = await editProfileSpecialist(
-          userID,
-          userName.trim(),
-          phone.trim(),
-          birthDate,
-          selectedCity.trim(),
-          specialistCategory.trim(),
-          price,
-        );
+        var rest = await editChildCard(widget.childId, childName.trim(),
+            birthDate.trim(), gender.trim(), degreeOfAutism.trim());
         if (rest['success']) {
           Navigator.pushReplacement(
-              context, MaterialPageRoute(builder: (_) => SpecialistProfile()));
+              context, MaterialPageRoute(builder: (_) => ParentProfile()));
         } else {
           setState(() {
             _showErrorText = true;

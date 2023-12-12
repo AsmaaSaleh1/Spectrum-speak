@@ -3,6 +3,7 @@ import 'package:spectrum_speak/constant/const_color.dart';
 import 'package:spectrum_speak/modules/parent.dart';
 import 'package:spectrum_speak/rest/auth_manager.dart';
 import 'package:spectrum_speak/rest/rest_api_profile.dart';
+import 'package:spectrum_speak/rest/rest_api_profile_edit.dart';
 import 'package:spectrum_speak/screen/parent_profile.dart';
 import 'package:spectrum_speak/units/build_date_text_field.dart';
 import 'package:spectrum_speak/units/build_text_field.dart';
@@ -208,19 +209,19 @@ class _EditProfileState extends State<EditProfile> {
                     },
                   ),
                 ),
-              ],
-            ),
-            Visibility(
-              visible: _showErrorText,
-              child: Container(
-                child: const Text(
-                  'All fields are required',
-                  style: TextStyle(
-                    color: Colors.red,
-                    fontSize: 16,
+                Visibility(
+                  visible: _showErrorText,
+                  child: Container(
+                    child: const Text(
+                      'All fields are required',
+                      style: TextStyle(
+                        color: Colors.red,
+                        fontSize: 16,
+                      ),
+                    ),
                   ),
                 ),
-              ),
+              ],
             ),
             const SizedBox(
               height: 20,

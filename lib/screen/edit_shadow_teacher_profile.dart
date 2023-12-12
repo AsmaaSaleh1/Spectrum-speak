@@ -3,6 +3,7 @@ import 'package:spectrum_speak/constant/const_color.dart';
 import 'package:spectrum_speak/modules/shadow_teacher.dart';
 import 'package:spectrum_speak/rest/auth_manager.dart';
 import 'package:spectrum_speak/rest/rest_api_profile.dart';
+import 'package:spectrum_speak/rest/rest_api_profile_edit.dart';
 import 'package:spectrum_speak/screen/shadow_teacher_profile.dart';
 import 'package:spectrum_speak/units/build_date_text_field.dart';
 import 'package:spectrum_speak/units/build_text_field.dart';
