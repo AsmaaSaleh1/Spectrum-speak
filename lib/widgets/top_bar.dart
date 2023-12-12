@@ -427,7 +427,8 @@ class TopBar extends StatelessWidget {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text("Warning"),
-          content: Text("Are you sure you want to destroy your account? This action cannot be undone."),
+          content: Text("Are you sure you want to destroy your account?"
+              "This action cannot be undone."),
           icon: Icon(Icons.warning_amber,size: 45,color: kYellow,),
           actions: <Widget>[
             TextButton(

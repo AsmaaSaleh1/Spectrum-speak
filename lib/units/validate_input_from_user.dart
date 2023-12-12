@@ -5,8 +5,11 @@ bool isValidEmail(String email) {
 }
 // Phone validation function
 bool isValidPhoneNumber(String phoneNumber) {
-  return int.tryParse(phoneNumber) != null;
+  // Adjust the regular expression as needed for your specific requirements
+  final RegExp phoneRegex = RegExp(r'^\+?[0-9]+$');
+  return phoneRegex.hasMatch(phoneNumber);
 }
+
 // Password validation function
 bool isPasswordValid(String password) {
   // Password must contain at least one lowercase letter, one uppercase letter,
@@ -21,9 +24,13 @@ bool isDecimal(String input) {
   return decimalRegExp.hasMatch(input);
 }
 //Date [yyyy-mm-dd] validation function
-bool isDate(String input) {
+bool isDate(String input) {//TODO:test it
   final RegExp dateRegExp = RegExp(
       r'^\d{4}-\d{2}-\d{2}$'); // Matches the 'yyyy-mm-dd' format (e.g., '2023-11-29')
-  //TODO: check if the date is not come yet
-  return dateRegExp.hasMatch(input);
+  if (!dateRegExp.hasMatch(input)) {
+    return false; // Not a valid date format
+  }
+  DateTime inputDate = DateTime.parse(input);
+  DateTime currentDate = DateTime.now();
+  return !inputDate.isBefore(currentDate); // Return true if the input date is not in the past
 }
