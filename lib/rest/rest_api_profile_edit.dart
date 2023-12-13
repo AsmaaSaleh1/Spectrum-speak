@@ -91,3 +91,15 @@ Future editChildCard(
   var decodedData = jsonDecode(response.body);
   return decodedData;
 }
+Future resetPassword(String email, String password)async{
+  final response = await http.patch(
+      Uri.parse('${Utils.baseUrl}/profileEdit/password/$email'),
+      headers: {
+        "Accept": "application/json"
+      },
+      body: {
+        'Password':password
+      });
+  var decodedData = jsonDecode(response.body);
+  return decodedData;
+}

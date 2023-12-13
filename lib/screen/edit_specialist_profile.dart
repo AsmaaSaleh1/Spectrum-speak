@@ -1,3 +1,4 @@
+import 'package:email_otp/email_otp.dart';
 import 'package:flutter/material.dart';
 import 'package:spectrum_speak/constant/const_color.dart';
 import 'package:spectrum_speak/modules/specialist.dart';
@@ -10,6 +11,8 @@ import 'package:spectrum_speak/units/build_text_field.dart';
 import 'package:spectrum_speak/units/custom_button.dart';
 import 'package:spectrum_speak/units/build_drop_down_menu.dart';
 import 'package:spectrum_speak/units/validate_input_from_user.dart';
+
+import 'otp_screen.dart';
 
 class EditSpecialistProfile extends StatefulWidget {
   const EditSpecialistProfile({super.key});
@@ -26,7 +29,7 @@ class _EditSpecialistProfileState extends State<EditSpecialistProfile> {
   final TextEditingController _birthDateController = TextEditingController();
   final TextEditingController _phoneNumberController = TextEditingController();
   final TextEditingController _priceController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
+  EmailOTP myAuth = EmailOTP();
 
   bool _phoneError = false;
   bool _showDateError = false;
@@ -282,10 +285,43 @@ class _EditSpecialistProfileState extends State<EditSpecialistProfile> {
                 child: CustomButton(
                   foregroundColor: kDarkerColor,
                   backgroundColor: kBlue,
-                  onPressed: () {},
                   buttonText: "Change Password",
                   icon: Icon(Icons.key_sharp),
                   iconColor: kPrimary,
+                  onPressed: () async {
+                    myAuth.setConfig(
+                      appEmail: "asmaatareq1999@gmail.com",
+                      appName: "Spectrum Speak",
+                      userEmail: _emailController.text,
+                      otpLength: 4,
+                      otpType: OTPType.digitsOnly,
+                    );
+                    if (await myAuth.sendOTP() == true) {
+                      print("done send");
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('OTP has been sent'),
+                        ),
+                      );
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => OTPScreen(
+                            myAuth: myAuth,
+                            email: _emailController.text,
+                            comeFromSignUp: false,
+                          ),
+                        ),
+                      );
+                    } else {
+                      print("error");
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Oops, OTP send failed'),
+                        ),
+                      );
+                    }
+                  },
                 ),
               ),
             ),

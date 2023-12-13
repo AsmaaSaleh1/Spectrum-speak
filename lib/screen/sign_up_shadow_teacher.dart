@@ -33,10 +33,8 @@ class _SignUpShadowTeacherState extends State<SignUpShadowTeacher> {
       body: SingleChildScrollView(
         child: Column(
           children: [
+            const SizedBox(height: 100,),
             Container(
-              padding: const EdgeInsets.only(
-                top: 20,
-              ),
               alignment: Alignment.topCenter,
               height: 210,
               //margin: const EdgeInsets.only(left: 8, top: 45),

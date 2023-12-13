@@ -1,3 +1,4 @@
+import 'package:email_otp/email_otp.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -15,6 +16,7 @@ import 'package:spectrum_speak/units/build_radio_button.dart';
 import 'package:spectrum_speak/units/build_text_field.dart';
 import 'package:spectrum_speak/units/validate_input_from_user.dart';
 import 'login.dart';
+import 'otp_screen.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({super.key});
@@ -31,6 +33,7 @@ class _SignUpState extends State<SignUp> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController =
       TextEditingController();
+  EmailOTP myAuth = EmailOTP();
   UserCategory _selectedCategory = UserCategory.Parent;
   bool _showTextPassword = false;
   bool _showTextPasswordValid = false;
@@ -323,7 +326,8 @@ class _SignUpState extends State<SignUp> {
             ),
             ElevatedButton(
               onPressed: () async {
-                print("Selected category in RadioButtonSearch: $_selectedCategory");
+                print(
+                    "Selected category in RadioButtonSearch: $_selectedCategory");
                 resetErrorFlags();
                 if (_emailController.text.isEmpty ||
                     _usernameController.text.isEmpty ||
@@ -332,10 +336,10 @@ class _SignUpState extends State<SignUp> {
                     _passwordController.text.isEmpty ||
                     _confirmPasswordController.text.isEmpty ||
                     selectedCity == null) {
-                    setState(() {
-                      _showErrorText = true;
-                    });
-                    return;
+                  setState(() {
+                    _showErrorText = true;
+                  });
+                  return;
                 }
 
                 if (!isValidEmail(_emailController.text)) {
@@ -490,15 +494,37 @@ class _SignUpState extends State<SignUp> {
       String userEmail = rest['data'][0]['Email'];
       String userID = rest['data'][0]['UserID'].toString();
       await AuthManager.storeUserData(userID, userEmail);
-      if (selectedCategory == UserCategory.Parent) {
-        Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (_) => const AddChild(comeFromSignUp: true,)));
-      } else if (selectedCategory == UserCategory.ShadowTeacher) {
-        Navigator.pushReplacement(context,
-            MaterialPageRoute(builder: (_) => const SignUpShadowTeacher()));
+      myAuth.setConfig(
+        appEmail: "asmaatareq1999@gmail.com",
+        appName: "Spectrum Speak",
+        userEmail: _emailController.text,
+        otpLength: 4,
+        otpType: OTPType.digitsOnly,
+      );
+      if (await myAuth.sendOTP() == true) {
+        print("done send");
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('OTP has been sent'),
+          ),
+        );
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => OTPScreen(
+              myAuth: myAuth,
+              email: _emailController.text,
+              comeFromSignUp: true,
+            ),
+          ),
+        );
       } else {
-        Navigator.pushReplacement(context,
-            MaterialPageRoute(builder: (_) => const SignUpSpecialist()));
+        print("error");
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Oops, OTP send failed'),
+          ),
+        );
       }
     } else {
       setState(() {
@@ -507,8 +533,14 @@ class _SignUpState extends State<SignUp> {
     }
   }
 
-  doSignUp(String email, String userName, String phone, String password,String birthDate,
-      String selectedCity, UserCategory selectedCategory) async {
+  doSignUp(
+      String email,
+      String userName,
+      String phone,
+      String password,
+      String birthDate,
+      String selectedCity,
+      UserCategory selectedCategory) async {
     var rest = await userSignUp(
         email.trim(),
         userName.trim(),
