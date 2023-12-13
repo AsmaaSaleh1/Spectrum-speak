@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -29,6 +28,7 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -51,6 +51,18 @@ class _MyAppState extends State<MyApp> {
         iconTheme: IconThemeData(color: kDarkerColor),
         fontFamily: GoogleFonts.tinos().fontFamily,
         textTheme: GoogleFonts.tinosTextTheme(),
+        textSelectionTheme: TextSelectionThemeData(
+          cursorColor: kDarkBlue, // Set the cursor color here
+          selectionHandleColor:
+              kDarkBlue, // Set the selection handle color if needed
+          selectionColor: kDarkBlue,
+        ),
+        inputDecorationTheme: InputDecorationTheme(
+          focusedBorder: UnderlineInputBorder(
+            borderSide:
+                BorderSide(color: kDarkBlue), // Set the focus color here
+          ),
+        ),
       ),
       home: const Scaffold(
         body: Welcome(),

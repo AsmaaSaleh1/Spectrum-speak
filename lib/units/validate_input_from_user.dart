@@ -24,7 +24,7 @@ bool isDecimal(String input) {
   return decimalRegExp.hasMatch(input);
 }
 //Date [yyyy-mm-dd] validation function
-bool isDate(String input) {//TODO:test it
+bool isDate(String input) {
   final RegExp dateRegExp = RegExp(
       r'^\d{4}-\d{2}-\d{2}$'); // Matches the 'yyyy-mm-dd' format (e.g., '2023-11-29')
   if (!dateRegExp.hasMatch(input)) {
@@ -32,5 +32,5 @@ bool isDate(String input) {//TODO:test it
   }
   DateTime inputDate = DateTime.parse(input);
   DateTime currentDate = DateTime.now();
-  return !inputDate.isBefore(currentDate); // Return true if the input date is not in the past
+  return inputDate.isBefore(currentDate); // Return true if the input date is not in the past
 }
