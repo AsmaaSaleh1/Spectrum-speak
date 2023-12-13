@@ -4,6 +4,7 @@ import 'package:spectrum_speak/rest/auth_manager.dart';
 import 'package:spectrum_speak/rest/rest_api_login.dart';
 import 'package:spectrum_speak/screen/main_page.dart';
 import 'package:spectrum_speak/units/build_text_field.dart';
+import 'forget_password.dart';
 import 'sign_up.dart';
 import 'package:spectrum_speak/rest/rest_api_signUp.dart';
 
@@ -39,7 +40,6 @@ class _LoginState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
-    bool isObscurePassword = true;
     return Scaffold(
       backgroundColor: kPrimary,
       body: SingleChildScrollView(
@@ -64,30 +64,32 @@ class _LoginState extends State<Login> {
               ),
             ),
             Container(
-                alignment: Alignment.center,
-                margin: const EdgeInsets.only(bottom: 15),
-                width: 280,
-                height: 50,
-                child: CustomTextField(
-                    preIcon: Icons.mail,
-                    labelText: "Email Address",
-                    placeholder: "Asmaa@gmail.com",
-                    isPasswordTextField: false,
-                    controller: _emailController)),
+              alignment: Alignment.center,
+              margin: const EdgeInsets.only(bottom: 15),
+              width: 280,
+              height: 50,
+              child: CustomTextField(
+                  preIcon: Icons.mail,
+                  labelText: "Email Address",
+                  placeholder: "Asmaa@gmail.com",
+                  isPasswordTextField: false,
+                  controller: _emailController),
+            ),
             const SizedBox(
               height: 10,
             ),
             Container(
-                alignment: Alignment.center,
-                margin: const EdgeInsets.only(bottom: 15),
-                width: 280,
-                height: 50,
-                child: CustomTextField(
-                    preIcon: Icons.lock_outline,
-                    labelText: "Password",
-                    placeholder: "**********",
-                    isPasswordTextField: true,
-                    controller: _passwordController)),
+              alignment: Alignment.center,
+              margin: const EdgeInsets.only(bottom: 15),
+              width: 280,
+              height: 50,
+              child: CustomTextField(
+                  preIcon: Icons.lock_outline,
+                  labelText: "Password",
+                  placeholder: "**********",
+                  isPasswordTextField: true,
+                  controller: _passwordController),
+            ),
             Visibility(
               visible: _showErrorText,
               child: Container(
@@ -139,12 +141,21 @@ class _LoginState extends State<Login> {
             ),
             Container(
               margin: const EdgeInsets.only(top: 25),
-              child: const Text(
-                'Forgot Password?',
-                style: TextStyle(
-                  color: kDarkBlue,
-                  decoration: TextDecoration.underline,
-                  fontSize: 15,
+              child: TextButton(
+                onPressed: () {
+                  // Navigate to ForgetPassword screen
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ForgetPassword()));
+                },
+                child: const Text(
+                  'Forgot Password?',
+                  style: TextStyle(
+                    color: kDarkBlue,
+                    decoration: TextDecoration.underline,
+                    fontSize: 15,
+                  ),
                 ),
               ),
             ),
