@@ -2,13 +2,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthManager {
   static Future<void> storeUserData(String userId, String userEmail) async {
-    //TODO:test it
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.clear();
     prefs.setString('userID', userId);
     prefs.setString('userEmail', userEmail);
     final DateTime now = DateTime.now();
-    final DateTime sessionExpiration = now.add(const Duration(minutes: 20));
+    final DateTime sessionExpiration = now.add(const Duration(minutes: 2));
     prefs.setString('sessionExpiration', sessionExpiration.toIso8601String());
     /*If the timestamp is within the valid session duration,
      the user is considered logged in;
@@ -32,7 +31,6 @@ class AuthManager {
   }
 
   static Future<bool> isUserLoggedIn() async {
-    //TODO:test it
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final String? expirationString = prefs.getString('sessionExpiration');
 

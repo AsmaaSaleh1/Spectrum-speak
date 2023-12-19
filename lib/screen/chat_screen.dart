@@ -1,6 +1,9 @@
 import 'package:circular_profile_avatar/circular_profile_avatar.dart';
 import 'package:flutter/material.dart';
 import 'package:spectrum_speak/constant/const_color.dart';
+import 'package:spectrum_speak/rest/auth_manager.dart';
+
+import 'login.dart';
 
 class ChatScreen extends StatefulWidget {
   const ChatScreen({super.key});
@@ -10,6 +13,24 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
+  @override
+  void initState() {
+    super.initState();
+    checkLoginStatus();
+  }
+
+  // Method to check if the user is logged in
+  Future<void> checkLoginStatus() async {
+    bool isLoggedIn = await AuthManager.isUserLoggedIn();
+
+    if (!isLoggedIn) {
+      // If the user is not logged in, navigate to the login page
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => Login()),
+      );
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return SafeArea(

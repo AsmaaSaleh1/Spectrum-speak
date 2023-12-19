@@ -11,6 +11,7 @@ import 'package:spectrum_speak/widgets/stack_container_parent.dart';
 import 'package:spectrum_speak/widgets/parent_information.dart';
 
 import 'add_child.dart';
+import 'login.dart';
 
 class ParentProfile extends StatefulWidget {
   const ParentProfile({super.key});
@@ -26,6 +27,20 @@ class _ParentProfileState extends State<ParentProfile> {
   void initState() {
     super.initState();
     _loadChildren();
+    checkLoginStatus();
+  }
+
+  // Method to check if the user is logged in
+  Future<void> checkLoginStatus() async {
+    bool isLoggedIn = await AuthManager.isUserLoggedIn();
+
+    if (!isLoggedIn) {
+      // If the user is not logged in, navigate to the login page
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => Login()),
+      );
+    }
   }
   @override
   Widget build(BuildContext context) => LayoutBuilder(

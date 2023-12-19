@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:spectrum_speak/constant/const_color.dart';
+import 'package:spectrum_speak/rest/auth_manager.dart';
 import 'package:spectrum_speak/widgets/card_review.dart';
 
 import 'package:spectrum_speak/widgets/stack_container_specialist.dart';
@@ -8,6 +9,8 @@ import 'package:spectrum_speak/widgets/specialist_information.dart';
 
 import 'package:spectrum_speak/units/review_add_from_user.dart';
 import 'package:spectrum_speak/widgets/top_bar.dart';
+
+import 'login.dart';
 
 class SpecialistProfile extends StatefulWidget {
   const SpecialistProfile({super.key});
@@ -18,6 +21,24 @@ class SpecialistProfile extends StatefulWidget {
 
 class _SpecialistProfileState extends State<SpecialistProfile> {
   double userRating = 0.0;
+  @override
+  void initState() {
+    super.initState();
+    checkLoginStatus();
+  }
+
+  // Method to check if the user is logged in
+  Future<void> checkLoginStatus() async {
+    bool isLoggedIn = await AuthManager.isUserLoggedIn();
+
+    if (!isLoggedIn) {
+      // If the user is not logged in, navigate to the login page
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => Login()),
+      );
+    }
+  }
   @override
   Widget build(BuildContext context) => LayoutBuilder(
           builder: (BuildContext context, BoxConstraints constraints) {
