@@ -11,6 +11,8 @@ import 'package:spectrum_speak/units/build_text_field.dart';
 import 'package:spectrum_speak/units/custom_button.dart';
 import 'package:spectrum_speak/units/validate_input_from_user.dart';
 
+import 'login.dart';
+
 class EditChildCard extends StatefulWidget {
   final String childId;
   const EditChildCard({super.key, required this.childId});
@@ -40,6 +42,20 @@ class _EditChildCardState extends State<EditChildCard> {
         degreeOfAutism = childData.degreeOfAutism;
       });
     });
+    checkLoginStatus();
+  }
+
+  // Method to check if the user is logged in
+  Future<void> checkLoginStatus() async {
+    bool isLoggedIn = await AuthManager.isUserLoggedIn();
+
+    if (!isLoggedIn) {
+      // If the user is not logged in, navigate to the login page
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => Login()),
+      );
+    }
   }
 
   @override

@@ -13,6 +13,7 @@ import 'package:spectrum_speak/units/custom_button.dart';
 import 'package:spectrum_speak/units/build_drop_down_menu.dart';
 import 'package:spectrum_speak/units/validate_input_from_user.dart';
 
+import 'login.dart';
 import 'otp_screen.dart';
 
 class EditShadowTeacherProfile extends StatefulWidget {
@@ -58,6 +59,20 @@ class _EditShadowTeacherProfileState extends State<EditShadowTeacherProfile> {
         selectedGender = teacherData.gender;
       });
     });
+    checkLoginStatus();
+  }
+
+  // Method to check if the user is logged in
+  Future<void> checkLoginStatus() async {
+    bool isLoggedIn = await AuthManager.isUserLoggedIn();
+
+    if (!isLoggedIn) {
+      // If the user is not logged in, navigate to the login page
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => Login()),
+      );
+    }
   }
 
   @override
@@ -436,15 +451,14 @@ class _EditShadowTeacherProfileState extends State<EditShadowTeacherProfile> {
                         }
 
                         doEditProfile(
-                          _userNameController.text,
-                          _phoneNumberController.text,
-                          _birthDateController.text,
-                          selectedCity!,
-                          _qualificationController.text,
-                          double.parse(_salaryController.text),
-                          selectedGender!,
-                          availability!
-                        );
+                            _userNameController.text,
+                            _phoneNumberController.text,
+                            _birthDateController.text,
+                            selectedCity!,
+                            _qualificationController.text,
+                            double.parse(_salaryController.text),
+                            selectedGender!,
+                            availability!);
                       },
                       buttonText: 'Save',
                       icon: const Icon(
@@ -493,16 +507,15 @@ class _EditShadowTeacherProfileState extends State<EditShadowTeacherProfile> {
       String? userID = await AuthManager.getUserId();
       if (userID != null) {
         var rest = await editProfileShadowTeacher(
-          userID,
-          userName.trim(),
-          phone.trim(),
-          birthDate,
-          selectedCity.trim(),
-          AcademicQualification.trim(),
-          salary,
-          gender.trim(),
-          availability.trim()
-        );
+            userID,
+            userName.trim(),
+            phone.trim(),
+            birthDate,
+            selectedCity.trim(),
+            AcademicQualification.trim(),
+            salary,
+            gender.trim(),
+            availability.trim());
         if (rest['success']) {
           Navigator.pushReplacement(context,
               MaterialPageRoute(builder: (_) => ShadowTeacherProfile()));

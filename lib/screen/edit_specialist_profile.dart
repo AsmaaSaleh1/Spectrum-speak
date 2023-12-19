@@ -12,6 +12,7 @@ import 'package:spectrum_speak/units/custom_button.dart';
 import 'package:spectrum_speak/units/build_drop_down_menu.dart';
 import 'package:spectrum_speak/units/validate_input_from_user.dart';
 
+import 'login.dart';
 import 'otp_screen.dart';
 
 class EditSpecialistProfile extends StatefulWidget {
@@ -51,6 +52,20 @@ class _EditSpecialistProfileState extends State<EditSpecialistProfile> {
         selectedSpecialist = specialistData.specialistCategory;
       });
     });
+    checkLoginStatus();
+  }
+
+  // Method to check if the user is logged in
+  Future<void> checkLoginStatus() async {
+    bool isLoggedIn = await AuthManager.isUserLoggedIn();
+
+    if (!isLoggedIn) {
+      // If the user is not logged in, navigate to the login page
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => Login()),
+      );
+    }
   }
 
   @override
