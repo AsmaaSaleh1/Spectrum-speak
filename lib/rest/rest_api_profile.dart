@@ -1,5 +1,6 @@
-import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'dart:io';
+import 'package:http/http.dart' as http;
 import 'package:spectrum_speak/constant/utils.dart';
 import 'package:spectrum_speak/modules/child.dart';
 import 'package:spectrum_speak/modules/parent.dart';
@@ -145,7 +146,7 @@ Future<int?> countOfChildForParent(String userId) async {
       int count = decodedData['message'];
       return count;
     } else {
-        print("Error decoding data from /childCount/$userId");
+      print("Error decoding data from /childCount/$userId");
       return null;
     }
   } catch (error) {
@@ -164,7 +165,7 @@ Future<Child?> getChildByID(String childId) async {
       var decodedData = jsonDecode(response.body)["data"][0];
       String? userId = await AuthManager.getUserId();
       // Create and return a list of Child instances
-      if(userId!=null){
+      if (userId != null) {
         return Child(
           childID: childId,
           userID: userId,
@@ -173,8 +174,9 @@ Future<Child?> getChildByID(String childId) async {
           gender: decodedData['Gender'],
           degreeOfAutism: decodedData['DegreeOfAutism'],
         );
-      }else{
+      } else {
         print("Null userID");
+        return null;
       }
     } else {
       print("Error in child card: ${response.statusCode}");
@@ -186,6 +188,27 @@ Future<Child?> getChildByID(String childId) async {
   }
 }
 
+Future<void> uploadImage(File image) async {
+  try {//TODO:not tested
+    // Ensure you are importing 'dart:io' for the File class
+    final bytes = await image.readAsBytes();
+    final base64Image = base64Encode(bytes);
 
+    final response = await http.post(
+      Uri.parse('${Utils.baseUrl}/profile/uploadPhoto'),
+      headers: {"Accept": "application/json"},
+      body: {
+        'Photo': base64Image,
+      },
+    );
 
+    if (response.statusCode == 200) {
+      print('Image uploaded successfully');
+    } else {
+      print('Failed to upload image. Status code: ${response.statusCode}');
+    }
+  } catch (e) {
+    print('Error uploading image: $e');
+  }
+}
 //TODO: handle the null from the database in shadowTeacher and specialist profile

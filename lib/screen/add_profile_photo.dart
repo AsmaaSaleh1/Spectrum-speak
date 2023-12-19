@@ -1,12 +1,13 @@
 import 'dart:io' show File;
-import 'dart:convert';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:spectrum_speak/constant/const_color.dart';
 import 'package:spectrum_speak/units/custom_button.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:path/path.dart';
+import 'package:spectrum_speak/widgets/image_widget.dart';
 
 class AddProfilePhoto extends StatefulWidget {
   const AddProfilePhoto({super.key});
@@ -43,23 +44,14 @@ class _AddProfilePhotoState extends State<AddProfilePhoto> {
               ),
               child: image != null
                   ? ClipOval(
-                      child: kIsWeb
-                          ? Image.network(
-                              'data:image/png;base64,${base64Encode(image!.readAsBytesSync())}',
-                              width: 200,
-                              height: 200,
-                              fit: BoxFit.cover,
-                            )
-                          : Image.file(
-                              image!,
-                              width: 200,
-                              height: 200,
-                              fit: BoxFit.cover,
-                            ),
-                    )
+                    child: ImageWidget(
+                        image: image!,
+                        onClicked: (source) => pickImage(source),
+                      ),
+                  )
                   : ClipOval(
                       child: Image.asset(
-                        'images/prof.png',
+                        'images/profile.jpg',
                         width: 200,
                         height: 200,
                         fit: BoxFit.cover,
@@ -73,7 +65,7 @@ class _AddProfilePhotoState extends State<AddProfilePhoto> {
               child: CustomButton(
                 foregroundColor: kPrimary,
                 backgroundColor: kDarkerColor,
-                onPressed: () => pickImage(),
+                onPressed: () => pickImage(ImageSource.gallery),
                 buttonText: 'Upload from Gallery',
                 icon: const Icon(
                   Icons.image_outlined,
@@ -89,7 +81,7 @@ class _AddProfilePhotoState extends State<AddProfilePhoto> {
               child: CustomButton(
                 foregroundColor: kPrimary,
                 backgroundColor: kDarkerColor,
-                onPressed: () {},
+                onPressed: () => pickImage(ImageSource.camera),
                 buttonText: 'Pick Camera',
                 icon: const Icon(
                   Icons.camera_alt,
@@ -104,19 +96,27 @@ class _AddProfilePhotoState extends State<AddProfilePhoto> {
     );
   }
 
-  Future pickImage() async {
+  Future pickImage(ImageSource source) async {
     // If running on mobile, use ImagePicker package
     try {
-      final image = await ImagePicker().pickImage(source: ImageSource.gallery);
+      final image = await ImagePicker().pickImage(source: source);
       if (image == null) {
         return;
       }
-      final imageTemp = File(image.path);
+      //final imageTemp = File(image.path);
+      final imagePermanent = await saveImagePermanently(image.path);
       setState(() {
-        this.image = imageTemp;
+        this.image = imagePermanent;
       });
     } on PlatformException catch (e) {
       print("failed to upload image: $e");
     }
+  }
+
+  Future<File> saveImagePermanently(String path) async {
+    final directory = await getApplicationDocumentsDirectory();
+    final name = basename(path);
+    final image = File('${directory.path}/$name');
+    return File(path).copy(image.path);
   }
 }
