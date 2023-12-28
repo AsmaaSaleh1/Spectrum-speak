@@ -8,6 +8,7 @@ import 'package:spectrum_speak/units/build_drop_down_menu.dart';
 import 'package:spectrum_speak/units/build_text_field.dart';
 import 'package:spectrum_speak/units/validate_input_from_user.dart';
 
+import 'add_profile_photo.dart';
 import 'main_page.dart';
 
 class SignUpShadowTeacher extends StatefulWidget {
@@ -244,7 +245,7 @@ class _SignUpShadowTeacherState extends State<SignUpShadowTeacher> {
     );
     if (rest['success']) {
       Navigator.of(context)
-          .push(MaterialPageRoute(builder: (context) => const MainPage()));
+          .push(MaterialPageRoute(builder: (context) => AddProfilePhoto(comeFromSignUp: true,)));
     } else {
       setState(() {
         _showErrorText = true;

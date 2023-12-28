@@ -65,7 +65,7 @@ class _MyAppState extends State<MyApp> {
         ),
       ),
       home: const Scaffold(
-        body: AddProfilePhoto(),
+        body: Welcome(),
       ),
     );
   }

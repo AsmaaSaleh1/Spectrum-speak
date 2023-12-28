@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
+import 'package:path_provider/path_provider.dart';
 import 'package:spectrum_speak/constant/utils.dart';
 import 'package:spectrum_speak/modules/child.dart';
 import 'package:spectrum_speak/modules/parent.dart';
@@ -188,27 +189,43 @@ Future<Child?> getChildByID(String childId) async {
   }
 }
 
-Future<void> uploadImage(File image) async {
-  try {//TODO:not tested
-    // Ensure you are importing 'dart:io' for the File class
-    final bytes = await image.readAsBytes();
-    final base64Image = base64Encode(bytes);
+Future<File> getPhoto(String userID) async {
+  try {
+    // Delete existing file if it exists
+    final documentDirectory = await getApplicationDocumentsDirectory();
+    final existingFilePath = documentDirectory.path + '/$userID' + '_photo.jpg';
+    File existingFile = File(existingFilePath);
 
-    final response = await http.post(
-      Uri.parse('${Utils.baseUrl}/profile/uploadPhoto'),
-      headers: {"Accept": "application/json"},
-      body: {
-        'Photo': base64Image,
+    if (existingFile.existsSync()) {
+      await existingFile.delete();
+      print('Deleted existing photo: $existingFilePath');
+    }
+    var response = await http.get(
+      Uri.parse('${Utils.baseUrl}/profile/getPhoto/$userID'),
+      headers: {
+        "Accept": "application/json",
+        "Cache-Control": "no-store",
       },
     );
-
+    print("res");
     if (response.statusCode == 200) {
-      print('Image uploaded successfully');
+      final documentDirectory = await getApplicationDocumentsDirectory();
+      final filePath = documentDirectory.path + '/$userID' + '_photo.jpg';
+
+      File file = File(filePath);
+      await file.writeAsBytes(response.bodyBytes);
+
+      // Now you can use the file as needed (e.g., display it in an Image widget)
+      print('Photo downloaded successfully to: $filePath');
+      return file; // Return the path of the saved photo
     } else {
-      print('Failed to upload image. Status code: ${response.statusCode}');
+      print('Failed to retrieve photo. Status code: ${response.statusCode}');
+      throw Exception('Failed to retrieve photo');
     }
   } catch (e) {
-    print('Error uploading image: $e');
+    print('Error retrieving photo: $e');
+    throw Exception('Error retrieving photo');
   }
 }
+
 //TODO: handle the null from the database in shadowTeacher and specialist profile

@@ -7,11 +7,13 @@ import 'package:spectrum_speak/rest/rest_api_profile.dart';
 import 'package:spectrum_speak/rest/rest_api_profile_edit.dart';
 import 'package:spectrum_speak/screen/parent_profile.dart';
 import 'package:spectrum_speak/units/build_date_text_field.dart';
+import 'package:spectrum_speak/units/build_profile_image.dart';
 import 'package:spectrum_speak/units/build_text_field.dart';
 import 'package:spectrum_speak/units/custom_button.dart';
 import 'package:spectrum_speak/units/build_drop_down_menu.dart';
 import 'package:spectrum_speak/units/validate_input_from_user.dart';
 
+import 'add_profile_photo.dart';
 import 'login.dart';
 import 'otp_screen.dart';
 
@@ -82,36 +84,47 @@ class _EditProfileState extends State<EditProfile> {
                       width: 130,
                       height: 130,
                       decoration: BoxDecoration(
-                          border: Border.all(width: 4, color: kPrimary),
-                          boxShadow: [
-                            BoxShadow(
-                              color: kDarkBlue.withOpacity(0.5),
-                              blurRadius: 8.0, // Blur radius
-                              spreadRadius: 2.0, // Spread radius
-                              offset: const Offset(-5, 5),
-                            ),
-                          ],
-                          shape: BoxShape.circle,
-                          image: const DecorationImage(
-                            fit: BoxFit.cover,
-                            image: AssetImage('images/prof.png'),
-                          )),
+                        border: Border.all(width: 4, color: kPrimary),
+                        boxShadow: [
+                          BoxShadow(
+                            color: kDarkBlue.withOpacity(0.5),
+                            blurRadius: 8.0, // Blur radius
+                            spreadRadius: 2.0, // Spread radius
+                            offset: const Offset(-5, 5),
+                          ),
+                        ],
+                        shape: BoxShape.circle,
+                      ),
+                      child: ClipOval(
+                        //child: ProfileImageDisplay(),
+                      ),
                     ),
                   ),
                   Positioned(
                     bottom: 0,
                     right: 0,
-                    child: Container(
-                      height: 40,
-                      width: 40,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        border: Border.all(width: 3, color: kPrimary),
-                        color: kDarkBlue,
-                      ),
-                      child: const Icon(
-                        Icons.edit,
-                        color: kPrimary,
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                AddProfilePhoto(comeFromSignUp: false),
+                          ),
+                        );
+                      },
+                      child: Container(
+                        height: 40,
+                        width: 40,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(width: 3, color: kPrimary),
+                          color: kDarkBlue,
+                        ),
+                        child: const Icon(
+                          Icons.edit,
+                          color: kPrimary,
+                        ),
                       ),
                     ),
                   ),

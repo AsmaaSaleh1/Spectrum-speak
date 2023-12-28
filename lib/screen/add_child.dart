@@ -10,6 +10,8 @@ import 'package:spectrum_speak/units/build_drop_down_menu.dart';
 import 'package:spectrum_speak/units/build_text_field.dart';
 import 'package:spectrum_speak/units/validate_input_from_user.dart';
 
+import 'add_profile_photo.dart';
+
 class AddChild extends StatefulWidget {
   final bool comeFromSignUp;
   const AddChild({super.key, required this.comeFromSignUp});
@@ -41,7 +43,7 @@ class _AddChildState extends State<AddChild> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => const MainPage()),
+                              builder: (context) => AddProfilePhoto(comeFromSignUp: true,)),
                         );
                       },
                       child: Row(

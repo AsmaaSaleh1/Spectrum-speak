@@ -1,5 +1,6 @@
-import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'dart:io';
+import 'package:http/http.dart' as http;
 import 'package:spectrum_speak/constant/utils.dart';
 
 Future userSignUp(String email, String userName, String phone, String password,
@@ -80,5 +81,27 @@ Future<bool> isEmailAlreadyExists(String email) async {
     return decodedData['exists'];
   } else {
     return false;
+  }
+}
+
+Future<void> uploadImage(File image, String userID) async {
+  try {
+    var request = http.MultipartRequest(
+      'POST',
+      Uri.parse('${Utils.baseUrl}/signUp/uploadPhoto/$userID'),
+    );
+    request.headers['Accept'] = 'application/json';
+    var multipartFile = await http.MultipartFile.fromPath(
+        'image', image.path,
+    );
+    request.files.add(multipartFile);
+    var response = await http.Response.fromStream(await request.send());
+    if (response.statusCode == 200) {
+      print('Image uploaded successfully');
+    } else {
+      print('Failed to upload image. Status code: ${response.statusCode}');
+    }
+  } catch (e) {
+    print('Error uploading image: $e');
   }
 }

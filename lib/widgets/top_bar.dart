@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:io';
+
 import 'package:circular_profile_avatar/circular_profile_avatar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -6,7 +9,6 @@ import 'package:spectrum_speak/constant/const_color.dart';
 import 'package:spectrum_speak/rest/auth_manager.dart';
 import 'package:spectrum_speak/rest/rest_api_menu.dart';
 import 'package:spectrum_speak/rest/rest_api_profile_delete.dart';
-import 'package:spectrum_speak/rest/rest_api_signUp.dart';
 import 'package:spectrum_speak/screen/login.dart';
 import 'package:spectrum_speak/screen/main_page.dart';
 import 'package:spectrum_speak/screen/parent_profile.dart';
@@ -14,6 +16,7 @@ import 'package:spectrum_speak/screen/search_page.dart';
 import 'package:spectrum_speak/screen/shadow_teacher_profile.dart';
 import 'package:spectrum_speak/screen/specialist_profile.dart';
 import 'package:spectrum_speak/screen/splash_screen_chat.dart';
+import 'package:spectrum_speak/units/build_profile_image.dart';
 import 'package:tuple/tuple.dart';
 
 import 'card_user_chat.dart';
@@ -102,13 +105,12 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                   break;
               }
             },
-            child: Image.asset('images/prof.png'),
+            //child: ProfileImageDisplay(updateStreamController: updateStreamController,),
           ),
         )
       ],
     );
   }
-
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 }
@@ -123,6 +125,7 @@ class TopBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final StreamController<void> updateStreamController = StreamController<void>();
     return FutureBuilder<Tuple2<String?, String?>>(
         future: _getEmailAndName(),
         builder: (context, snapshot) {
@@ -202,7 +205,7 @@ class TopBar extends StatelessWidget {
                                 break;
                             }
                           },
-                          child: Image.asset('images/prof.png'),
+                          //child: ProfileImageDisplay(updateStreamController: updateStreamController,),
                         ),
                       ),
                       currentAccountPictureSize: const Size.square(75),
@@ -498,4 +501,5 @@ void _showPopupMenu(BuildContext context, int numberOfCards) async {
       ),
     ],
   );
+
 }

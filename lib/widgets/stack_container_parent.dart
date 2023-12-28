@@ -8,6 +8,7 @@ import 'package:spectrum_speak/rest/auth_manager.dart';
 import 'package:spectrum_speak/rest/rest_api_signUp.dart';
 import 'package:spectrum_speak/rest/rest_api_profile.dart';
 import 'package:spectrum_speak/screen/edit_profile.dart';
+import 'package:spectrum_speak/units/build_profile_image.dart';
 import 'package:spectrum_speak/units/custom_button.dart';
 import 'package:spectrum_speak/units/custom_clipper.dart';
 
@@ -49,7 +50,7 @@ class StackContainerParent extends StatelessWidget {
                           borderWidth: 4.0,
                           borderColor: kPrimary,
                           radius: 80.0,
-                          child: Image.asset('images/prof.png'),
+                          //child: ProfileImageDisplay(updateStreamController: updateStreamController,),
                         ),
                         const SizedBox(height: 4.0),
                         Text(

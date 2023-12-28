@@ -7,6 +7,7 @@ import 'package:spectrum_speak/rest/rest_api_profile.dart';
 import 'package:spectrum_speak/rest/rest_api_profile_edit.dart';
 import 'package:spectrum_speak/screen/shadow_teacher_profile.dart';
 import 'package:spectrum_speak/units/build_date_text_field.dart';
+import 'package:spectrum_speak/units/build_profile_image.dart';
 import 'package:spectrum_speak/units/build_text_field.dart';
 import 'package:spectrum_speak/units/custom_button.dart';
 
@@ -103,10 +104,10 @@ class _EditShadowTeacherProfileState extends State<EditShadowTeacherProfile> {
                             ),
                           ],
                           shape: BoxShape.circle,
-                          image: const DecorationImage(
-                            fit: BoxFit.cover,
-                            image: AssetImage('images/prof.png'),
-                          )),
+                          ),
+                      child: ClipOval(
+                        //child: ProfileImageDisplay(),
+                      ),
                     ),
                   ),
                   Positioned(

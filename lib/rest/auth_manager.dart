@@ -7,7 +7,7 @@ class AuthManager {
     prefs.setString('userID', userId);
     prefs.setString('userEmail', userEmail);
     final DateTime now = DateTime.now();
-    final DateTime sessionExpiration = now.add(const Duration(minutes: 2));
+    final DateTime sessionExpiration = now.add(const Duration(minutes: 20));
     prefs.setString('sessionExpiration', sessionExpiration.toIso8601String());
     /*If the timestamp is within the valid session duration,
      the user is considered logged in;

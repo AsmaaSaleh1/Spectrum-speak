@@ -7,6 +7,7 @@ import 'package:spectrum_speak/rest/rest_api_profile.dart';
 import 'package:spectrum_speak/rest/rest_api_profile_edit.dart';
 import 'package:spectrum_speak/screen/specialist_profile.dart';
 import 'package:spectrum_speak/units/build_date_text_field.dart';
+import 'package:spectrum_speak/units/build_profile_image.dart';
 import 'package:spectrum_speak/units/build_text_field.dart';
 import 'package:spectrum_speak/units/custom_button.dart';
 import 'package:spectrum_speak/units/build_drop_down_menu.dart';
@@ -96,10 +97,10 @@ class _EditSpecialistProfileState extends State<EditSpecialistProfile> {
                             ),
                           ],
                           shape: BoxShape.circle,
-                          image: const DecorationImage(
-                            fit: BoxFit.cover,
-                            image: AssetImage('images/prof.png'),
-                          )),
+                      ),
+                      child: ClipOval(
+                        //child: ProfileImageDisplay(),
+                      ),
                     ),
                   ),
                   Positioned(
