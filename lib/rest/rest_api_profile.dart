@@ -53,6 +53,7 @@ Future<Specialist?> profileSpecialist(String userId) async {
       // Create and return a specialist instance
       return Specialist(
         userID: userId,
+        specialistID: decodedData['SpecialistID'].toString(),
         userName: decodedData['Username'],
         email: decodedData['Email'],
         birthDate: decodedData['BirthDate'],
@@ -62,6 +63,8 @@ Future<Specialist?> profileSpecialist(String userId) async {
             (e) => e.toString() == 'UserCategory.${decodedData['Category']}'),
         specialistCategory: decodedData['SpecialistCategory'].toString(),
         price: double.parse(decodedData['Price']),
+        admin: decodedData['Admin']==1,
+        centerID: decodedData['CenterID'].toString(),
       );
     } else {
       print("Error in profileShadowTeacher: ${response.statusCode}");

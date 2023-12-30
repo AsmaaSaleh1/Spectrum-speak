@@ -20,7 +20,7 @@ class _CardReviewState extends State<CardReview> {
       padding: const EdgeInsets.all(19.0),
       child: Container(
         width: 300,
-        height: 170,
+        height: 180,
         decoration: BoxDecoration(
           color: kPrimary,
           borderRadius: BorderRadius.circular(15),

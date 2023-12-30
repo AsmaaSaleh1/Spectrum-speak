@@ -2,24 +2,39 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:spectrum_speak/constant/const_color.dart';
 import 'package:spectrum_speak/rest/auth_manager.dart';
-import 'package:spectrum_speak/rest/rest_api_signUp.dart';
 import 'package:spectrum_speak/units/build_drop_down_menu.dart';
 import 'package:spectrum_speak/units/build_text_field.dart';
-import 'package:spectrum_speak/units/validate_input_from_user.dart';
-import 'add_profile_photo.dart';
 
-class SignUpSpecialist extends StatefulWidget {
-  const SignUpSpecialist({super.key});
+class SignUpCenter extends StatefulWidget {
+  final String SpecialistID;
+  const SignUpCenter({super.key, required this.SpecialistID});
 
   @override
-  State<SignUpSpecialist> createState() => _SignUpSpecialistState();
+  State<SignUpCenter> createState() => _SignUpCenterState();
 }
 
-class _SignUpSpecialistState extends State<SignUpSpecialist> {
-  String? selectedSpecialist;
-  final TextEditingController _priceController = TextEditingController();
+class _SignUpCenterState extends State<SignUpCenter> {
+
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _phoneNumberController = TextEditingController();
+  String? selectedCity;
+
   bool _showErrorText = false;
-  bool _showPriceError =false;
+  bool _validEmail = false;
+  bool _existEmail = false;
+  bool _phoneError = false;
+
+  String messages() {
+    if (_validEmail) {
+      return "Not valid Email";
+    } else if (_existEmail) {
+      return "Already exist email";
+    }else {
+      return "Error";
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,7 +49,6 @@ class _SignUpSpecialistState extends State<SignUpSpecialist> {
               child: Container(
                 alignment: Alignment.topCenter,
                 height: 210,
-                //margin: const EdgeInsets.only(left: 8, top: 45),
                 child: Image.asset(
                   'images/spectrumspeak.png',
                   width: 270.0,
@@ -61,17 +75,51 @@ class _SignUpSpecialistState extends State<SignUpSpecialist> {
               height: 50,
               child: CustomTextField(
                   preIcon:FontAwesomeIcons.sackDollar,
-                  labelText:"Price",
-                  placeholder:"100\$ (in one session)",
+                  labelText:"Center Name",
+                  placeholder:"Asmaa Center",
                   isPasswordTextField:false,
-                  controller:_priceController),
+                  controller:_nameController),
+            ),
+            Container(
+              alignment: Alignment.center,
+              margin: const EdgeInsets.only(bottom: 15),
+              width: 280,
+              height: 50,
+              child: CustomTextField(
+                  preIcon: Icons.mail,
+                  labelText: "Email Address",
+                  placeholder: "Asmaa@gmail.com",
+                  isPasswordTextField: false,
+                  controller: _emailController),
             ),
             Visibility(
-              visible: _showPriceError,
+              visible: _validEmail || _existEmail,
               child: Container(
-                margin: const EdgeInsets.only(top: 10),
+                child: Text(
+                  messages(),
+                  style: const TextStyle(
+                    color: Colors.red,
+                    fontSize: 16,
+                  ),
+                ),
+              ),
+            ),
+            Container(
+              alignment: Alignment.center,
+              margin: const EdgeInsets.only(bottom: 15),
+              width: 280,
+              height: 50,
+              child: CustomTextField(
+                  preIcon: Icons.phone,
+                  labelText: "Phone Number",
+                  placeholder: "0592777777",
+                  isPasswordTextField: false,
+                  controller: _phoneNumberController),),
+            Visibility(
+              visible: _phoneError,
+              child: Container(
                 child: const Text(
-                  'Please enter a valid price (maximum 99999.99)',
+                  'Not a number',
                   style: TextStyle(
                     color: Colors.red,
                     fontSize: 16,
@@ -83,30 +131,35 @@ class _SignUpSpecialistState extends State<SignUpSpecialist> {
               alignment: Alignment.center,
               margin: const EdgeInsets.only(bottom: 15),
               width: 280,
-              height: 60,
+              height: 50,
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Padding(
                     padding:
-                        const EdgeInsets.only(top: 20, right: 10, bottom: 0),
+                    const EdgeInsets.only(left: 10, right: 10, bottom: 0),
                     child: Icon(
-                      FontAwesomeIcons.userDoctor,
-                      size: 25.0,
+                      FontAwesomeIcons.locationDot,
+                      size: 22.0,
                       color: kDarkerColor,
                     ),
                   ),
                   CustomDropDown(
                     items: const [
-                      'Audio & Speech',
-                      'Rehabilitation',
-                      'Psychiatrists'
+                      'Nablus',
+                      'Ramallah',
+                      'Jerusalem',
+                      'Bethlehem',
+                      'Qalqilya',
+                      'Hebron',
+                      'Jenin',
+                      'Tulkarm',
+                      'Other',
                     ],
-                    selectedValue: selectedSpecialist,
-                    hint: 'Select Category',
+                    selectedValue: selectedCity,
+                    hint: 'Select City',
                     onChanged: (String? value) {
                       setState(() {
-                        selectedSpecialist = value;
+                        selectedCity = value;
                       });
                     },
                   ),
@@ -129,27 +182,11 @@ class _SignUpSpecialistState extends State<SignUpSpecialist> {
             ElevatedButton(
               onPressed: () async {
                 String? userId = await AuthManager.getUserId();
-                _showErrorText=false;
-                _showPriceError=false;
+                _showErrorText = false;
+                _validEmail = false;
+                _existEmail = false;
+                _phoneError = false;
                 if (userId != null) {
-                  if(_priceController.text.isNotEmpty &&
-                      selectedSpecialist.toString().isNotEmpty){
-                    if(isDecimal(_priceController.text)){
-                      saveSpecialist(
-                          userId,
-                          _priceController.text,
-                          selectedSpecialist!
-                      );
-                    }else{
-                      setState(() {
-                        _showPriceError=true;
-                      });
-                    }
-                  }else {
-                    setState(() {
-                      _showErrorText = true;
-                    });
-                  }
 
                 } else {
                   // Handle the case where user ID is not available
@@ -181,20 +218,5 @@ class _SignUpSpecialistState extends State<SignUpSpecialist> {
         ),
       ),
     );
-  }
-
-  saveSpecialist(String userId, String price,String selectedSpecialist) async {
-    var rest = await specialistSignUp(userId,
-        double.parse(price),
-        selectedSpecialist);
-
-    if (rest['success']) {
-      Navigator.of(context).push(
-          MaterialPageRoute(builder: (context) => AddProfilePhoto(comeFromSignUp: true,)));
-    } else {
-      setState(() {
-        _showErrorText = true;
-      });
-    }
   }
 }

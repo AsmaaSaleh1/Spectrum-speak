@@ -6,7 +6,9 @@ import 'package:spectrum_speak/constant/const_color.dart';
 import 'package:spectrum_speak/modules/specialist.dart';
 import 'package:spectrum_speak/rest/auth_manager.dart';
 import 'package:spectrum_speak/rest/rest_api_profile.dart';
+import 'package:spectrum_speak/screen/center_profile.dart';
 import 'package:spectrum_speak/screen/edit_specialist_profile.dart';
+import 'package:spectrum_speak/screen/sign_up_center.dart';
 import 'package:spectrum_speak/units/build_profile_image.dart';
 import 'package:spectrum_speak/units/custom_button.dart';
 import 'package:spectrum_speak/units/custom_clipper.dart';
@@ -74,7 +76,9 @@ class StackContainerSpecialist extends StatelessWidget {
                                 width: 3,
                               ),
                               Text(
-                                toBeginningOfSentenceCase(specialist.specialistCategory)??"",
+                                toBeginningOfSentenceCase(
+                                        specialist.specialistCategory) ??
+                                    "",
                                 style: TextStyle(
                                   fontSize: 15.0,
                                   color: Colors.grey[700],
@@ -104,23 +108,74 @@ class StackContainerSpecialist extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(height: 5.0),
-                        CustomButton(
-                          foregroundColor: kDarkerColor,
-                          backgroundColor: kBlue,
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      const EditSpecialistProfile()),
-                            );
-                          },
-                          buttonText: 'Edit Profile',
-                          icon: const Icon(
-                            Icons.edit,
-                            size: 18.0,
-                          ),
-                          iconColor: kPrimary,
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            CustomButton(
+                              foregroundColor: kDarkerColor,
+                              backgroundColor: kBlue,
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const EditSpecialistProfile()),
+                                );
+                              },
+                              buttonText: 'Edit Profile',
+                              icon: const Icon(
+                                Icons.edit,
+                                size: 18.0,
+                              ),
+                              iconColor: kPrimary,
+                            ),
+                            const SizedBox(
+                              width: 20,
+                            ),
+                            if (specialist.specialistCategory ==
+                                'Rehabilitation')
+                              specialist.admin
+                                  ? CustomButton(
+                                      foregroundColor: kDarkerColor,
+                                      backgroundColor: kYellow,
+                                      onPressed: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => CenterProfile(
+                                              CenterID: specialist.centerID,
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                      buttonText: 'Go to Center',
+                                      icon: const Icon(
+                                        Icons.home_work_outlined,
+                                        size: 18.0,
+                                      ),
+                                      iconColor: kPrimary,
+                                    )
+                                  : CustomButton(
+                                      foregroundColor: kDarkerColor,
+                                      backgroundColor: kGreen,
+                                      onPressed: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => SignUpCenter(
+                                              SpecialistID: specialist.specialistID,
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                      buttonText: 'Make Center',
+                                      icon: const Icon(
+                                        Icons.login,
+                                        size: 18.0,
+                                      ),
+                                      iconColor: kPrimary,
+                                    )
+                          ],
                         ),
                       ],
                     ),
@@ -143,7 +198,6 @@ class StackContainerSpecialist extends StatelessWidget {
       // Check if userId is not null before calling profileShadowTeacher
       if (userId != null) {
         var result = await profileSpecialist(userId);
-        print('Profile result: $result');
         return result;
       } else {
         print('UserId is null');

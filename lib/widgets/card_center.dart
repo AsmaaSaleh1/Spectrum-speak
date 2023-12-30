@@ -157,10 +157,10 @@ class CenterCard extends StatelessWidget {
                         children: [
                           GestureDetector(
                             onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (context) => const CenterProfile()),
-                              );
+                              // Navigator.push(
+                              //   context,
+                              //   MaterialPageRoute(builder: (context) => const CenterProfile()),
+                              // );
                             },
                             child: Row(
                               children: [
@@ -174,10 +174,10 @@ class CenterCard extends StatelessWidget {
                                 ),
                                 IconButton(
                                   onPressed: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(builder: (context) => const CenterProfile()),
-                                    );
+                                    // Navigator.push(
+                                    //   context,
+                                    //   MaterialPageRoute(builder: (context) => const CenterProfile()),
+                                    // );
                                   },
                                   icon: Icon(
                                     FontAwesomeIcons.anglesRight,

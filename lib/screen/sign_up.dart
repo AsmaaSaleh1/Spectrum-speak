@@ -24,7 +24,8 @@ class SignUp extends StatefulWidget {
   @override
   State<SignUp> createState() => _SignUpState();
 }
-
+//TODO: add text area to about
+//TODO: complete
 class _SignUpState extends State<SignUp> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _usernameController = TextEditingController();
@@ -140,7 +141,7 @@ class _SignUpState extends State<SignUp> {
                     labelText: "User Name",
                     placeholder: "Asmaa",
                     isPasswordTextField: false,
-                    controller: _usernameController)),
+                    controller: _usernameController),),
             Container(
                 alignment: Alignment.center,
                 margin: const EdgeInsets.only(bottom: 15),
@@ -151,7 +152,7 @@ class _SignUpState extends State<SignUp> {
                     labelText: "Phone Number",
                     placeholder: "0592777777",
                     isPasswordTextField: false,
-                    controller: _phoneNumberController)),
+                    controller: _phoneNumberController),),
             Visibility(
               visible: _phoneError,
               child: Container(

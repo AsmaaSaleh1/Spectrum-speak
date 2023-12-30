@@ -8,7 +8,8 @@ import 'package:spectrum_speak/widgets/center_information.dart';
 import 'package:spectrum_speak/widgets/top_bar.dart';
 
 class CenterProfile extends StatefulWidget {
-  const CenterProfile({super.key});
+  final String CenterID;
+  const CenterProfile({super.key, required this.CenterID});
 
   @override
   State<CenterProfile> createState() => _CenterProfileState();
