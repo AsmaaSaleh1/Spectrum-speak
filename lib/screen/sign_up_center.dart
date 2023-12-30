@@ -14,10 +14,10 @@ class SignUpCenter extends StatefulWidget {
 }
 
 class _SignUpCenterState extends State<SignUpCenter> {
-
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _phoneNumberController = TextEditingController();
+  final TextEditingController _descriptionController = TextEditingController();
   String? selectedCity;
 
   bool _showErrorText = false;
@@ -25,12 +25,15 @@ class _SignUpCenterState extends State<SignUpCenter> {
   bool _existEmail = false;
   bool _phoneError = false;
 
+  int _characterCount = 0;
+  int _maxCharacterCount = 100;
+
   String messages() {
     if (_validEmail) {
       return "Not valid Email";
     } else if (_existEmail) {
       return "Already exist email";
-    }else {
+    } else {
       return "Error";
     }
   }
@@ -74,11 +77,12 @@ class _SignUpCenterState extends State<SignUpCenter> {
               width: 280,
               height: 50,
               child: CustomTextField(
-                  preIcon:FontAwesomeIcons.sackDollar,
-                  labelText:"Center Name",
-                  placeholder:"Asmaa Center",
-                  isPasswordTextField:false,
-                  controller:_nameController),
+                preIcon: FontAwesomeIcons.sackDollar,
+                labelText: "Center Name",
+                placeholder: "Asmaa Center",
+                isPasswordTextField: false,
+                controller: _nameController,
+              ),
             ),
             Container(
               alignment: Alignment.center,
@@ -86,11 +90,12 @@ class _SignUpCenterState extends State<SignUpCenter> {
               width: 280,
               height: 50,
               child: CustomTextField(
-                  preIcon: Icons.mail,
-                  labelText: "Email Address",
-                  placeholder: "Asmaa@gmail.com",
-                  isPasswordTextField: false,
-                  controller: _emailController),
+                preIcon: Icons.mail,
+                labelText: "Email Address",
+                placeholder: "Asmaa@gmail.com",
+                isPasswordTextField: false,
+                controller: _emailController,
+              ),
             ),
             Visibility(
               visible: _validEmail || _existEmail,
@@ -110,11 +115,13 @@ class _SignUpCenterState extends State<SignUpCenter> {
               width: 280,
               height: 50,
               child: CustomTextField(
-                  preIcon: Icons.phone,
-                  labelText: "Phone Number",
-                  placeholder: "0592777777",
-                  isPasswordTextField: false,
-                  controller: _phoneNumberController),),
+                preIcon: Icons.phone,
+                labelText: "Phone Number",
+                placeholder: "0592777777",
+                isPasswordTextField: false,
+                controller: _phoneNumberController,
+              ),
+            ),
             Visibility(
               visible: _phoneError,
               child: Container(
@@ -129,6 +136,52 @@ class _SignUpCenterState extends State<SignUpCenter> {
             ),
             Container(
               alignment: Alignment.center,
+              width: 280,
+              height: 80,
+              child: CustomTextField(
+                preIcon: FontAwesomeIcons.fileLines,
+                labelText: "Description",
+                placeholder: "Lorem ipsum comment Lorem ipsum comment",
+                isPasswordTextField: false,
+                controller: _descriptionController,
+                numOfLine: 3,
+                maxCharacterCount: _maxCharacterCount,
+                onChange: (text) {
+                  setState(() {
+                    _characterCount = text.length;
+                  });
+
+                  if (_characterCount > _maxCharacterCount) {
+                    // Truncate the text to the maximum allowed characters
+                    _descriptionController.text = _descriptionController.text
+                        .substring(0, _maxCharacterCount);
+                    _descriptionController.selection =
+                        TextSelection.fromPosition(
+                      TextPosition(offset: _maxCharacterCount),
+                    );
+                  }
+                },
+              ),
+            ),
+            Container(
+              alignment: Alignment.centerRight,
+              margin: const EdgeInsets.only(bottom: 10),
+              padding: const EdgeInsets.only(right: 5),
+              width: 280,
+              height: 18,
+              child: Text(
+                '$_characterCount/$_maxCharacterCount',
+                style: TextStyle(
+                  color: _characterCount > _maxCharacterCount
+                      ? kRed
+                      : kDarkerColor.withOpacity(0.8),
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+            Container(
+              alignment: Alignment.center,
               margin: const EdgeInsets.only(bottom: 15),
               width: 280,
               height: 50,
@@ -136,7 +189,7 @@ class _SignUpCenterState extends State<SignUpCenter> {
                 children: [
                   Padding(
                     padding:
-                    const EdgeInsets.only(left: 10, right: 10, bottom: 0),
+                        const EdgeInsets.only(left: 10, right: 10, bottom: 0),
                     child: Icon(
                       FontAwesomeIcons.locationDot,
                       size: 22.0,
@@ -187,7 +240,6 @@ class _SignUpCenterState extends State<SignUpCenter> {
                 _existEmail = false;
                 _phoneError = false;
                 if (userId != null) {
-
                 } else {
                   // Handle the case where user ID is not available
                   print('User ID not available');
