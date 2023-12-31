@@ -33,6 +33,6 @@ class Specialist {
 
   @override
   String toString() {
-    return 'Specialist{userID: $userID, specialistID: $specialistID, specialistCategory: $specialistCategory, price: $price, userName: $userName, email: $email, city: $city, phone: $phone, photo: $photo, category: $category, Admin: $admin, CenterIS: $centerID}';
+    return 'Specialist{userID: $userID, specialistID: $specialistID, specialistCategory: $specialistCategory, price: $price, userName: $userName, email: $email, city: $city, phone: $phone, photo: $photo, category: $category, Admin: $admin, CenterID: $centerID}';
   }
 }

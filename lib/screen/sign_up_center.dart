@@ -2,8 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:spectrum_speak/constant/const_color.dart';
 import 'package:spectrum_speak/rest/auth_manager.dart';
+import 'package:spectrum_speak/rest/rest_api_center.dart';
 import 'package:spectrum_speak/units/build_drop_down_menu.dart';
 import 'package:spectrum_speak/units/build_text_field.dart';
+import 'package:spectrum_speak/units/validate_input_from_user.dart';
+
+import 'add_profile_photo.dart';
+import 'center_profile.dart';
 
 class SignUpCenter extends StatefulWidget {
   final String SpecialistID;
@@ -17,7 +22,7 @@ class _SignUpCenterState extends State<SignUpCenter> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _phoneNumberController = TextEditingController();
-  final TextEditingController _descriptionController = TextEditingController();
+  final TextEditingController _aboutController = TextEditingController();
   String? selectedCity;
 
   bool _showErrorText = false;
@@ -26,7 +31,7 @@ class _SignUpCenterState extends State<SignUpCenter> {
   bool _phoneError = false;
 
   int _characterCount = 0;
-  int _maxCharacterCount = 100;
+  int _maxCharacterCount = 200;
 
   String messages() {
     if (_validEmail) {
@@ -92,7 +97,7 @@ class _SignUpCenterState extends State<SignUpCenter> {
               child: CustomTextField(
                 preIcon: Icons.mail,
                 labelText: "Email Address",
-                placeholder: "Asmaa@gmail.com",
+                placeholder: "AsmaaCenter@gmail.com",
                 isPasswordTextField: false,
                 controller: _emailController,
               ),
@@ -137,14 +142,13 @@ class _SignUpCenterState extends State<SignUpCenter> {
             Container(
               alignment: Alignment.center,
               width: 280,
-              height: 80,
+              height: 200,
               child: CustomTextField(
-                preIcon: FontAwesomeIcons.fileLines,
-                labelText: "Description",
+                labelText: "About",
                 placeholder: "Lorem ipsum comment Lorem ipsum comment",
                 isPasswordTextField: false,
-                controller: _descriptionController,
-                numOfLine: 3,
+                controller: _aboutController,
+                numOfLine: 8,
                 maxCharacterCount: _maxCharacterCount,
                 onChange: (text) {
                   setState(() {
@@ -153,9 +157,9 @@ class _SignUpCenterState extends State<SignUpCenter> {
 
                   if (_characterCount > _maxCharacterCount) {
                     // Truncate the text to the maximum allowed characters
-                    _descriptionController.text = _descriptionController.text
+                    _aboutController.text = _aboutController.text
                         .substring(0, _maxCharacterCount);
-                    _descriptionController.selection =
+                    _aboutController.selection =
                         TextSelection.fromPosition(
                       TextPosition(offset: _maxCharacterCount),
                     );
@@ -240,6 +244,43 @@ class _SignUpCenterState extends State<SignUpCenter> {
                 _existEmail = false;
                 _phoneError = false;
                 if (userId != null) {
+                  if (_nameController.text.isEmpty ||
+                      _emailController.text.isEmpty ||
+                      _phoneNumberController.text.isEmpty ||
+                      _aboutController.text.isEmpty ||
+                      selectedCity == null) {
+                    setState(() {
+                      _showErrorText = true;
+                    });
+                    return;
+                  }
+
+                  if (!isValidEmail(_emailController.text)) {
+                    setState(() {
+                      _validEmail = true;
+                    });
+                    return;
+                  }
+
+                  if (await isEmailAlreadyExistsCenter(_emailController.text)) {
+                    setState(() {
+                      _existEmail = true;
+                    });
+                    return;
+                  }
+
+                  if (!isValidPhoneNumber(_phoneNumberController.text)) {
+                    setState(() {
+                      _phoneError = true;
+                    });
+                    return;
+                  }
+                  doSignUp(
+                      _nameController.text,
+                      _emailController.text,
+                      _phoneNumberController.text,
+                      _aboutController.text,
+                      selectedCity!);
                 } else {
                   // Handle the case where user ID is not available
                   print('User ID not available');
@@ -264,11 +305,38 @@ class _SignUpCenterState extends State<SignUpCenter> {
               ),
             ),
             const SizedBox(
-              height: 25,
+              height: 100,
             ),
           ],
         ),
       ),
     );
+  }
+
+  doSignUp(
+    String centerName,
+    String email,
+    String phone,
+    String description,
+    String selectedCity,
+  ) async {
+    var rest = await centerSignUp(
+      widget.SpecialistID,
+      centerName.trim(),
+      email.trim(),
+      phone.trim(),
+      description.trim(),
+      selectedCity.trim(),
+    );
+    if (rest != null && rest['success'] == true) {
+      Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => AddProfilePhoto(
+                comeFromSignUp: true,
+              )));
+    } else {
+      setState(() {
+        _showErrorText = true;
+      });
+    }
   }
 }

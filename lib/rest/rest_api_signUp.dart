@@ -69,7 +69,7 @@ Future childrenSignUp(String userId, String name, String birthDate,
 
 Future<bool> isEmailAlreadyExists(String email) async {
   final response = await http.post(
-    Uri.parse('${Utils.baseUrl}/checkEmail'),
+    Uri.parse('${Utils.baseUrl}/users/checkEmail/user'),
     headers: {"Accept": "application/json"},
     body: {
       'Email': email,
@@ -92,7 +92,8 @@ Future<void> uploadImage(File image, String userID) async {
     );
     request.headers['Accept'] = 'application/json';
     var multipartFile = await http.MultipartFile.fromPath(
-        'image', image.path,
+      'image',
+      image.path,
     );
     request.files.add(multipartFile);
     var response = await http.Response.fromStream(await request.send());
@@ -105,3 +106,4 @@ Future<void> uploadImage(File image, String userID) async {
     print('Error uploading image: $e');
   }
 }
+

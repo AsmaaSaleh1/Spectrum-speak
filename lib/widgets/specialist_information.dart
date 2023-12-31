@@ -328,8 +328,6 @@ class SpecialistInformation extends StatelessWidget {
   Future<Specialist?> _getSpecialist() async {
     try {
       String? userId = await AuthManager.getUserId();
-      print('UserId: $userId');
-
       // Check if userId is not null before calling profileShadowTeacher
       if (userId != null) {
         var result = await profileSpecialist(userId);

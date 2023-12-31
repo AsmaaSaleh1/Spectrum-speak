@@ -7,8 +7,10 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:spectrum_speak/constant/const_color.dart';
 import 'package:spectrum_speak/rest/auth_manager.dart';
+import 'package:spectrum_speak/rest/rest_api_center.dart';
 import 'package:spectrum_speak/rest/rest_api_menu.dart';
 import 'package:spectrum_speak/rest/rest_api_profile_delete.dart';
+import 'package:spectrum_speak/screen/center_profile.dart';
 import 'package:spectrum_speak/screen/login.dart';
 import 'package:spectrum_speak/screen/main_page.dart';
 import 'package:spectrum_speak/screen/parent_profile.dart';
@@ -111,6 +113,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       ],
     );
   }
+
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 }
@@ -125,9 +128,8 @@ class TopBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final StreamController<void> updateStreamController = StreamController<void>();
-    return FutureBuilder<Tuple2<String?, String?>>(
-        future: _getEmailAndName(),
+    return FutureBuilder<Tuple4<String?, String?, String?, bool?>>(
+        future: _getEmailNameAndCategory(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             // You can return a loading indicator here if needed
@@ -139,6 +141,8 @@ class TopBar extends StatelessWidget {
             // Access the data from the tuple
             String? email = snapshot.data!.item1;
             String? userName = snapshot.data!.item2;
+            String? category = snapshot.data!.item3;
+            bool? isAdmin=snapshot.data!.item4;
             return Scaffold(
               appBar: const CustomAppBar(),
               drawer: Drawer(
@@ -172,9 +176,6 @@ class TopBar extends StatelessWidget {
                           radius: 90.0,
                           backgroundColor: kPrimary,
                           onTap: () async {
-                            String? userId = await AuthManager.getUserId();
-                            String category =
-                                await getUserCategory(userId!);
                             switch (category) {
                               case "Parent":
                                 Navigator.push(
@@ -213,15 +214,12 @@ class TopBar extends StatelessWidget {
                         color: kDarkBlue,
                       ),
                       onDetailsPressed: () async {
-                        String? userId = await AuthManager.getUserId();
-                        String category = await getUserCategory(userId!);
                         switch (category) {
                           case "Parent":
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) =>
-                                      const ParentProfile()),
+                                  builder: (context) => const ParentProfile()),
                             );
                             break;
                           case "Specialist":
@@ -245,6 +243,27 @@ class TopBar extends StatelessWidget {
                             break;
                         }
                       },
+                      otherAccountsPicturesSize: const Size.square(40),
+                      otherAccountsPictures: [
+                        if (category == "Specialist" && isAdmin!)
+                          CircleAvatar(
+                            backgroundColor: kPrimary,
+                            child: CircularProfileAvatar(
+                              '',
+                              borderWidth: 1.0,
+                              borderColor: kPrimary.withOpacity(0.5),
+                              radius: 90.0,
+                              backgroundColor: kPrimary,
+                              onTap: () async {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) => CenterProfile(),
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                      ],
                     ),
                     ListTile(
                       leading: Icon(
@@ -280,8 +299,7 @@ class TopBar extends StatelessWidget {
                       ),
                       onTap: () => Navigator.push(
                         context,
-                        MaterialPageRoute(
-                            builder: (context) => const Search()),
+                        MaterialPageRoute(builder: (context) => const Search()),
                       ),
                     ),
                     ListTile(
@@ -353,12 +371,35 @@ class TopBar extends StatelessWidget {
                         ),
                       ),
                       onTap: () async {
-                        bool confirmed = await _showDestroyAccountConfirmation(context);
-                        if (confirmed){
+                        bool confirmed =
+                            await _showDestroyAccountConfirmation(context);
+                        if (confirmed) {
                           _destroy(context);
                         }
                       },
                     ),
+                    if (category == "Specialist" && isAdmin!)
+                      ListTile(
+                        leading: Icon(
+                          FontAwesomeIcons.trashCan,
+                          color: kDarkerColor,
+                          size: 22,
+                        ),
+                        title: const Text(
+                          "Destroy Center account",
+                          style: TextStyle(
+                            fontWeight: FontWeight.w700,
+                            fontSize: 17,
+                          ),
+                        ),
+                        onTap: () async {
+                          bool confirmed =
+                              await _showDestroyAccountConfirmation(context);
+                          if (confirmed) {
+                            _destroyCenter(context);
+                          }
+                        },
+                      ),
                   ],
                 ),
               ),
@@ -371,28 +412,31 @@ class TopBar extends StatelessWidget {
         });
   }
 
-  Future<Tuple2<String?, String?>> _getEmailAndName() async {
+  Future<Tuple4<String?, String?, String?, bool?>> _getEmailNameAndCategory() async {
     try {
       String? userId = await AuthManager.getUserId();
-      // Check if userId is not null before calling profileShadowTeacher
+
+      // Check if userId is not null before proceeding
       if (userId != null) {
         var email = await AuthManager.getUserEmail();
         var userName = await getUserName(userId);
-        // Return a tuple of email and userName
-        return Tuple2(email, userName);
+        var category = await getUserCategory(userId);
+        bool isAdmin=await checkAdmin(userId);
+        // Return a tuple of email, userName, and category
+        return Tuple4(email, userName, category, isAdmin);
       } else {
         print('UserId is null');
-        return const Tuple2(null, null);
+        return const Tuple4(null, null, null, false);
       }
     } catch (error) {
       // Handle errors here
-      print('Error in _getShadowTeacher: $error');
-      return const Tuple2(null, null);
+      print('Error in _getEmailNameAndCategory: $error');
+      return const Tuple4(null, null, null, false);
     }
   }
 
-  Future _destroy(BuildContext context)async{
-    try{
+  Future _destroy(BuildContext context) async {
+    try {
       String? userId = await AuthManager.getUserId();
       if (userId != null) {
         String category = await getUserCategory(userId);
@@ -413,46 +457,60 @@ class TopBar extends StatelessWidget {
         await AuthManager.clearUserData();
         Navigator.push(
           context,
-          MaterialPageRoute(
-              builder: (context) => const Login()),
+          MaterialPageRoute(builder: (context) => const Login()),
         );
       } else {
         print('UserId is null');
       }
-    }catch(error){
+    } catch (error) {}
+  }
 
-    }
+  Future _destroyCenter(BuildContext context) async {
+    try {
+      String? userId = await AuthManager.getUserId();
+      if (userId != null) {
+        deleteCenter(userId);
+      } else {
+        print('UserId is null');
+      }
+    } catch (error) {}
   }
 
   Future<bool> _showDestroyAccountConfirmation(BuildContext context) async {
     return await showDialog<bool>(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text("Warning"),
-          content: Text("Are you sure you want to destroy your account?"
-              "This action cannot be undone."),
-          icon: Icon(Icons.warning_amber,size: 45,color: kYellow,),
-          actions: <Widget>[
-            TextButton(
-              child: Text("Cancel"),
-              onPressed: () {
-                Navigator.of(context).pop(false); // Close the dialog and return false
-              },
-            ),
-            TextButton(
-              child: Text("Yes"),
-              onPressed: () {
-                Navigator.of(context).pop(true); // Close the dialog and return true
-              },
-            ),
-          ],
-        );
-      },
-    ) ?? false; // Return false if the user dismisses the dialog without making a choice
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text("Warning"),
+              content: Text("Are you sure you want to destroy your account?"
+                  "This action cannot be undone."),
+              icon: Icon(
+                Icons.warning_amber,
+                size: 45,
+                color: kYellow,
+              ),
+              actions: <Widget>[
+                TextButton(
+                  child: Text("Cancel"),
+                  onPressed: () {
+                    Navigator.of(context)
+                        .pop(false); // Close the dialog and return false
+                  },
+                ),
+                TextButton(
+                  child: Text("Yes"),
+                  onPressed: () {
+                    Navigator.of(context)
+                        .pop(true); // Close the dialog and return true
+                  },
+                ),
+              ],
+            );
+          },
+        ) ??
+        false; // Return false if the user dismisses the dialog without making a choice
   }
 }
-
 
 void _showPopupMenu(BuildContext context, int numberOfCards) async {
   final RenderBox overlay =
@@ -501,5 +559,4 @@ void _showPopupMenu(BuildContext context, int numberOfCards) async {
       ),
     ],
   );
-
 }

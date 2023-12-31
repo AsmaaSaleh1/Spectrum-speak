@@ -113,7 +113,6 @@ Future<List<Child>> childCard(String userId) async {
     );
     if (response.statusCode == 200) {
       var decodedData = jsonDecode(response.body)["data"];
-      print(decodedData);
       // Create and return a list of Child instances
       List<Child> children = decodedData.map<Child>((childData) {
         return Child(
@@ -140,7 +139,7 @@ Future<List<Child>> childCard(String userId) async {
 Future<int?> countOfChildForParent(String userId) async {
   try {
     final response = await http.get(
-      Uri.parse('${Utils.baseUrl}/childCount/$userId'),
+      Uri.parse('${Utils.baseUrl}/users/childCount/$userId'),
       headers: {"Accept": "application/json"},
     );
 

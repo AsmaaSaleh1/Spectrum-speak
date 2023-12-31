@@ -6,7 +6,7 @@ import 'package:spectrum_speak/constant/utils.dart';
 Future getUserCategory(String userId) async {
   try {
     final response = await http.get(
-      Uri.parse('${Utils.baseUrl}/user/category/$userId'),
+      Uri.parse('${Utils.baseUrl}/users/category/$userId'),
       headers: {"Accept": "application/json"},
     );
     var decodedData = jsonDecode(response.body);
@@ -25,7 +25,7 @@ Future getUserCategory(String userId) async {
 Future getUserName(String userId) async {
   try {
     final response = await http.get(
-      Uri.parse('${Utils.baseUrl}/user/username/$userId'),
+      Uri.parse('${Utils.baseUrl}/users/username/$userId'),
       headers: {"Accept": "application/json"},
     );
     var decodedData = jsonDecode(response.body);

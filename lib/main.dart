@@ -67,7 +67,7 @@ class _MyAppState extends State<MyApp> {
         ),
       ),
       home: const Scaffold(
-        body: SignUpCenter(SpecialistID: "8",),
+        body: Welcome(),
       ),
     );
   }

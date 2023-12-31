@@ -1,23 +1,43 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:spectrum_speak/constant/const_color.dart';
+import 'package:spectrum_speak/rest/auth_manager.dart';
 import 'package:spectrum_speak/units/review_add_from_user.dart';
 import 'package:spectrum_speak/widgets/card_review.dart';
 import 'package:spectrum_speak/widgets/stack_container_center.dart';
 import 'package:spectrum_speak/widgets/center_information.dart';
 import 'package:spectrum_speak/widgets/top_bar.dart';
 
+import 'login.dart';
+
 class CenterProfile extends StatefulWidget {
-  final String CenterID;
-  const CenterProfile({super.key, required this.CenterID});
+  const CenterProfile({super.key});
 
   @override
   State<CenterProfile> createState() => _CenterProfileState();
 }
 
 class _CenterProfileState extends State<CenterProfile> {
-  bool isMore = false;
   double userRating = 0.0;
+
+  @override
+  void initState() {
+    super.initState();
+    checkLoginStatus();
+  }
+
+  // Method to check if the user is logged in
+  Future<void> checkLoginStatus() async {
+    bool isLoggedIn = await AuthManager.isUserLoggedIn();
+
+    if (!isLoggedIn) {
+      // If the user is not logged in, navigate to the login page
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => Login()),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) => LayoutBuilder(
@@ -38,14 +58,7 @@ class _CenterProfileState extends State<CenterProfile> {
                 child: Column(
                   children: <Widget>[
                     const StackContainerCenter(),
-                    CenterInformation(
-                      about:
-                          "Lorem ipsum comment Lorem ipsum comment Lorem ipsum comment Lorem ipsum comment Lorem ipsum comment Lorem ipsum comment Lorem ipsum comment Lorem ipsum comment",
-                      onTap: () => setState(() {
-                        isMore = !isMore;
-                      }),
-                      isLess: isMore,
-                    ),
+                    CenterInformation(),
                     Divider(
                       color: kDarkerColor, // You can customize the color
                       thickness: 2.0, // You can customize the thickness
