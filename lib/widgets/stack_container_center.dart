@@ -5,6 +5,7 @@ import 'package:spectrum_speak/constant/const_color.dart';
 import 'package:spectrum_speak/modules/center.dart';
 import 'package:spectrum_speak/rest/auth_manager.dart';
 import 'package:spectrum_speak/rest/rest_api_center.dart';
+import 'package:spectrum_speak/screen/add_specialist_from_center.dart';
 import 'package:spectrum_speak/screen/edit_center_profile.dart';
 import 'package:spectrum_speak/units/custom_button.dart';
 import 'package:spectrum_speak/units/custom_clipper.dart';
@@ -116,11 +117,10 @@ class StackContainerCenter extends StatelessWidget {
                               foregroundColor: kDarkerColor,
                               backgroundColor: kBlue,
                               onPressed: () {
-                                //TODO: Add Specialist For Center
-                                // Navigator.push(
-                                //   context,
-                                //   MaterialPageRoute(builder: (context) => const EditProfile()),
-                                // );
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => const AddSpecialistFromCenter()),
+                                );
                               },
                               buttonText: 'Add Specialist',
                               icon: const Icon(
