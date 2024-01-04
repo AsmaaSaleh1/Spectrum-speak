@@ -73,40 +73,7 @@ class _CenterInformationState extends State<CenterInformation> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
-                                "About",
-                                style: TextStyle(
-                                  fontSize: 20.0,
-                                  fontWeight: FontWeight.bold,
-                                  color: kDarkerColor,
-                                ),
-                              ),
-                              GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    isMore = !isMore;
-                                  });
-                                },
-                                child: isMore
-                                    ? Text(
-                                        center.description,
-                                        style: TextStyle(
-                                          fontSize: 14.0,
-                                          color: kDarkerColor,
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                      )
-                                    : Text(
-                                        center.description,
-                                        maxLines: 3,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: TextStyle(
-                                          fontSize: 14.0,
-                                          color: kDarkerColor,
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                      ),
-                              ),
+                              AboutSection(center: center),
                               const SizedBox(height: 10),
                               Text(
                                 "Center Information",
@@ -363,5 +330,61 @@ class _CenterInformationState extends State<CenterInformation> {
       print('Error in _getCenter: $error');
       return null;
     }
+  }
+}
+class AboutSection extends StatefulWidget {
+  final CenterAutism center;
+
+  const AboutSection({Key? key, required this.center}) : super(key: key);
+
+  @override
+  _AboutSectionState createState() => _AboutSectionState();
+}
+
+class _AboutSectionState extends State<AboutSection> {
+  bool isMore = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          "About",
+          style: TextStyle(
+            fontSize: 20.0,
+            fontWeight: FontWeight.bold,
+            color: kDarkerColor,
+          ),
+        ),
+        GestureDetector(
+          onTap: () {
+            setState(() {
+              isMore = !isMore;
+            });
+          },
+          child: isMore
+              ? Text(
+            widget.center.description,
+            style: TextStyle(
+              fontSize: 14.0,
+              color: kDarkerColor,
+              fontWeight: FontWeight.w600,
+            ),
+          )
+              : Text(
+            widget.center.description,
+            maxLines: 3,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+              fontSize: 14.0,
+              color: kDarkerColor,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ),
+        const SizedBox(height: 10),
+      ],
+    );
   }
 }
