@@ -252,24 +252,34 @@ class TopBar extends StatelessWidget {
                             break;
                         }
                       },
-                      otherAccountsPicturesSize: const Size.square(40),
+                      otherAccountsPicturesSize: const Size.square(45),
                       otherAccountsPictures: [
                         if (category == "Specialist" && isAdmin!)
-                          CircleAvatar(
-                            backgroundColor: kPrimary,
-                            child: CircularProfileAvatar(
-                              '',
-                              borderWidth: 1.0,
-                              borderColor: kPrimary.withOpacity(0.5),
-                              radius: 90.0,
-                              backgroundColor: kPrimary,
-                              onTap: () async {
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (context) => CenterProfile(),
-                                  ),
-                                );
-                              },
+                          Container(
+                            width: 90.0,
+                            height: 90.0,
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: kPrimary.withOpacity(0.5),
+                                width: 1.0,
+                              ),
+                              color: kPrimary,
+                            ),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(0.0), // Set borderRadius to 0.0
+                              child: CircularProfileAvatar(
+                                '',
+                                backgroundColor: kPrimary,
+                                borderWidth: 1.0,
+                                borderColor: kPrimary.withOpacity(0.5),
+                                onTap: () async {
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (context) => CenterProfile(),
+                                    ),
+                                  );
+                                },
+                              ),
                             ),
                           ),
                       ],
