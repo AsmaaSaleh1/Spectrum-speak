@@ -390,7 +390,6 @@ class ShadowTeacherInformation extends StatelessWidget {
       // Check if userId is not null before calling profileShadowTeacher
       if (userId != null) {
         var result = await profileShadowTeacher(userId);
-        print('Profile result: $result');
         return result;
       } else {
         print('UserId is null');
