@@ -146,3 +146,29 @@ Future<bool> checkAdmin(String userId) async {
     throw Exception('Failed to check admin status');
   }
 }
+
+Future searchSpecialist() async {//does not work
+  try {
+    final response = await http.get(
+      Uri.parse('${Utils.baseUrl}/search/specialist'),
+      headers: {
+        'Accept': 'application/json',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      // Check if the response body is not empty before decoding
+      if (response.body.isNotEmpty) {
+        var decodedData = jsonDecode(response.body);
+        return decodedData;
+      } else {
+        throw Exception('Empty response body');//TTTTTTT
+      }
+    } else {
+      throw Exception('Failed to get data. Status code: ${response.statusCode}');
+    }
+  } catch (error) {
+    print(error);
+    throw Exception('Failed to get data error: $error');
+  }
+}

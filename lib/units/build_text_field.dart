@@ -22,7 +22,7 @@ class CustomTextField extends StatefulWidget {
     this.disable = false,
     this.numOfLine = 1,
     this.onChange,
-    this.maxCharacterCount=1000,
+    this.maxCharacterCount = 1000,
   });
 
   @override
@@ -45,22 +45,22 @@ class _CustomTextFieldState extends State<CustomTextField> {
           fillColor: Colors.grey.shade400,
           prefixIcon: widget.preIcon != null
               ? Icon(
-            widget.preIcon,
-            color: kDarkerColor,
-          )
+                  widget.preIcon,
+                  color: kDarkerColor,
+                )
               : null,
           suffixIcon: widget.isPasswordTextField
               ? IconButton(
-            onPressed: () {
-              setState(() {
-                isObscurePassword = !isObscurePassword;
-              });
-            },
-            icon: Icon(
-              isObscurePassword ? Icons.visibility : Icons.visibility_off,
-              color: kDarkerColor,
-            ),
-          )
+                  onPressed: () {
+                    setState(() {
+                      isObscurePassword = !isObscurePassword;
+                    });
+                  },
+                  icon: Icon(
+                    isObscurePassword ? Icons.visibility : Icons.visibility_off,
+                    color: kDarkerColor,
+                  ),
+                )
               : null,
           contentPadding: const EdgeInsets.only(
             bottom: 5,
