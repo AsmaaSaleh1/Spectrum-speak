@@ -21,9 +21,15 @@ class StackContainerParent extends StatelessWidget {
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             // You can return a loading indicator here if needed
-            return const CircularProgressIndicator(
-              backgroundColor: kPrimary,
-              color: kDarkBlue,
+            return Container(
+              color: kPrimary,
+              child: Container(
+                alignment: Alignment.center,
+                child: const CircularProgressIndicator(
+                  backgroundColor: kDarkBlue,
+                  color: kDarkBlue,
+                ),
+              ),
             );
           } else if (snapshot.hasError) {
             // Handle the error

@@ -46,9 +46,15 @@ class _ProfileImageDisplayState extends State<ProfileImageDisplay> {
       future: getPhotoFromDatabase(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const CircularProgressIndicator(
-            backgroundColor: kPrimary,
-            color: kDarkBlue,
+          return Container(
+            color: kPrimary,
+            child: Container(
+              alignment: Alignment.center,
+              child: const CircularProgressIndicator(
+                backgroundColor: kDarkBlue,
+                color: kDarkBlue,
+              ),
+            ),
           );
         } else if (snapshot.hasError) {
           print('Error retrieving photo: ${snapshot.error}');
