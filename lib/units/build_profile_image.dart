@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:spectrum_speak/constant/const_color.dart';
 import 'dart:io';
 import 'package:spectrum_speak/rest/auth_manager.dart';
 import 'package:spectrum_speak/rest/rest_api_profile.dart';
@@ -45,7 +46,10 @@ class _ProfileImageDisplayState extends State<ProfileImageDisplay> {
       future: getPhotoFromDatabase(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return CircularProgressIndicator();
+          return const CircularProgressIndicator(
+            backgroundColor: kPrimary,
+            color: kDarkBlue,
+          );
         } else if (snapshot.hasError) {
           print('Error retrieving photo: ${snapshot.error}');
           return defaultProfileImage();

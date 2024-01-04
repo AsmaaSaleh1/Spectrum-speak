@@ -29,7 +29,10 @@ class ParentInformation extends StatelessWidget {
           future: _getParentData(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return const CircularProgressIndicator();
+              return const CircularProgressIndicator(
+                backgroundColor: kPrimary,
+                color: kDarkBlue,
+              );
             } else if (snapshot.hasError) {
               return Text('Error: ${snapshot.error}');
             } else if (snapshot.hasData) {

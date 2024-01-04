@@ -44,7 +44,10 @@ class _CenterInformationState extends State<CenterInformation> {
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               // You can return a loading indicator here if needed
-              return const CircularProgressIndicator();
+              return const CircularProgressIndicator(
+                backgroundColor: kPrimary,
+                color: kDarkBlue,
+              );
             } else if (snapshot.hasError) {
               // Handle the error
               return Text('Error: ${snapshot.error}');
