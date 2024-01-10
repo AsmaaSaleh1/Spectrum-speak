@@ -18,7 +18,7 @@ class _AddSpecialistFromCenterState extends State<AddSpecialistFromCenter> {
 
   Future<void> getSpecialists(String namePrefix) async {
     try {
-      var data = await searchSpecialist(namePrefix);
+      var data = await searchToAddSpecialist(namePrefix);
 
       setState(() {
         specialistData = data;

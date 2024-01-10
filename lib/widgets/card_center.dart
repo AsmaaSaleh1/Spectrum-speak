@@ -8,12 +8,16 @@ import 'package:spectrum_speak/units/custom_clipper_center_card.dart';
 class CenterCard extends StatelessWidget {
   final Color cardColor;
   final String about;
+  final String centerName;
+  final String city;
   final VoidCallback onTap;
   final bool isLess;
   const CenterCard({
     super.key,
     this.cardColor = kDarkBlue,
     required this.about,
+    required this.centerName,
+    required this.city,
     required this.onTap,
     required this.isLess,
   });
@@ -23,7 +27,7 @@ class CenterCard extends StatelessWidget {
       padding: const EdgeInsets.all(19.0),
       child: Container(
         width: 300,
-        height: 380,
+        height: 400,
         decoration: BoxDecoration(
           color: kPrimary,
           borderRadius: BorderRadius.circular(15),
@@ -73,7 +77,7 @@ class CenterCard extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.all(3.0),
                   child: Text(
-                    "Center Name",
+                    centerName,
                     style: TextStyle(
                       fontSize: 20.0,
                       fontWeight: FontWeight.w900,
@@ -92,7 +96,7 @@ class CenterCard extends StatelessWidget {
                         color: kRed,
                       ),
                       Text(
-                        "Location",
+                        city,
                         style: TextStyle(
                           fontSize: 12.0,
                           color: Colors.grey[700],
@@ -105,98 +109,123 @@ class CenterCard extends StatelessWidget {
                   alignment: Alignment.topLeft,
                   child: Padding(
                     padding: const EdgeInsets.only(
-                        left: 20, right: 20, top: 5, bottom: 2),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                        left: 20, right: 20, top: 2, bottom: 2),
+                    child: AboutSection(about: about,)
+                  ),
+                ),
+                Align(
+                  alignment: Alignment.topRight,
+                  child: Padding(
+                    padding:
+                        const EdgeInsets.only(right: 10, top: 2, bottom: 2),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        Text(
-                          "About",
-                          style: TextStyle(
-                            fontSize: 16.0,
-                            fontWeight: FontWeight.w700,
-                            color: kDarkerColor,
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 5,
-                        ),
                         GestureDetector(
-                          onTap: onTap,
-                          child: isLess
-                              ? Text(
-                                  about,
-                                  style: TextStyle(
-                                    fontSize: 14.0,
-                                    color: kDarkerColor,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                )
-                              : Text(
-                                  about,
-                                  maxLines: 3,
-                                  overflow: TextOverflow.ellipsis,
-                                  //Comment
-                                  style: TextStyle(
-                                    fontSize: 14.0,
-                                    color: kDarkerColor,
-                                    fontWeight: FontWeight.w500,
-                                  ),
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const CenterProfile(),
+                              ),
+                            );
+                          },
+                          child: Row(
+                            children: [
+                              Text(
+                                "Show More",
+                                style: TextStyle(
+                                  fontSize: 16.0,
+                                  fontWeight: FontWeight.w700,
+                                  color: kDarkerColor,
                                 ),
+                              ),
+                              IconButton(
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          const CenterProfile(),
+                                    ),
+                                  );
+                                },
+                                icon: Icon(
+                                  FontAwesomeIcons.anglesRight,
+                                  size: 14,
+                                  color: cardColor,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ],
                     ),
                   ),
                 ),
-                Align(
-                    alignment: Alignment.topRight,
-                    child: Padding(
-                      padding:
-                          const EdgeInsets.only(right: 10, top: 2, bottom: 2),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          GestureDetector(
-                            onTap: () {
-                              // Navigator.push(
-                              //   context,
-                              //   MaterialPageRoute(builder: (context) => const CenterProfile()),
-                              // );
-                            },
-                            child: Row(
-                              children: [
-                                Text(
-                                  "Show More",
-                                  style: TextStyle(
-                                    fontSize: 16.0,
-                                    fontWeight: FontWeight.w700,
-                                    color: kDarkerColor,
-                                  ),
-                                ),
-                                IconButton(
-                                  onPressed: () {
-                                    // Navigator.push(
-                                    //   context,
-                                    //   MaterialPageRoute(builder: (context) => const CenterProfile()),
-                                    // );
-                                  },
-                                  icon: Icon(
-                                    FontAwesomeIcons.anglesRight,
-                                    size: 14,
-                                    color: cardColor,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-
-                    )),
               ],
             )
           ],
         ),
       ),
+    );
+  }
+}
+
+class AboutSection extends StatefulWidget {
+  final String about;
+  const AboutSection({
+    Key? key,
+    required this.about,
+  }) : super(key: key);
+
+  @override
+  _AboutSectionState createState() => _AboutSectionState();
+}
+
+class _AboutSectionState extends State<AboutSection> {
+  bool isMore = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          "About",
+          style: TextStyle(
+            fontSize: 16.0,
+            fontWeight: FontWeight.w700,
+            color: kDarkerColor,
+          ),
+        ),
+        GestureDetector(
+          onTap: () {
+            setState(() {
+              isMore = !isMore;
+            });
+          },
+          child: isMore
+              ? Text(
+            widget.about,
+            style: TextStyle(
+              fontSize: 14.0,
+              color: kDarkerColor,
+              fontWeight: FontWeight.w500,
+            ),
+          )
+              : Text(
+            widget.about,
+            maxLines: 4,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+              fontSize: 14.0,
+              color: kDarkerColor,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

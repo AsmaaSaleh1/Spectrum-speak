@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:spectrum_speak/rest/rest_api_search.dart';
+import 'package:spectrum_speak/units/build_search_text_field.dart';
 import 'package:spectrum_speak/units/build_text_field.dart';
 import 'package:spectrum_speak/widgets/top_bar.dart';
 import 'package:spectrum_speak/constant/const_color.dart';
@@ -13,8 +15,9 @@ class Search extends StatefulWidget {
 }
 
 class _SearchState extends State<Search> {
-  SearchEnum selectedSearch = SearchEnum.center;
-  final TextEditingController _searchController=TextEditingController();
+  SearchEnum selectedSearch = SearchEnum.specialist;
+  final TextEditingController _searchController = TextEditingController();
+
   void onSearchTypeChanged(SearchEnum newValue) {
     setState(() {
       selectedSearch = newValue;
@@ -44,7 +47,9 @@ class _SearchState extends State<Search> {
                             size: 40.0,
                             color: kDarkBlue,
                           ),
-                          const SizedBox(width: 20,),
+                          const SizedBox(
+                            width: 20,
+                          ),
                           Text(
                             "Search",
                             style: TextStyle(
@@ -57,11 +62,21 @@ class _SearchState extends State<Search> {
                       ),
                     ),
                   ),
-                  CustomTextField(labelText: "Search", placeholder: "eg: Al-Amal center", isPasswordTextField: false, controller: _searchController),
+                  CustomSearchTextField(
+                    labelText: "Search",
+                    placeholder: "eg: Al-Amal center",
+                    controller: _searchController,
+                    onTextChanged: (text) {
+                      setState(() {
+                        _searchController.text = text;
+                      });
+                    },
+                  ),
                   Padding(
                     padding: const EdgeInsets.all(5.0),
                     child: MyTab(
-                        selectedSearch: selectedSearch
+                      selectedSearch: selectedSearch,
+                      namePrefix: _searchController.text,
                     ),
                   ),
                 ],
@@ -79,7 +94,12 @@ class _SearchState extends State<Search> {
                 gradient: LinearGradient(
                   begin: Alignment.bottomCenter,
                   end: Alignment.topCenter,
-                  colors: [kPrimary.withOpacity(0.8),kPrimary.withOpacity(0.5),kPrimary.withOpacity(0.1),kPrimary.withOpacity(0.0)],
+                  colors: [
+                    kPrimary.withOpacity(0.8),
+                    kPrimary.withOpacity(0.5),
+                    kPrimary.withOpacity(0.1),
+                    kPrimary.withOpacity(0.0)
+                  ],
                 ),
               ),
             ),

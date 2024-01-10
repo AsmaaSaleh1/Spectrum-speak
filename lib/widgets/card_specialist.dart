@@ -7,10 +7,19 @@ import 'package:spectrum_speak/units/custom_clipper_puzzle.dart';
 
 class CardSpecialist extends StatelessWidget {
   final Color cardColor;
-
+  final String username;
+  final String city;
+  final String price;
+  final String category;
+  final String centerName;
   const CardSpecialist({
     super.key,
     this.cardColor = kDarkBlue,
+    required this.username,
+    required this.city,
+    required this.price,
+    required this.centerName,
+    required this.category,
   });
 
   @override
@@ -35,7 +44,7 @@ class CardSpecialist extends StatelessWidget {
         child: Stack(
           children: <Widget>[
             Padding(
-              padding: const EdgeInsets.only(left: 20,right: 20,bottom: 70),
+              padding: const EdgeInsets.only(left: 20, right: 20, bottom: 70),
               child: ClipPath(
                 clipper: CustomClipperPuzzle(),
                 child: Container(
@@ -51,7 +60,8 @@ class CardSpecialist extends StatelessWidget {
                   alignment: Alignment.topCenter,
                   child: Padding(
                     padding: const EdgeInsets.only(
-                      top: 20,bottom: 10,
+                      top: 20,
+                      bottom: 10,
                     ),
                     child: Container(
                       width: 120, // Adjust the width as needed
@@ -77,9 +87,9 @@ class CardSpecialist extends StatelessWidget {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(bottom: 10,top: 10),
+                  padding: const EdgeInsets.only(bottom: 10, top: 10),
                   child: Text(
-                    "Specialized Name",
+                    username,
                     style: TextStyle(
                       fontSize: 25.0,
                       fontWeight: FontWeight.w900,
@@ -97,9 +107,11 @@ class CardSpecialist extends StatelessWidget {
                         size: 15.0,
                         color: kDarkerColor,
                       ),
-                      const SizedBox(width: 7,),
+                      const SizedBox(
+                        width: 7,
+                      ),
                       Text(
-                        "Category",
+                        category,
                         style: TextStyle(
                           fontSize: 14.0,
                           fontWeight: FontWeight.bold,
@@ -110,7 +122,7 @@ class CardSpecialist extends StatelessWidget {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.all(5.0),
+                  padding: const EdgeInsets.symmetric(vertical: 7,horizontal: 5),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -119,9 +131,11 @@ class CardSpecialist extends StatelessWidget {
                         size: 15.0,
                         color: kDarkerColor,
                       ),
-                      const SizedBox(width: 7,),
+                      const SizedBox(
+                        width: 7,
+                      ),
                       Text(
-                        "Location",
+                        city,
                         style: TextStyle(
                           fontSize: 12.0,
                           fontWeight: FontWeight.bold,
@@ -132,7 +146,7 @@ class CardSpecialist extends StatelessWidget {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.all(5.0),
+                  padding: const EdgeInsets.symmetric(vertical: 7,horizontal: 5),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -141,9 +155,11 @@ class CardSpecialist extends StatelessWidget {
                         size: 15.0,
                         color: kDarkerColor,
                       ),
-                      const SizedBox(width: 7,),
+                      const SizedBox(
+                        width: 7,
+                      ),
                       Text(
-                        "100\$",//Price for one session
+                        price+"\$", //Price for one session
                         style: TextStyle(
                           fontSize: 12.0,
                           fontWeight: FontWeight.bold,
@@ -154,7 +170,7 @@ class CardSpecialist extends StatelessWidget {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.all(5.0),
+                  padding: const EdgeInsets.symmetric(vertical: 7,horizontal: 5),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -163,9 +179,11 @@ class CardSpecialist extends StatelessWidget {
                         size: 15.0,
                         color: kDarkerColor,
                       ),
-                      const SizedBox(width: 7,),
+                      const SizedBox(
+                        width: 7,
+                      ),
                       Text(
-                        "Center Name",//If any
+                        centerName, //If any
                         style: TextStyle(
                           fontSize: 12.0,
                           fontWeight: FontWeight.bold,
@@ -179,7 +197,7 @@ class CardSpecialist extends StatelessWidget {
                     alignment: Alignment.topRight,
                     child: Padding(
                       padding:
-                      const EdgeInsets.only(right: 10, top: 2, bottom: 2),
+                          const EdgeInsets.only(right: 10, top: 2, bottom: 2),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
@@ -187,7 +205,9 @@ class CardSpecialist extends StatelessWidget {
                             onTap: () {
                               Navigator.push(
                                 context,
-                                MaterialPageRoute(builder: (context) => const SpecialistProfile()),
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        const SpecialistProfile()),
                               );
                             },
                             child: Row(
@@ -204,7 +224,9 @@ class CardSpecialist extends StatelessWidget {
                                   onPressed: () {
                                     Navigator.push(
                                       context,
-                                      MaterialPageRoute(builder: (context) => const SpecialistProfile()),
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const SpecialistProfile()),
                                     );
                                   },
                                   icon: Icon(

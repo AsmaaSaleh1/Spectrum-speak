@@ -147,7 +147,7 @@ Future<bool> checkAdmin(String userId) async {
   }
 }
 
-Future<List<dynamic>> searchSpecialist(String namePrefix) async {
+Future<List<dynamic>> searchToAddSpecialist(String namePrefix) async {
   try {
     final response = await http.get(
       Uri.parse('${Utils.baseUrl}/search/center/specialist?namePrefix=$namePrefix'),

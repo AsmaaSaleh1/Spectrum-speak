@@ -1,4 +1,5 @@
 import 'package:circular_profile_avatar/circular_profile_avatar.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:spectrum_speak/constant/const_color.dart';
@@ -7,14 +8,29 @@ import 'package:spectrum_speak/units/custom_clipper_shadow_teacher.dart';
 
 class CardShadowTeacher extends StatelessWidget {
   final Color cardColor;
-
+  final String teacherName;
+  final String academicQualification;
+  final String city;
+  final String gender;
+  final String availability;
   const CardShadowTeacher({
     super.key,
     this.cardColor = kDarkBlue,
+    required this.teacherName,
+    required this.academicQualification,
+    required this.city,
+    required this.gender,
+    required this.availability,
   });
 
   @override
   Widget build(BuildContext context) {
+    bool isTeacherAvailable;
+    if (availability == "Available") {
+      isTeacherAvailable = true;
+    } else {
+      isTeacherAvailable = false;
+    }
     return Padding(
       padding: const EdgeInsets.all(19.0),
       child: Container(
@@ -35,7 +51,8 @@ class CardShadowTeacher extends StatelessWidget {
         child: Stack(
           children: <Widget>[
             Padding(
-              padding: const EdgeInsets.only(left: 10,top: 10,right:10,bottom: 40),
+              padding: const EdgeInsets.only(
+                  left: 10, top: 10, right: 10, bottom: 40),
               child: ClipPath(
                 clipper: CustomClipperShadowTeacher(),
                 child: Container(
@@ -51,7 +68,8 @@ class CardShadowTeacher extends StatelessWidget {
                   alignment: Alignment.topCenter,
                   child: Padding(
                     padding: const EdgeInsets.only(
-                      top: 20,bottom: 10,
+                      top: 20,
+                      bottom: 10,
                     ),
                     child: Container(
                       width: 120, // Adjust the width as needed
@@ -77,9 +95,9 @@ class CardShadowTeacher extends StatelessWidget {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(bottom: 10,top: 10),
+                  padding: const EdgeInsets.only(bottom: 10, top: 10),
                   child: Text(
-                    "Teacher Name",
+                    teacherName,
                     style: TextStyle(
                       fontSize: 25.0,
                       fontWeight: FontWeight.w900,
@@ -97,9 +115,11 @@ class CardShadowTeacher extends StatelessWidget {
                         size: 15.0,
                         color: kDarkerColor,
                       ),
-                      const SizedBox(width: 7,),
+                      const SizedBox(
+                        width: 7,
+                      ),
                       Text(
-                        "Academic Qualification",
+                        academicQualification,
                         style: TextStyle(
                           fontSize: 14.0,
                           fontWeight: FontWeight.bold,
@@ -119,9 +139,11 @@ class CardShadowTeacher extends StatelessWidget {
                         size: 15.0,
                         color: kDarkerColor,
                       ),
-                      const SizedBox(width: 7,),
+                      const SizedBox(
+                        width: 7,
+                      ),
                       Text(
-                        "Location",
+                        city,
                         style: TextStyle(
                           fontSize: 12.0,
                           fontWeight: FontWeight.bold,
@@ -141,9 +163,11 @@ class CardShadowTeacher extends StatelessWidget {
                         size: 15.0,
                         color: kDarkerColor,
                       ),
-                      const SizedBox(width: 7,),
+                      const SizedBox(
+                        width: 7,
+                      ),
                       Text(
-                        "Gender",
+                        gender,
                         style: TextStyle(
                           fontSize: 12.0,
                           fontWeight: FontWeight.bold,
@@ -159,13 +183,17 @@ class CardShadowTeacher extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Icon(
-                        FontAwesomeIcons.cakeCandles,
-                        size: 15.0,
-                        color: kDarkerColor,
+                        isTeacherAvailable
+                            ? CupertinoIcons.checkmark_circle_fill
+                            : CupertinoIcons.clear_circled_solid,
+                        size: 17.0,
+                        color: isTeacherAvailable ? kGreen : kRed,
                       ),
-                      const SizedBox(width: 7,),
+                      const SizedBox(
+                        width: 3,
+                      ),
                       Text(
-                        "Age",
+                        availability,
                         style: TextStyle(
                           fontSize: 12.0,
                           fontWeight: FontWeight.bold,
@@ -176,50 +204,56 @@ class CardShadowTeacher extends StatelessWidget {
                   ),
                 ),
                 Align(
-                    alignment: Alignment.topRight,
-                    child: Padding(
-                      padding:
-                      const EdgeInsets.only(right: 10, top: 2, bottom: 2),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (context) => const ShadowTeacherProfile()),
-                              );
-                            },
-                            child: Row(
-                              children: [
-                                Text(
-                                  "Show More",
-                                  style: TextStyle(
-                                    fontSize: 16.0,
-                                    fontWeight: FontWeight.w700,
-                                    color: kDarkerColor,
-                                  ),
+                  alignment: Alignment.topRight,
+                  child: Padding(
+                    padding:
+                        const EdgeInsets.only(right: 10, top: 10, bottom: 2),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    const ShadowTeacherProfile(),
+                              ),
+                            );
+                          },
+                          child: Row(
+                            children: [
+                              Text(
+                                "Show More",
+                                style: TextStyle(
+                                  fontSize: 16.0,
+                                  fontWeight: FontWeight.w700,
+                                  color: kDarkerColor,
                                 ),
-                                IconButton(
-                                  onPressed: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(builder: (context) => const ShadowTeacherProfile()),
-                                    );
-                                  },
-                                  icon: Icon(
-                                    FontAwesomeIcons.anglesRight,
-                                    size: 14,
-                                    color: cardColor,
-                                  ),
+                              ),
+                              IconButton(
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          const ShadowTeacherProfile(),
+                                    ),
+                                  );
+                                },
+                                icon: Icon(
+                                  FontAwesomeIcons.anglesRight,
+                                  size: 14,
+                                  color: cardColor,
                                 ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
-
-                    )),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
               ],
             )
           ],
