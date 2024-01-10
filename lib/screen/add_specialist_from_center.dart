@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:spectrum_speak/constant/const_color.dart';
 import 'package:spectrum_speak/rest/rest_api_center.dart';
-import 'package:spectrum_speak/units/build_text_field.dart';
-import 'package:spectrum_speak/widgets/top_bar.dart';
-//does not work
+import 'package:spectrum_speak/units/build_search_text_field.dart';
+import 'package:spectrum_speak/widgets/card_choose_specialist.dart';
+
 class AddSpecialistFromCenter extends StatefulWidget {
-  const AddSpecialistFromCenter({super.key});
+  const AddSpecialistFromCenter({Key? key}) : super(key: key);
 
   @override
   State<AddSpecialistFromCenter> createState() =>
@@ -13,57 +14,73 @@ class AddSpecialistFromCenter extends StatefulWidget {
 
 class _AddSpecialistFromCenterState extends State<AddSpecialistFromCenter> {
   final TextEditingController _searchController = TextEditingController();
-  List<dynamic> specialistData = []; // Assuming your specialist data is a list
+  List<dynamic> specialistData = [];
 
-  // Define an async function to fetch specialist data
-  Future<void> getSpecialists() async {
+  Future<void> getSpecialists(String namePrefix) async {
     try {
-      var data = await searchSpecialist();
+      var data = await searchSpecialist(namePrefix);
 
-      if (data is List) {
-        setState(() {
-          specialistData = data;
-        });
-      } else {
-        print('Error: Invalid data format');
-      }
+      setState(() {
+        specialistData = data;
+      });
     } catch (error) {
       print('Error fetching specialist data: $error');
     }
   }
 
-
   @override
   void initState() {
     super.initState();
-    // Fetch specialist data when the page is first created
-    getSpecialists();
+    getSpecialists('');
   }
 
   @override
   Widget build(BuildContext context) {
-    return TopBar(
-      body: Stack(
-        children: [
-          SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  CustomTextField(
-                    labelText: 'Search',
-                    placeholder: 'Search',
-                    isPasswordTextField: false,
-                    controller: _searchController,
-                  ),
-
-                ],
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Add Specialist to Center'),
+      ),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              CustomSearchTextField(
+                labelText: 'Search',
+                placeholder: 'Search',
+                controller: _searchController,
+                onTextChanged: (text) {
+                  getSpecialists(text);
+                },
               ),
-            ),
+              const SizedBox(
+                height: 20,
+              ),
+              if (specialistData.isNotEmpty)
+                Column(
+                  children: specialistData.map((data) {
+                    return CardChooseSpecialist(
+                      userID: data['UserID'].toString(),
+                      userName: data['Username'] ?? '',
+                      specialistCategory: data['SpecialistCategory'] ?? '',
+                    );
+                  }).toList(),
+                )
+              else
+                Center(
+                    child: Text(
+                  "No Specialist Found",
+                  style: TextStyle(
+                    color: kDarkerColor.withOpacity(0.7),
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                )),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }

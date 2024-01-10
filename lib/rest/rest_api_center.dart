@@ -147,10 +147,10 @@ Future<bool> checkAdmin(String userId) async {
   }
 }
 
-Future searchSpecialist() async {//does not work
+Future<List<dynamic>> searchSpecialist(String namePrefix) async {
   try {
     final response = await http.get(
-      Uri.parse('${Utils.baseUrl}/search/specialist'),
+      Uri.parse('${Utils.baseUrl}/search/center/specialist?namePrefix=$namePrefix'),
       headers: {
         'Accept': 'application/json',
       },
@@ -160,9 +160,10 @@ Future searchSpecialist() async {//does not work
       // Check if the response body is not empty before decoding
       if (response.body.isNotEmpty) {
         var decodedData = jsonDecode(response.body);
-        return decodedData;
+        print(decodedData['message']);
+        return decodedData['message']; // Return the array directly
       } else {
-        throw Exception('Empty response body');//TTTTTTT
+        throw Exception('Empty response body');
       }
     } else {
       throw Exception('Failed to get data. Status code: ${response.statusCode}');
@@ -172,3 +173,4 @@ Future searchSpecialist() async {//does not work
     throw Exception('Failed to get data error: $error');
   }
 }
+
