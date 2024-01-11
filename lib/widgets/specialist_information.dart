@@ -7,7 +7,11 @@ import 'package:spectrum_speak/rest/rest_api_signUp.dart';
 import 'package:spectrum_speak/rest/rest_api_profile.dart';
 
 class SpecialistInformation extends StatelessWidget {
-  const SpecialistInformation({super.key});
+  final String userId;
+  const SpecialistInformation({
+    super.key,
+    required this.userId,
+  });
 
   @override
   Widget build(BuildContext context) => LayoutBuilder(
@@ -202,7 +206,7 @@ class SpecialistInformation extends StatelessWidget {
                                               height: 10.0,
                                             ),
                                             Text(
-                                              "Work Center",//TODO
+                                              "Work Center", //TODO
                                               style: TextStyle(
                                                 fontSize: 15.0,
                                                 fontWeight: FontWeight.bold,
@@ -336,18 +340,12 @@ class SpecialistInformation extends StatelessWidget {
       );
   Future<Specialist?> _getSpecialist() async {
     try {
-      String? userId = await AuthManager.getUserId();
       // Check if userId is not null before calling profileShadowTeacher
-      if (userId != null) {
-        var result = await profileSpecialist(userId);
-        return result;
-      } else {
-        print('UserId is null');
-        return null;
-      }
+      var result = await profileSpecialist(userId);
+      return result;
     } catch (error) {
       // Handle errors here
-      print('Error in _getShadowTeacher: $error');
+      print('Error in _getSpecialist: $error');
       return null;
     }
   }

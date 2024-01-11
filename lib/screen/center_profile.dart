@@ -11,7 +11,11 @@ import 'package:spectrum_speak/widgets/top_bar.dart';
 import 'login.dart';
 
 class CenterProfile extends StatefulWidget {
-  const CenterProfile({super.key});
+  final String userId;
+  const CenterProfile({
+    super.key,
+    required this.userId,
+  });
 
   @override
   State<CenterProfile> createState() => _CenterProfileState();
@@ -57,8 +61,8 @@ class _CenterProfileState extends State<CenterProfile> {
               SingleChildScrollView(
                 child: Column(
                   children: <Widget>[
-                    const StackContainerCenter(),
-                    CenterInformation(),
+                    StackContainerCenter(userId: widget.userId,),
+                    CenterInformation(userId: widget.userId,),
                     Divider(
                       color: kDarkerColor, // You can customize the color
                       thickness: 2.0, // You can customize the thickness

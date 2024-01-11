@@ -87,20 +87,20 @@ class _EditSpecialistProfileState extends State<EditSpecialistProfile> {
                       width: 130,
                       height: 130,
                       decoration: BoxDecoration(
-                          border: Border.all(width: 4, color: kPrimary),
-                          boxShadow: [
-                            BoxShadow(
-                              color: kDarkBlue.withOpacity(0.5),
-                              blurRadius: 8.0, // Blur radius
-                              spreadRadius: 2.0, // Spread radius
-                              offset: const Offset(-5, 5),
-                            ),
-                          ],
-                          shape: BoxShape.circle,
+                        border: Border.all(width: 4, color: kPrimary),
+                        boxShadow: [
+                          BoxShadow(
+                            color: kDarkBlue.withOpacity(0.5),
+                            blurRadius: 8.0, // Blur radius
+                            spreadRadius: 2.0, // Spread radius
+                            offset: const Offset(-5, 5),
+                          ),
+                        ],
+                        shape: BoxShape.circle,
                       ),
                       child: ClipOval(
-                        //child: ProfileImageDisplay(),
-                      ),
+                          //child: ProfileImageDisplay(),
+                          ),
                     ),
                   ),
                   Positioned(
@@ -458,7 +458,13 @@ class _EditSpecialistProfileState extends State<EditSpecialistProfile> {
         );
         if (rest['success']) {
           Navigator.pushReplacement(
-              context, MaterialPageRoute(builder: (_) => SpecialistProfile()));
+            context,
+            MaterialPageRoute(
+              builder: (_) => SpecialistProfile(
+                userId: userID,
+              ),
+            ),
+          );
         } else {
           setState(() {
             _showErrorText = true;

@@ -9,15 +9,19 @@ import 'package:spectrum_speak/rest/rest_api_profile.dart';
 import 'package:spectrum_speak/screen/center_profile.dart';
 import 'package:spectrum_speak/screen/edit_specialist_profile.dart';
 import 'package:spectrum_speak/screen/sign_up_center.dart';
-import 'package:spectrum_speak/units/build_profile_image.dart';
 import 'package:spectrum_speak/units/custom_button.dart';
 import 'package:spectrum_speak/units/custom_clipper.dart';
+import 'package:tuple/tuple.dart';
 
 class StackContainerSpecialist extends StatelessWidget {
-  const StackContainerSpecialist({super.key});
+  final String userId;
+  const StackContainerSpecialist({
+    super.key,
+    required this.userId,
+  });
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<Specialist?>(
+    return FutureBuilder<Tuple2<Specialist?, String?>>(
         future: _getSpecialist(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -37,7 +41,8 @@ class StackContainerSpecialist extends StatelessWidget {
             return Text('Error: ${snapshot.error}');
           } else if (snapshot.hasData) {
             // Build your UI with the fetched data
-            Specialist specialist = snapshot.data!;
+            Specialist specialist = snapshot.data!.item1!;
+            String userIdLogin = snapshot.data!.item2!;
             return SizedBox(
               height: 400.0,
               child: Stack(
@@ -120,70 +125,87 @@ class StackContainerSpecialist extends StatelessWidget {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            CustomButton(
-                              foregroundColor: kDarkerColor,
-                              backgroundColor: kBlue,
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
+                            Visibility(
+                              visible: userId == userIdLogin,
+                              child: CustomButton(
+                                foregroundColor: kDarkerColor,
+                                backgroundColor: kBlue,
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
                                       builder: (context) =>
-                                          const EditSpecialistProfile()),
-                                );
-                              },
-                              buttonText: 'Edit Profile',
-                              icon: const Icon(
-                                Icons.edit,
-                                size: 18.0,
+                                          const EditSpecialistProfile(),
+                                    ),
+                                  );
+                                },
+                                buttonText: 'Edit Profile',
+                                icon: const Icon(
+                                  Icons.edit,
+                                  size: 18.0,
+                                ),
+                                iconColor: kPrimary,
                               ),
-                              iconColor: kPrimary,
                             ),
                             const SizedBox(
                               width: 20,
                             ),
                             if (specialist.specialistCategory ==
                                 'Rehabilitation')
-                              specialist.admin
-                                  ? CustomButton(
-                                      foregroundColor: kDarkerColor,
-                                      backgroundColor: kYellow,
-                                      onPressed: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                CenterProfile(),
-                                          ),
-                                        );
-                                      },
-                                      buttonText: 'Go to Center',
-                                      icon: const Icon(
-                                        Icons.home_work_outlined,
-                                        size: 18.0,
-                                      ),
-                                      iconColor: kPrimary,
-                                    )
-                                  : CustomButton(
-                                      foregroundColor: kDarkerColor,
-                                      backgroundColor: kGreen,
-                                      onPressed: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) => SignUpCenter(
-                                              SpecialistID:
-                                                  specialist.specialistID,
+                              Visibility(
+                                visible: userId ==
+                                    userIdLogin, // Show only if userId equals userIdLogin
+                                child: specialist.admin
+                                    ? CustomButton(
+                                        foregroundColor: kDarkerColor,
+                                        backgroundColor: kYellow,
+                                        onPressed: () async {
+                                          String? userId =
+                                              await AuthManager.getUserId();
+                                          if (userId != null) {
+                                            Navigator.of(context).push(
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    CenterProfile(
+                                                  userId: userId,
+                                                ),
+                                              ),
+                                            );
+                                          } else {
+                                            print('userId null');
+                                          }
+                                        },
+                                        buttonText: 'Go to Center',
+                                        icon: const Icon(
+                                          Icons.home_work_outlined,
+                                          size: 18.0,
+                                        ),
+                                        iconColor: kPrimary,
+                                      )
+                                    : CustomButton(
+                                        foregroundColor: kDarkerColor,
+                                        backgroundColor: kGreen,
+                                        onPressed: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  SignUpCenter(
+                                                SpecialistID:
+                                                    specialist.specialistID,
+                                                userId: userId,
+                                              ),
                                             ),
-                                          ),
-                                        );
-                                      },
-                                      buttonText: 'Make Center',
-                                      icon: const Icon(
-                                        Icons.login,
-                                        size: 18.0,
+                                          );
+                                        },
+                                        buttonText: 'Make Center',
+                                        icon: const Icon(
+                                          Icons.login,
+                                          size: 18.0,
+                                        ),
+                                        iconColor: kPrimary,
                                       ),
-                                      iconColor: kPrimary,
-                                    )
+                              ),
                           ],
                         ),
                       ],
@@ -199,21 +221,17 @@ class StackContainerSpecialist extends StatelessWidget {
         });
   }
 
-  Future<Specialist?> _getSpecialist() async {
+  Future<Tuple2<Specialist?, String?>> _getSpecialist() async {
     try {
-      String? userId = await AuthManager.getUserId();
-      // Check if userId is not null before calling profileShadowTeacher
-      if (userId != null) {
-        var result = await profileSpecialist(userId);
-        return result;
-      } else {
-        print('UserId is null');
-        return null;
-      }
+      // Check if userId is not null before calling profileSpecialist
+      var result = await profileSpecialist(userId);
+      String? userIdLogin = await AuthManager.getUserId();
+      return Tuple2(result, userIdLogin);
     } catch (error) {
       // Handle errors here
-      print('Error in _getShadowTeacher: $error');
-      return null;
+      print('Error in _getSpecialist: $error');
+      return Tuple2(null, null);
     }
   }
+
 }

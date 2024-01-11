@@ -7,6 +7,7 @@ import 'package:spectrum_speak/screen/shadow_teacher_profile.dart';
 import 'package:spectrum_speak/units/custom_clipper_shadow_teacher.dart';
 
 class CardShadowTeacher extends StatelessWidget {
+  final String userId;
   final Color cardColor;
   final String teacherName;
   final String academicQualification;
@@ -15,6 +16,7 @@ class CardShadowTeacher extends StatelessWidget {
   final String availability;
   const CardShadowTeacher({
     super.key,
+    required this.userId,
     this.cardColor = kDarkBlue,
     required this.teacherName,
     required this.academicQualification,
@@ -217,7 +219,7 @@ class CardShadowTeacher extends StatelessWidget {
                               context,
                               MaterialPageRoute(
                                 builder: (context) =>
-                                    const ShadowTeacherProfile(),
+                                    ShadowTeacherProfile(userId: userId,),
                               ),
                             );
                           },
@@ -237,7 +239,7 @@ class CardShadowTeacher extends StatelessWidget {
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) =>
-                                          const ShadowTeacherProfile(),
+                                          ShadowTeacherProfile(userId: userId,),
                                     ),
                                   );
                                 },

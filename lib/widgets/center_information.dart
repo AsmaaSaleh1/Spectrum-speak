@@ -7,7 +7,11 @@ import 'package:spectrum_speak/rest/auth_manager.dart';
 import 'package:spectrum_speak/rest/rest_api_center.dart';
 
 class CenterInformation extends StatefulWidget {
-  const CenterInformation({Key? key}) : super(key: key);
+  final String userId;
+  const CenterInformation({
+    Key? key,
+    required this.userId,
+  }) : super(key: key);
 
   @override
   _CenterInformationState createState() => _CenterInformationState();
@@ -196,7 +200,7 @@ class _CenterInformationState extends State<CenterInformation> {
                                           height: 10.0,
                                         ),
                                         Text(
-                                          "Specialist Admin",//TODO
+                                          "Specialist Admin", //TODO
                                           style: TextStyle(
                                             fontSize: 15.0,
                                             fontWeight: FontWeight.bold,
@@ -325,22 +329,16 @@ class _CenterInformationState extends State<CenterInformation> {
 
   Future<CenterAutism?> _getCenter() async {
     try {
-      String? userId = await AuthManager.getUserId();
-      print('UserId: $userId');
-
-      if (userId != null) {
-        var result = await profileCenter(userId);
-        return result;
-      } else {
-        print('UserId is null');
-        return null;
-      }
+      print('UserId: ${widget.userId}');
+      var result = await profileCenter(widget.userId);
+      return result;
     } catch (error) {
       print('Error in _getCenter: $error');
       return null;
     }
   }
 }
+
 class AboutSection extends StatefulWidget {
   final CenterAutism center;
 
@@ -374,23 +372,23 @@ class _AboutSectionState extends State<AboutSection> {
           },
           child: isMore
               ? Text(
-            widget.center.description,
-            style: TextStyle(
-              fontSize: 14.0,
-              color: kDarkerColor,
-              fontWeight: FontWeight.w600,
-            ),
-          )
+                  widget.center.description,
+                  style: TextStyle(
+                    fontSize: 14.0,
+                    color: kDarkerColor,
+                    fontWeight: FontWeight.w600,
+                  ),
+                )
               : Text(
-            widget.center.description,
-            maxLines: 3,
-            overflow: TextOverflow.ellipsis,
-            style: TextStyle(
-              fontSize: 14.0,
-              color: kDarkerColor,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
+                  widget.center.description,
+                  maxLines: 3,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontSize: 14.0,
+                    color: kDarkerColor,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
         ),
         const SizedBox(height: 10),
       ],

@@ -6,20 +6,21 @@ import 'package:intl/intl.dart';
 import 'package:spectrum_speak/constant/const_color.dart';
 import 'package:spectrum_speak/modules/shadow_teacher.dart';
 import 'package:spectrum_speak/rest/auth_manager.dart';
-import 'package:spectrum_speak/rest/rest_api_signUp.dart';
 import 'package:spectrum_speak/rest/rest_api_profile.dart';
 import 'package:spectrum_speak/screen/edit_shadow_teacher_profile.dart';
-import 'package:spectrum_speak/units/build_profile_image.dart';
 import 'package:spectrum_speak/units/custom_button.dart';
 import 'package:spectrum_speak/units/custom_clipper.dart';
+import 'package:tuple/tuple.dart';
 
 class StackContainerShadowTeacher extends StatelessWidget {
+  final String userId;
   const StackContainerShadowTeacher({
     super.key,
+    required this.userId,
   });
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<ShadowTeacher?>(
+    return FutureBuilder<Tuple2<ShadowTeacher?, String?>>(
         future: _getShadowTeacher(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -39,12 +40,13 @@ class StackContainerShadowTeacher extends StatelessWidget {
             return Text('Error: ${snapshot.error}');
           } else if (snapshot.hasData) {
             // Build your UI with the fetched data
-            ShadowTeacher shadowTeacher = snapshot.data!;
+            ShadowTeacher shadowTeacher = snapshot.data!.item1!;
+            String userIdLogin = snapshot.data!.item2!;
             bool isTeacherAvailable;
-            if(shadowTeacher.availability=="Available"){
-              isTeacherAvailable=true;
-            }else{
-              isTeacherAvailable=false;
+            if (shadowTeacher.availability == "Available") {
+              isTeacherAvailable = true;
+            } else {
+              isTeacherAvailable = false;
             }
             return SizedBox(
               height: 400.0,
@@ -72,7 +74,8 @@ class StackContainerShadowTeacher extends StatelessWidget {
                         ),
                         const SizedBox(height: 4.0),
                         Text(
-                          toBeginningOfSentenceCase(shadowTeacher.userName) ?? "",
+                          toBeginningOfSentenceCase(shadowTeacher.userName) ??
+                              "",
                           style: TextStyle(
                             fontSize: 25.0,
                             fontWeight: FontWeight.bold,
@@ -93,7 +96,9 @@ class StackContainerShadowTeacher extends StatelessWidget {
                                 width: 3,
                               ),
                               Text(
-                                toBeginningOfSentenceCase(shadowTeacher.qualification) ?? "",
+                                toBeginningOfSentenceCase(
+                                        shadowTeacher.qualification) ??
+                                    "",
                                 style: TextStyle(
                                   fontSize: 15.0,
                                   color: Colors.grey[700],
@@ -148,23 +153,26 @@ class StackContainerShadowTeacher extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(height: 5.0),
-                        CustomButton(
-                          foregroundColor: kDarkerColor,
-                          backgroundColor: kBlue,
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      const EditShadowTeacherProfile()),
-                            );
-                          },
-                          buttonText: 'Edit Profile',
-                          icon: const Icon(
-                            Icons.edit,
-                            size: 18.0,
+                        Visibility(
+                          visible: userId == userIdLogin,
+                          child: CustomButton(
+                            foregroundColor: kDarkerColor,
+                            backgroundColor: kBlue,
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        const EditShadowTeacherProfile()),
+                              );
+                            },
+                            buttonText: 'Edit Profile',
+                            icon: const Icon(
+                              Icons.edit,
+                              size: 18.0,
+                            ),
+                            iconColor: kPrimary,
                           ),
-                          iconColor: kPrimary,
                         ),
                       ],
                     ),
@@ -179,23 +187,15 @@ class StackContainerShadowTeacher extends StatelessWidget {
         });
   }
 
-  Future<ShadowTeacher?> _getShadowTeacher() async {
+  Future<Tuple2<ShadowTeacher?, String?>> _getShadowTeacher() async {
     try {
-      String? userId = await AuthManager.getUserId();
-      print('UserId: $userId');
-
-      // Check if userId is not null before calling profileShadowTeacher
-      if (userId != null) {
-        var result = await profileShadowTeacher(userId);
-        return result;
-      } else {
-        print('UserId is null');
-        return null;
-      }
+      String? userIdLogin = await AuthManager.getUserId();
+      var result = await profileShadowTeacher(userId);
+      return Tuple2(result, userIdLogin);
     } catch (error) {
       // Handle errors here
       print('Error in _getShadowTeacher: $error');
-      return null;
+      return Tuple2(null, null);
     }
   }
 }

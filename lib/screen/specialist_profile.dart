@@ -13,7 +13,11 @@ import 'package:spectrum_speak/widgets/top_bar.dart';
 import 'login.dart';
 
 class SpecialistProfile extends StatefulWidget {
-  const SpecialistProfile({super.key});
+  final String userId;
+  const SpecialistProfile({
+    super.key,
+    required this.userId,
+  });
 
   @override
   State<SpecialistProfile> createState() => _SpecialistProfileState();
@@ -39,6 +43,7 @@ class _SpecialistProfileState extends State<SpecialistProfile> {
       );
     }
   }
+
   @override
   Widget build(BuildContext context) => LayoutBuilder(
           builder: (BuildContext context, BoxConstraints constraints) {
@@ -57,8 +62,8 @@ class _SpecialistProfileState extends State<SpecialistProfile> {
               SingleChildScrollView(
                 child: Column(
                   children: <Widget>[
-                    const StackContainerSpecialist(),
-                    const SpecialistInformation(),
+                    StackContainerSpecialist(userId: widget.userId,),
+                    SpecialistInformation(userId: widget.userId,),
                     Divider(
                       color: kDarkerColor, // You can customize the color
                       thickness: 2.0, // You can customize the thickness
@@ -103,7 +108,9 @@ class _SpecialistProfileState extends State<SpecialistProfile> {
                         ],
                       ),
                     ),
-                    const SizedBox(height: 80,),
+                    const SizedBox(
+                      height: 80,
+                    ),
                   ],
                 ),
               ),
@@ -117,7 +124,12 @@ class _SpecialistProfileState extends State<SpecialistProfile> {
                     gradient: LinearGradient(
                       begin: Alignment.bottomCenter,
                       end: Alignment.topCenter,
-                      colors: [kPrimary.withOpacity(0.8),kPrimary.withOpacity(0.5),kPrimary.withOpacity(0.1),kPrimary.withOpacity(0.0)],
+                      colors: [
+                        kPrimary.withOpacity(0.8),
+                        kPrimary.withOpacity(0.5),
+                        kPrimary.withOpacity(0.1),
+                        kPrimary.withOpacity(0.0)
+                      ],
                     ),
                   ),
                 ),

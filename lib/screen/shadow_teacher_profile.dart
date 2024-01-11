@@ -10,7 +10,11 @@ import 'package:spectrum_speak/widgets/top_bar.dart';
 import 'login.dart';
 
 class ShadowTeacherProfile extends StatefulWidget {
-  const ShadowTeacherProfile({super.key});
+  final String userId;
+  const ShadowTeacherProfile({
+    super.key,
+    required this.userId,
+  });
 
   @override
   State<ShadowTeacherProfile> createState() => _ShadowTeacherProfileState();
@@ -35,16 +39,21 @@ class _ShadowTeacherProfileState extends State<ShadowTeacherProfile> {
       );
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return TopBar(
       body: Stack(
         children: [
-          const SingleChildScrollView(
+          SingleChildScrollView(
             child: Column(
               children: <Widget>[
-                StackContainerShadowTeacher(),
-                ShadowTeacherInformation(),
+                StackContainerShadowTeacher(
+                  userId: widget.userId,
+                ),
+                ShadowTeacherInformation(
+                  userId: widget.userId,
+                ),
                 SizedBox(
                   height: 80,
                 ),

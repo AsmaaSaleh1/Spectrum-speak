@@ -395,7 +395,7 @@ class _EditCenterProfileState extends State<EditCenterProfile> {
         );
         if (rest['success']) {
           Navigator.pushReplacement(
-              context, MaterialPageRoute(builder: (_) => CenterProfile()));
+              context, MaterialPageRoute(builder: (_) => CenterProfile(userId: userId,)));
         } else {
           setState(() {
             _showErrorText = true;

@@ -13,7 +13,12 @@ import 'center_profile.dart';
 
 class SignUpCenter extends StatefulWidget {
   final String SpecialistID;
-  const SignUpCenter({super.key, required this.SpecialistID});
+  final String userId;
+  const SignUpCenter({
+    super.key,
+    required this.SpecialistID,
+    required this.userId,
+  });
 
   @override
   State<SignUpCenter> createState() => _SignUpCenterState();
@@ -52,13 +57,17 @@ class _SignUpCenterState extends State<SignUpCenter> {
         child: Column(
           children: [
             Padding(
-              padding: EdgeInsets.only(right: 30, left:30,top: 50,bottom: 30),
+              padding:
+                  EdgeInsets.only(right: 30, left: 30, top: 50, bottom: 30),
               child: GestureDetector(
                 onTap: () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => const SpecialistProfile()),
+                      builder: (context) => SpecialistProfile(
+                        userId: widget.userId,
+                      ),
+                    ),
                   );
                 },
                 child: Row(
@@ -185,10 +194,9 @@ class _SignUpCenterState extends State<SignUpCenter> {
 
                   if (_characterCount > _maxCharacterCount) {
                     // Truncate the text to the maximum allowed characters
-                    _aboutController.text = _aboutController.text
-                        .substring(0, _maxCharacterCount);
-                    _aboutController.selection =
-                        TextSelection.fromPosition(
+                    _aboutController.text =
+                        _aboutController.text.substring(0, _maxCharacterCount);
+                    _aboutController.selection = TextSelection.fromPosition(
                       TextPosition(offset: _maxCharacterCount),
                     );
                   }

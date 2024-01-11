@@ -9,12 +9,17 @@ import 'package:spectrum_speak/screen/add_specialist_from_center.dart';
 import 'package:spectrum_speak/screen/edit_center_profile.dart';
 import 'package:spectrum_speak/units/custom_button.dart';
 import 'package:spectrum_speak/units/custom_clipper.dart';
+import 'package:tuple/tuple.dart';
 
 class StackContainerCenter extends StatelessWidget {
-  const StackContainerCenter({super.key});
+  final String userId;
+  const StackContainerCenter({
+    super.key,
+    required this.userId,
+  });
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<CenterAutism?>(
+    return FutureBuilder<Tuple2<CenterAutism?,String?>>(
         future: _getCenter(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -34,7 +39,8 @@ class StackContainerCenter extends StatelessWidget {
             return Text('Error: ${snapshot.error}');
           } else if (snapshot.hasData) {
             // Build your UI with the fetched data
-            CenterAutism center = snapshot.data!;
+            CenterAutism? center = snapshot.data!.item1;
+            String userIdLogin = snapshot.data!.item2!;
             return SizedBox(
               height: 400.0,
               child: Stack(
@@ -70,7 +76,7 @@ class StackContainerCenter extends StatelessWidget {
                         ),
                         const SizedBox(height: 10.0),
                         Text(
-                          toBeginningOfSentenceCase(center.centerName)??"",
+                          toBeginningOfSentenceCase(center?.centerName) ?? "",
                           style: TextStyle(
                             fontSize: 25.0,
                             fontWeight: FontWeight.bold,
@@ -88,7 +94,7 @@ class StackContainerCenter extends StatelessWidget {
                                 color: kRed,
                               ),
                               Text(
-                                center.city,
+                                center!.city,
                                 style: TextStyle(
                                   fontSize: 12.0,
                                   color: Colors.grey[700],
@@ -101,46 +107,53 @@ class StackContainerCenter extends StatelessWidget {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            CustomButton(
-                              foregroundColor: kDarkerColor,
-                              backgroundColor: kBlue,
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          const EditCenterProfile()),
-                                );
-                              },
-                              buttonText: 'Edit Profile',
-                              icon: const Icon(
-                                Icons.edit,
-                                size: 18.0,
+                            Visibility(
+                              visible: userId == userIdLogin,
+                              child: CustomButton(
+                                foregroundColor: kDarkerColor,
+                                backgroundColor: kBlue,
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => const EditCenterProfile(),
+                                    ),
+                                  );
+                                },
+                                buttonText: 'Edit Profile',
+                                icon: const Icon(
+                                  Icons.edit,
+                                  size: 18.0,
+                                ),
+                                iconColor: kPrimary,
                               ),
-                              iconColor: kPrimary,
                             ),
                             const SizedBox(
                               width: 20,
                             ),
-                            CustomButton(
-                              foregroundColor: kDarkerColor,
-                              backgroundColor: kBlue,
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(builder: (context) => const AddSpecialistFromCenter()),
-                                );
-                              },
-                              buttonText: 'Add Specialist',
-                              icon: const Icon(
-                                Icons.add_circle_outline,
-                                size: 18.0,
+                            Visibility(
+                              visible: userId == userIdLogin,
+                              child: CustomButton(
+                                foregroundColor: kDarkerColor,
+                                backgroundColor: kBlue,
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => const AddSpecialistFromCenter(),
+                                    ),
+                                  );
+                                },
+                                buttonText: 'Add Specialist',
+                                icon: const Icon(
+                                  Icons.add_circle_outline,
+                                  size: 18.0,
+                                ),
+                                iconColor: kPrimary,
                               ),
-                              iconColor: kPrimary,
                             ),
                           ],
                         ),
-                        //TODO: Hide the two buttons if there is anyone who is not a specialist who has set up the center
                       ],
                     ),
                   ),
@@ -154,23 +167,19 @@ class StackContainerCenter extends StatelessWidget {
         });
   }
 
-  Future<CenterAutism?> _getCenter() async {
+  Future<Tuple2<CenterAutism?,String?>> _getCenter() async {
     try {
-      String? userId = await AuthManager.getUserId();
+      //String? userId = await AuthManager.getUserId();
       print('UserId: $userId');
+      String? userIdLogin = await AuthManager.getUserId();
 
       // Check if userId is not null before calling profileShadowTeacher
-      if (userId != null) {
-        var result = await profileCenter(userId);
-        return result;
-      } else {
-        print('UserId is null');
-        return null;
-      }
+      var result = await profileCenter(userId);
+      return Tuple2(result, userIdLogin);
     } catch (error) {
       // Handle errors here
       print('Error in _getCenter: $error');
-      return null;
+      return Tuple2(null, null);
     }
   }
 }

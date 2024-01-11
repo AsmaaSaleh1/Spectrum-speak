@@ -3,12 +3,15 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:spectrum_speak/constant/const_color.dart';
 import 'package:spectrum_speak/modules/shadow_teacher.dart';
-import 'package:spectrum_speak/rest/auth_manager.dart';
 import 'package:spectrum_speak/rest/rest_api_profile.dart';
 
 //TODO: make it suitable at all width size (like I make in About in CenterProfile) specially Academic Qualification
 class ShadowTeacherInformation extends StatelessWidget {
-  const ShadowTeacherInformation({super.key});
+  final String userId;
+  const ShadowTeacherInformation({
+    super.key,
+    required this.userId,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -384,17 +387,8 @@ class ShadowTeacherInformation extends StatelessWidget {
 
   Future<ShadowTeacher?> _getShadowTeacher() async {
     try {
-      String? userId = await AuthManager.getUserId();
-      print('UserId: $userId');
-
-      // Check if userId is not null before calling profileShadowTeacher
-      if (userId != null) {
-        var result = await profileShadowTeacher(userId);
-        return result;
-      } else {
-        print('UserId is null');
-        return null;
-      }
+      var result = await profileShadowTeacher(userId);
+      return result;
     } catch (error) {
       // Handle errors here
       print('Error in _getShadowTeacher: $error');

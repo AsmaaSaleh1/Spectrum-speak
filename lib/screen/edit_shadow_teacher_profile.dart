@@ -7,7 +7,6 @@ import 'package:spectrum_speak/rest/rest_api_profile.dart';
 import 'package:spectrum_speak/rest/rest_api_profile_edit.dart';
 import 'package:spectrum_speak/screen/shadow_teacher_profile.dart';
 import 'package:spectrum_speak/units/build_date_text_field.dart';
-import 'package:spectrum_speak/units/build_profile_image.dart';
 import 'package:spectrum_speak/units/build_text_field.dart';
 import 'package:spectrum_speak/units/custom_button.dart';
 
@@ -94,20 +93,20 @@ class _EditShadowTeacherProfileState extends State<EditShadowTeacherProfile> {
                       width: 130,
                       height: 130,
                       decoration: BoxDecoration(
-                          border: Border.all(width: 4, color: kPrimary),
-                          boxShadow: [
-                            BoxShadow(
-                              color: kDarkBlue.withOpacity(0.5),
-                              blurRadius: 8.0, // Blur radius
-                              spreadRadius: 2.0, // Spread radius
-                              offset: const Offset(-5, 5),
-                            ),
-                          ],
-                          shape: BoxShape.circle,
+                        border: Border.all(width: 4, color: kPrimary),
+                        boxShadow: [
+                          BoxShadow(
+                            color: kDarkBlue.withOpacity(0.5),
+                            blurRadius: 8.0, // Blur radius
+                            spreadRadius: 2.0, // Spread radius
+                            offset: const Offset(-5, 5),
                           ),
-                      child: ClipOval(
-                        //child: ProfileImageDisplay(),
+                        ],
+                        shape: BoxShape.circle,
                       ),
+                      child: ClipOval(
+                          //child: ProfileImageDisplay(),
+                          ),
                     ),
                   ),
                   Positioned(
@@ -518,8 +517,14 @@ class _EditShadowTeacherProfileState extends State<EditShadowTeacherProfile> {
             gender.trim(),
             availability.trim());
         if (rest['success']) {
-          Navigator.pushReplacement(context,
-              MaterialPageRoute(builder: (_) => ShadowTeacherProfile()));
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (_) => ShadowTeacherProfile(
+                userId: userID,
+              ),
+            ),
+          );
         } else {
           setState(() {
             _showErrorText = true;

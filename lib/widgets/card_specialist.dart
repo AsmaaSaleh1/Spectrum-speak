@@ -6,6 +6,7 @@ import 'package:spectrum_speak/screen/specialist_profile.dart';
 import 'package:spectrum_speak/units/custom_clipper_puzzle.dart';
 
 class CardSpecialist extends StatelessWidget {
+  final String userId;
   final Color cardColor;
   final String username;
   final String city;
@@ -14,6 +15,7 @@ class CardSpecialist extends StatelessWidget {
   final String centerName;
   const CardSpecialist({
     super.key,
+    required this.userId,
     this.cardColor = kDarkBlue,
     required this.username,
     required this.city,
@@ -122,7 +124,8 @@ class CardSpecialist extends StatelessWidget {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 7,horizontal: 5),
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 7, horizontal: 5),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -146,7 +149,8 @@ class CardSpecialist extends StatelessWidget {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 7,horizontal: 5),
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 7, horizontal: 5),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -159,7 +163,7 @@ class CardSpecialist extends StatelessWidget {
                         width: 7,
                       ),
                       Text(
-                        price+"\$", //Price for one session
+                        price + "\$", //Price for one session
                         style: TextStyle(
                           fontSize: 12.0,
                           fontWeight: FontWeight.bold,
@@ -170,7 +174,8 @@ class CardSpecialist extends StatelessWidget {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 7,horizontal: 5),
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 7, horizontal: 5),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -207,7 +212,7 @@ class CardSpecialist extends StatelessWidget {
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) =>
-                                        const SpecialistProfile()),
+                                        SpecialistProfile(userId: userId,)),
                               );
                             },
                             child: Row(
@@ -226,7 +231,7 @@ class CardSpecialist extends StatelessWidget {
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) =>
-                                              const SpecialistProfile()),
+                                              SpecialistProfile(userId: userId,)),
                                     );
                                   },
                                   icon: Icon(

@@ -90,21 +90,27 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => const ParentProfile()),
+                      builder: (context) => const ParentProfile(),
+                    ),
                   );
                   break;
                 case "Specialist":
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => const SpecialistProfile()),
+                        builder: (context) => SpecialistProfile(
+                              userId: userId,
+                            )),
                   );
                   break;
                 case "ShadowTeacher":
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => const ShadowTeacherProfile()),
+                      builder: (context) => ShadowTeacherProfile(
+                        userId: userId,
+                      ),
+                    ),
                   );
                   break;
                 default:
@@ -134,7 +140,7 @@ class TopBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<Tuple4<String?, String?, String?, bool?>>(
+    return FutureBuilder<Tuple5<String?, String?, String?, bool?, String?>>(
         future: _getEmailNameAndCategory(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -158,6 +164,7 @@ class TopBar extends StatelessWidget {
             String? userName = snapshot.data!.item2;
             String? category = snapshot.data!.item3;
             bool? isAdmin = snapshot.data!.item4;
+            String? userId = snapshot.data!.item5;
             return Scaffold(
               key: _scaffoldKey,
               appBar: CustomAppBar(scaffoldKey: _scaffoldKey),
@@ -205,16 +212,20 @@ class TopBar extends StatelessWidget {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) =>
-                                          const SpecialistProfile()),
+                                    builder: (context) => SpecialistProfile(
+                                      userId: userId!,
+                                    ),
+                                  ),
                                 );
                                 break;
                               case "ShadowTeacher":
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) =>
-                                          const ShadowTeacherProfile()),
+                                    builder: (context) => ShadowTeacherProfile(
+                                      userId: userId!,
+                                    ),
+                                  ),
                                 );
                                 break;
                               default:
@@ -235,23 +246,27 @@ class TopBar extends StatelessWidget {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => const ParentProfile()),
+                                builder: (context) => const ParentProfile(),
+                              ),
                             );
                             break;
                           case "Specialist":
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) =>
-                                      const SpecialistProfile()),
+                                  builder: (context) => SpecialistProfile(
+                                        userId: userId!,
+                                      )),
                             );
                             break;
                           case "ShadowTeacher":
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) =>
-                                      const ShadowTeacherProfile()),
+                                builder: (context) => ShadowTeacherProfile(
+                                  userId: userId!,
+                                ),
+                              ),
                             );
                             break;
                           default:
@@ -281,11 +296,17 @@ class TopBar extends StatelessWidget {
                                 borderWidth: 1.0,
                                 borderColor: kPrimary.withOpacity(0.5),
                                 onTap: () async {
-                                  Navigator.of(context).push(
-                                    MaterialPageRoute(
-                                      builder: (context) => CenterProfile(),
-                                    ),
-                                  );
+                                  if (userId != null) {
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (context) => CenterProfile(
+                                          userId: userId,
+                                        ),
+                                      ),
+                                    );
+                                  } else {
+                                    print('userId null');
+                                  }
                                 },
                               ),
                             ),
@@ -439,7 +460,7 @@ class TopBar extends StatelessWidget {
         });
   }
 
-  Future<Tuple4<String?, String?, String?, bool?>>
+  Future<Tuple5<String?, String?, String?, bool?, String?>>
       _getEmailNameAndCategory() async {
     try {
       String? userId = await AuthManager.getUserId();
@@ -451,15 +472,15 @@ class TopBar extends StatelessWidget {
         var category = await getUserCategory(userId);
         bool isAdmin = await checkAdmin(userId);
         // Return a tuple of email, userName, and category
-        return Tuple4(email, userName, category, isAdmin);
+        return Tuple5(email, userName, category, isAdmin, userId);
       } else {
         print('UserId is null');
-        return const Tuple4(null, null, null, false);
+        return Tuple5(null, null, null, false, null);
       }
     } catch (error) {
       // Handle errors here
       print('Error in _getEmailNameAndCategory: $error');
-      return const Tuple4(null, null, null, false);
+      return const Tuple5(null, null, null, false, null);
     }
   }
 

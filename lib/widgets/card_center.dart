@@ -6,6 +6,7 @@ import 'package:spectrum_speak/screen/center_profile.dart';
 import 'package:spectrum_speak/units/custom_clipper_center_card.dart';
 
 class CenterCard extends StatelessWidget {
+  final String userId;
   final Color cardColor;
   final String about;
   final String centerName;
@@ -14,6 +15,7 @@ class CenterCard extends StatelessWidget {
   final bool isLess;
   const CenterCard({
     super.key,
+    required this.userId,
     this.cardColor = kDarkBlue,
     required this.about,
     required this.centerName,
@@ -108,10 +110,11 @@ class CenterCard extends StatelessWidget {
                 Align(
                   alignment: Alignment.topLeft,
                   child: Padding(
-                    padding: const EdgeInsets.only(
-                        left: 20, right: 20, top: 2, bottom: 2),
-                    child: AboutSection(about: about,)
-                  ),
+                      padding: const EdgeInsets.only(
+                          left: 20, right: 20, top: 2, bottom: 2),
+                      child: AboutSection(
+                        about: about,
+                      )),
                 ),
                 Align(
                   alignment: Alignment.topRight,
@@ -126,7 +129,9 @@ class CenterCard extends StatelessWidget {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => const CenterProfile(),
+                                builder: (context) => CenterProfile(
+                                  userId: userId,
+                                ),
                               ),
                             );
                           },
@@ -145,8 +150,9 @@ class CenterCard extends StatelessWidget {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) =>
-                                          const CenterProfile(),
+                                      builder: (context) => CenterProfile(
+                                        userId: userId,
+                                      ),
                                     ),
                                   );
                                 },
@@ -207,23 +213,23 @@ class _AboutSectionState extends State<AboutSection> {
           },
           child: isMore
               ? Text(
-            widget.about,
-            style: TextStyle(
-              fontSize: 14.0,
-              color: kDarkerColor,
-              fontWeight: FontWeight.w500,
-            ),
-          )
+                  widget.about,
+                  style: TextStyle(
+                    fontSize: 14.0,
+                    color: kDarkerColor,
+                    fontWeight: FontWeight.w500,
+                  ),
+                )
               : Text(
-            widget.about,
-            maxLines: 4,
-            overflow: TextOverflow.ellipsis,
-            style: TextStyle(
-              fontSize: 14.0,
-              color: kDarkerColor,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
+                  widget.about,
+                  maxLines: 4,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontSize: 14.0,
+                    color: kDarkerColor,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
         ),
       ],
     );
