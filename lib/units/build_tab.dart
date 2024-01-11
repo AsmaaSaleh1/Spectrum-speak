@@ -33,38 +33,10 @@ class _MyTabState extends State<MyTab> {
   String? selectedSpecialist;
   String? selectedGender;
   bool isMore = false;
-  void onSearchTypeChanged(SearchEnum newValue) {
-    setState(() {
-      selectedSearch = newValue;
-    });
-  }
 
-  void initState() {
-    super.initState();
-    calculateTotalHeight();
-  }
-
-  void onCityChanged(String? value) {
-    setState(() {
-      selectedCity = value;
-    });
-    getResults();
-  }
-
-  void onSpecialistChanged(String? value) {
-    setState(() {
-      selectedSpecialist = value;
-    });
-    getResults();
-  }
-
-  void onGenderChanged(String? value) {
-    setState(() {
-      selectedGender = value;
-    });
-    getResults();
-  }
-
+  List<dynamic> specialistData = [];
+  List<dynamic> centerData = [];
+  List<dynamic> shadowTeacherData = [];
   List<Color> cardColors = [
     kBlue,
     kRed,
@@ -79,6 +51,20 @@ class _MyTabState extends State<MyTab> {
     kGreen,
     kYellow
   ];
+  @override
+  void initState() {
+    super.initState();
+    calculateTotalHeight();
+  }
+  @override
+  void didUpdateWidget(covariant MyTab oldWidget) {
+    if (widget.namePrefix != oldWidget.namePrefix) {
+      // The namePrefix has changed, perform your desired action here
+      print('Accepted new namePrefix: ${widget.namePrefix}');
+      getResults(); // You can also call getResults if needed
+    }
+    super.didUpdateWidget(oldWidget);
+  }
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -408,9 +394,33 @@ class _MyTabState extends State<MyTab> {
     );
   }
 
-  List<dynamic> specialistData = [];
-  List<dynamic> centerData = [];
-  List<dynamic> shadowTeacherData = [];
+  void onSearchTypeChanged(SearchEnum newValue) {
+    setState(() {
+      selectedSearch = newValue;
+    });
+  }
+
+  void onCityChanged(String? value) {
+    setState(() {
+      selectedCity = value;
+    });
+    getResults();
+  }
+
+  void onSpecialistChanged(String? value) {
+    setState(() {
+      selectedSpecialist = value;
+    });
+    getResults();
+  }
+
+  void onGenderChanged(String? value) {
+    setState(() {
+      selectedGender = value;
+    });
+    getResults();
+  }
+
   Future<void> getSpecialists(
       String namePrefix, String selectedCity, String specialistCategory) async {
     try {
@@ -426,7 +436,7 @@ class _MyTabState extends State<MyTab> {
             city: entry.value['City'] ?? '',
             price: entry.value['Price'].toString(),
             centerName: entry.value['CenterName'] ?? '',
-            category: entry.value['SpecialistCategory']?? '',
+            category: entry.value['SpecialistCategory'] ?? '',
             // Pass other fields as needed
           );
         }).toList();
@@ -484,7 +494,6 @@ class _MyTabState extends State<MyTab> {
     }
   }
 
-  // Function to fetch data based on search parameters
   Future<void> getResults() async {
     try {
       if (selectedSearch == SearchEnum.specialist) {

@@ -24,7 +24,12 @@ import 'package:tuple/tuple.dart';
 import 'card_user_chat.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
-  const CustomAppBar({super.key});
+  final GlobalKey<ScaffoldState> scaffoldKey;
+
+  const CustomAppBar({
+    super.key,
+    required this.scaffoldKey,
+  });
   @override
   Widget build(BuildContext context) {
     return AppBar(
@@ -35,7 +40,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           size: 30,
         ),
         onPressed: () {
-          Scaffold.of(context).openDrawer();
+          scaffoldKey.currentState?.openDrawer();
         },
       ),
       actions: [
@@ -121,10 +126,11 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 class TopBar extends StatelessWidget {
   final Widget body;
 
-  const TopBar({
+  TopBar({
     super.key,
     required this.body,
   });
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
@@ -151,9 +157,10 @@ class TopBar extends StatelessWidget {
             String? email = snapshot.data!.item1;
             String? userName = snapshot.data!.item2;
             String? category = snapshot.data!.item3;
-            bool? isAdmin=snapshot.data!.item4;
+            bool? isAdmin = snapshot.data!.item4;
             return Scaffold(
-              appBar: const CustomAppBar(),
+              key: _scaffoldKey,
+              appBar: CustomAppBar(scaffoldKey: _scaffoldKey),
               drawer: Drawer(
                 shadowColor: kDarkerColor,
                 backgroundColor: kPrimary,
@@ -266,7 +273,8 @@ class TopBar extends StatelessWidget {
                               color: kPrimary,
                             ),
                             child: ClipRRect(
-                              borderRadius: BorderRadius.circular(0.0), // Set borderRadius to 0.0
+                              borderRadius: BorderRadius.circular(
+                                  0.0), // Set borderRadius to 0.0
                               child: CircularProfileAvatar(
                                 '',
                                 backgroundColor: kPrimary,
@@ -431,7 +439,8 @@ class TopBar extends StatelessWidget {
         });
   }
 
-  Future<Tuple4<String?, String?, String?, bool?>> _getEmailNameAndCategory() async {
+  Future<Tuple4<String?, String?, String?, bool?>>
+      _getEmailNameAndCategory() async {
     try {
       String? userId = await AuthManager.getUserId();
 
@@ -440,7 +449,7 @@ class TopBar extends StatelessWidget {
         var email = await AuthManager.getUserEmail();
         var userName = await getUserName(userId);
         var category = await getUserCategory(userId);
-        bool isAdmin=await checkAdmin(userId);
+        bool isAdmin = await checkAdmin(userId);
         // Return a tuple of email, userName, and category
         return Tuple4(email, userName, category, isAdmin);
       } else {

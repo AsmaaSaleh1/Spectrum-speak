@@ -20,8 +20,6 @@ class CustomSearchTextField extends StatefulWidget {
 }
 
 class _CustomSearchTextFieldState extends State<CustomSearchTextField> {
-  bool isObscurePassword = true;
-  int _characterCount = 0;
   @override
   Widget build(BuildContext context) {
     return Padding(
