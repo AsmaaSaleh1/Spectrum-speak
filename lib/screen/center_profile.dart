@@ -55,7 +55,10 @@ class _CenterProfileState extends State<CenterProfile> {
         } else {
           linePadding = 20;
         }
-        return TopBar(
+        return Scaffold(
+          appBar: AppBar(
+            title: Text('Center Profile'),
+          ),
           body: Stack(
             children: [
               SingleChildScrollView(

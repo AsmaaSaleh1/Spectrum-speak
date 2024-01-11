@@ -42,7 +42,10 @@ class _ShadowTeacherProfileState extends State<ShadowTeacherProfile> {
 
   @override
   Widget build(BuildContext context) {
-    return TopBar(
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Profile'),
+      ),
       body: Stack(
         children: [
           SingleChildScrollView(

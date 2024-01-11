@@ -54,130 +54,133 @@ class _ParentProfileState extends State<ParentProfile> {
       } else {
         linePadding = 20;
       }
-      return TopBar(
-        body: Stack(
-          children: [
-            SingleChildScrollView(
-              child: Column(
-                children: <Widget>[
-                  const StackContainerParent(),
-                  const ParentInformation(),
-                  Divider(
-                    color: kDarkerColor,
-                    thickness: 2.0,
-                    indent: linePadding,
-                    endIndent: linePadding,
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Align(
-                    alignment: AlignmentDirectional.topCenter,
-                    child: Text(
-                      "My Children",
-                      style: TextStyle(
-                        fontSize: 30.0,
-                        fontWeight: FontWeight.bold,
-                        color: kDarkerColor,
+      return Scaffold(
+        appBar: AppBar(
+          title: Text('Profile'),
+        ),
+          body: Stack(
+            children: [
+              SingleChildScrollView(
+                child: Column(
+                  children: <Widget>[
+                    const StackContainerParent(),
+                    const ParentInformation(),
+                    Divider(
+                      color: kDarkerColor,
+                      thickness: 2.0,
+                      indent: linePadding,
+                      endIndent: linePadding,
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Align(
+                      alignment: AlignmentDirectional.topCenter,
+                      child: Text(
+                        "My Children",
+                        style: TextStyle(
+                          fontSize: 30.0,
+                          fontWeight: FontWeight.bold,
+                          color: kDarkerColor,
+                        ),
                       ),
                     ),
-                  ),
-                  Visibility(
-                    visible: children.isNotEmpty,
-                    child: SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        children: children
-                            .map((child) => CardItem(
-                          childId: child.childID,
-                          userName: child.childName,
-                          gender: child.gender,
-                          birthDate: child.birthDate,
-                          degreeOfAutism: child.degreeOfAutism,
-                          // Add other properties as needed
-                        ))
-                            .toList(),
+                    Visibility(
+                      visible: children.isNotEmpty,
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          children: children
+                              .map((child) => CardItem(
+                            childId: child.childID,
+                            userName: child.childName,
+                            gender: child.gender,
+                            birthDate: child.birthDate,
+                            degreeOfAutism: child.degreeOfAutism,
+                            // Add other properties as needed
+                          ))
+                              .toList(),
+                        ),
                       ),
                     ),
-                  ),
-                  Visibility(
-                    visible: children.isEmpty,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: TextButton(
-                        onPressed: () {
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => const AddChild(
-                                comeFromSignUp: false,
+                    Visibility(
+                      visible: children.isEmpty,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: TextButton(
+                          onPressed: () {
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => const AddChild(
+                                  comeFromSignUp: false,
+                                ),
                               ),
+                            );
+                          },
+                          child: Text(
+                            "You Can Add Your children",
+                            style: TextStyle(
+                              fontSize: 15.0,
+                              fontWeight: FontWeight.bold,
+                              color: kGreen,
                             ),
-                          );
-                        },
-                        child: Text(
-                          "You Can Add Your children",
-                          style: TextStyle(
-                            fontSize: 15.0,
-                            fontWeight: FontWeight.bold,
-                            color: kGreen,
                           ),
                         ),
                       ),
                     ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(
-                        horizontal: linePadding, vertical: 10),
-                    child: Align(
-                      alignment: AlignmentDirectional.centerEnd,
-                      child: CustomButton(
-                        foregroundColor: kDarkerColor,
-                        backgroundColor: kBlue,
-                        onPressed: () {
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => const AddChild(
-                                comeFromSignUp: false,
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: linePadding, vertical: 10),
+                      child: Align(
+                        alignment: AlignmentDirectional.centerEnd,
+                        child: CustomButton(
+                          foregroundColor: kDarkerColor,
+                          backgroundColor: kBlue,
+                          onPressed: () {
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => const AddChild(
+                                  comeFromSignUp: false,
+                                ),
                               ),
-                            ),
-                          );
-                        },
-                        buttonText: "Add Child",
-                        icon: Icon(Icons.add_box_outlined),
-                        iconColor: kPrimary,
+                            );
+                          },
+                          buttonText: "Add Child",
+                          icon: Icon(Icons.add_box_outlined),
+                          iconColor: kPrimary,
+                        ),
                       ),
                     ),
-                  ),
-                  const SizedBox(
-                    height: 70,
-                  ),
-                ],
+                    const SizedBox(
+                      height: 70,
+                    ),
+                  ],
+                ),
               ),
-            ),
-            Positioned(
-              bottom: 0,
-              left: 0,
-              right: 0,
-              child: Container(
-                height: 80, // Adjust the height as needed
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.bottomCenter,
-                    end: Alignment.topCenter,
-                    colors: [
-                      kPrimary.withOpacity(0.8),
-                      kPrimary.withOpacity(0.5),
-                      kPrimary.withOpacity(0.1),
-                      kPrimary.withOpacity(0.0),
-                    ],
+              Positioned(
+                bottom: 0,
+                left: 0,
+                right: 0,
+                child: Container(
+                  height: 80, // Adjust the height as needed
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.bottomCenter,
+                      end: Alignment.topCenter,
+                      colors: [
+                        kPrimary.withOpacity(0.8),
+                        kPrimary.withOpacity(0.5),
+                        kPrimary.withOpacity(0.1),
+                        kPrimary.withOpacity(0.0),
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
-          ],
-        ),
+            ],
+          ),
       );
     },
   );

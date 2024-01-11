@@ -43,7 +43,7 @@ class _MyAppState extends State<MyApp> {
           iconTheme: const IconThemeData(color: kPrimary),
           titleTextStyle: TextStyle(
             color: kPrimary,
-            fontSize: 25,
+            fontSize: 22,
             fontWeight: FontWeight.bold,
             fontFamily: GoogleFonts.tinos().fontFamily,
           ),
