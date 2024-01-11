@@ -102,12 +102,11 @@ class _SpecialistProfileState extends State<SpecialistProfile> {
                             ),
                           ),
                         ),
-                        const SingleChildScrollView(
+                        SingleChildScrollView(
                           scrollDirection: Axis.horizontal,
                           child: Row(
                             children: <Widget>[
-                              CardReview(),
-                              CardReview(),
+                              CardReview(userId: widget.userId,),
                               // Add more CardItems as needed
                             ],
                           ),
