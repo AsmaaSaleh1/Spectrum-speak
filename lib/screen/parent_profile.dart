@@ -54,146 +54,187 @@ class _ParentProfileState extends State<ParentProfile> {
           } else {
             linePadding = 20;
           }
-          return Scaffold(
-            appBar: AppBar(
-              title: Text('Profile'),
-            ),
-            body: Stack(
-              children: [
-                SingleChildScrollView(
-                  child: Column(
-                    children: <Widget>[
-                      StackContainerParent(
-                        userID: widget.userID,
+          return FutureBuilder<String?>(
+              future: _getID(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  // You can return a loading indicator here if needed
+                  return Container(
+                    color: kPrimary,
+                    child: Container(
+                      alignment: Alignment.center,
+                      child: const CircularProgressIndicator(
+                        backgroundColor: kDarkBlue,
+                        color: kDarkBlue,
                       ),
-                      ParentInformation(
-                        userID: widget.userID,
-                      ),
-                      Divider(
-                        color: kDarkerColor,
-                        thickness: 2.0,
-                        indent: linePadding,
-                        endIndent: linePadding,
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Align(
-                        alignment: AlignmentDirectional.topCenter,
-                        child: Text(
-                          "My Children",
-                          style: TextStyle(
-                            fontSize: 30.0,
-                            fontWeight: FontWeight.bold,
-                            color: kDarkerColor,
-                          ),
-                        ),
-                      ),
-                      Visibility(
-                        visible: children.isNotEmpty,
-                        child: SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: Row(
-                            children: children
-                                .map((child) => CardItem(
-                                      childId: child.childID,
-                                      userName: child.childName,
-                                      gender: child.gender,
-                                      birthDate: child.birthDate,
-                                      degreeOfAutism: child.degreeOfAutism,
-                                      userID: child.userID,
-                                      // Add other properties as needed
-                                    ))
-                                .toList(),
-                          ),
-                        ),
-                      ),
-                      Visibility(
-                        visible: children.isEmpty,
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: TextButton(
-                            onPressed: () {
-                              Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (_) => const AddChild(
-                                    comeFromSignUp: false,
+                    ),
+                  );
+                } else if (snapshot.hasError) {
+                  // Handle the error
+                  return Text('Error: ${snapshot.error}');
+                } else if (snapshot.hasData) {
+                  // Build your UI with the fetched data
+                  String userIdLogin = snapshot.data!;
+                  return Scaffold(
+                    appBar: AppBar(
+                      title: Text('Profile'),
+                    ),
+                    body: Stack(
+                      children: [
+                        SingleChildScrollView(
+                          child: Column(
+                            children: <Widget>[
+                              StackContainerParent(
+                                userID: widget.userID,
+                              ),
+                              ParentInformation(
+                                userID: widget.userID,
+                              ),
+                              Divider(
+                                color: kDarkerColor,
+                                thickness: 2.0,
+                                indent: linePadding,
+                                endIndent: linePadding,
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              Align(
+                                alignment: AlignmentDirectional.topCenter,
+                                child: Text(
+                                  "My Children",
+                                  style: TextStyle(
+                                    fontSize: 30.0,
+                                    fontWeight: FontWeight.bold,
+                                    color: kDarkerColor,
                                   ),
                                 ),
-                              );
-                            },
-                            child: Text(
-                              "You Can Add Your children",
-                              style: TextStyle(
-                                fontSize: 15.0,
-                                fontWeight: FontWeight.bold,
-                                color: kGreen,
+                              ),
+                              Visibility(
+                                visible: children.isNotEmpty,
+                                child: SingleChildScrollView(
+                                  scrollDirection: Axis.horizontal,
+                                  child: Row(
+                                    children: children
+                                        .map((child) => CardItem(
+                                              childId: child.childID,
+                                              userName: child.childName,
+                                              gender: child.gender,
+                                              birthDate: child.birthDate,
+                                              degreeOfAutism:
+                                                  child.degreeOfAutism,
+                                              userID: child.userID,
+                                              // Add other properties as needed
+                                            ))
+                                        .toList(),
+                                  ),
+                                ),
+                              ),
+                              Visibility(
+                                visible: children.isEmpty &&
+                                    userIdLogin == widget.userID,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: TextButton(
+                                    onPressed: () {
+                                      Navigator.pushReplacement(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (_) => const AddChild(
+                                            comeFromSignUp: false,
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                    child: Text(
+                                      "You Can Add Your children",
+                                      style: TextStyle(
+                                        fontSize: 15.0,
+                                        fontWeight: FontWeight.bold,
+                                        color: kGreen,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Visibility(
+                                visible: userIdLogin == widget.userID,
+                                child: Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: linePadding, vertical: 10),
+                                  child: Align(
+                                    alignment: AlignmentDirectional.centerEnd,
+                                    child: CustomButton(
+                                      foregroundColor: kDarkerColor,
+                                      backgroundColor: kBlue,
+                                      onPressed: () {
+                                        Navigator.pushReplacement(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (_) => const AddChild(
+                                              comeFromSignUp: false,
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                      buttonText: "Add Child",
+                                      icon: Icon(Icons.add_box_outlined),
+                                      iconColor: kPrimary,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(
+                                height: 70,
+                              ),
+                            ],
+                          ),
+                        ),
+                        Positioned(
+                          bottom: 0,
+                          left: 0,
+                          right: 0,
+                          child: Container(
+                            height: 80, // Adjust the height as needed
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                begin: Alignment.bottomCenter,
+                                end: Alignment.topCenter,
+                                colors: [
+                                  kPrimary.withOpacity(0.8),
+                                  kPrimary.withOpacity(0.5),
+                                  kPrimary.withOpacity(0.1),
+                                  kPrimary.withOpacity(0.0),
+                                ],
                               ),
                             ),
                           ),
                         ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: linePadding, vertical: 10),
-                        child: Align(
-                          alignment: AlignmentDirectional.centerEnd,
-                          child: CustomButton(
-                            foregroundColor: kDarkerColor,
-                            backgroundColor: kBlue,
-                            onPressed: () {
-                              Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (_) => const AddChild(
-                                    comeFromSignUp: false,
-                                  ),
-                                ),
-                              );
-                            },
-                            buttonText: "Add Child",
-                            icon: Icon(Icons.add_box_outlined),
-                            iconColor: kPrimary,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 70,
-                      ),
-                    ],
-                  ),
-                ),
-                Positioned(
-                  bottom: 0,
-                  left: 0,
-                  right: 0,
-                  child: Container(
-                    height: 80, // Adjust the height as needed
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.bottomCenter,
-                        end: Alignment.topCenter,
-                        colors: [
-                          kPrimary.withOpacity(0.8),
-                          kPrimary.withOpacity(0.5),
-                          kPrimary.withOpacity(0.1),
-                          kPrimary.withOpacity(0.0),
-                        ],
-                      ),
+                      ],
                     ),
-                  ),
-                ),
-              ],
-            ),
-          );
+                  );
+                } else {
+                  // Return a default UI if no data is available
+                  return const Text('No data available');
+                }
+              });
         },
       );
   Future<void> _loadChildren(String userId) async {
-
     List<Child> loadedChildren = await childCard(userId);
     setState(() {
       children = loadedChildren;
     });
+  }
+
+  Future<String?> _getID() async {
+    try {
+      // Check if userId is not null before calling profileSpecialist
+      String? userIdLogin = await AuthManager.getUserId();
+      return userIdLogin;
+    } catch (e) {
+      print("error in user ID");
+    }
+    return null;
   }
 }
