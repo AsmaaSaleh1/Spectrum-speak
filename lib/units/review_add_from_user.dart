@@ -2,23 +2,25 @@ import 'package:circular_profile_avatar/circular_profile_avatar.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:spectrum_speak/constant/const_color.dart';
+import 'package:spectrum_speak/rest/auth_manager.dart';
+import 'package:spectrum_speak/rest/rest_api_rate.dart';
 import 'package:spectrum_speak/widgets/smooth_star_rating.dart';
 
 import 'build_text_field.dart';
 import 'custom_button.dart';
 
 class AddReview extends StatefulWidget {
-  final String image, name;
-  //final String comment;
-  final double userRating; // Rename the property to avoid conflict
+  final String image, name, specialistID, centerID;
+  final double userRating;
   final Function(double val) onRating;
   const AddReview({
     super.key,
     required this.image,
     required this.name,
-    //required this.comment,
     required this.userRating,
     required this.onRating,
+    required this.specialistID,
+    required this.centerID,
   });
 
   @override
@@ -145,8 +147,16 @@ class _AddReviewState extends State<AddReview> {
                     foregroundColor: kDarkerColor,
                     backgroundColor: kPrimary,
                     onPressed: () {
-                      // Handle the edit profile action here
                       //TODO:Hide all the addReview part and display on it the own card review
+                      if (_commentController.text.isEmpty) {
+                        return;
+                      }
+                      doSaveReview(
+                          widget.userRating,
+                          formattedDate,
+                          _commentController.text,
+                          widget.specialistID,
+                          widget.centerID);
                     },
                     buttonText: 'Save',
                     icon: const Icon(
@@ -161,4 +171,27 @@ class _AddReviewState extends State<AddReview> {
           ),
         );
       });
+}
+
+doSaveReview(
+  double rate,
+  String date,
+  String comment,
+  String specialistID,
+  String centerID,
+) async {
+  String? loginID = await AuthManager.getUserId();
+  var rest = await addRate(
+    loginID!,
+    rate,
+    date,
+    comment,
+    specialistID,
+    centerID,
+  );
+  if (rest['success']) {
+    print("correct");
+  } else {
+    print("error to add rate");
+  }
 }

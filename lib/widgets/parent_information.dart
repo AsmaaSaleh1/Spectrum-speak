@@ -8,7 +8,8 @@ import 'package:spectrum_speak/rest/rest_api_signUp.dart';
 import 'package:spectrum_speak/rest/rest_api_profile.dart';
 
 class ParentInformation extends StatelessWidget {
-  const ParentInformation({Key? key});
+  final String userID;
+  const ParentInformation({Key? key, required this.userID});
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +27,7 @@ class ParentInformation extends StatelessWidget {
           contentPadding = const EdgeInsets.symmetric(vertical: 20, horizontal: 20.0);
         }
         return FutureBuilder<Map<String, dynamic>?>(
-          future: _getParentData(),
+          future: _getParentData(userID),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Container(
@@ -308,19 +309,13 @@ class ParentInformation extends StatelessWidget {
     );
   }
 
-  Future<Map<String, dynamic>?> _getParentData() async {
+  Future<Map<String, dynamic>?> _getParentData(String userId) async {
     try {
-      String? userId = await AuthManager.getUserId();
-      if (userId != null) {
-        Parent? parent = await profileParent(userId);
-        int? numberOfChildren = await countOfChildForParent(userId);
-        String? num = numberOfChildren?.toString();
-        return {'parent': parent, 'numberOfChildren': num};
-      } else {
-        print('UserId is null');
-        return null;
-      }
-    } catch (error) {
+      Parent? parent = await profileParent(userId);
+      int? numberOfChildren = await countOfChildForParent(userId);
+      String? num = numberOfChildren?.toString();
+      return {'parent': parent, 'numberOfChildren': num};
+        } catch (error) {
       print('Error in _getParentData: $error');
       return null;
     }

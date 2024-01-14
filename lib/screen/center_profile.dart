@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:spectrum_speak/constant/const_color.dart';
 import 'package:spectrum_speak/rest/auth_manager.dart';
+import 'package:spectrum_speak/rest/rest_api_menu.dart';
+import 'package:spectrum_speak/rest/rest_api_profile.dart';
+import 'package:spectrum_speak/rest/rest_api_rate.dart';
 import 'package:spectrum_speak/units/review_add_from_user.dart';
 import 'package:spectrum_speak/widgets/card_review.dart';
 import 'package:spectrum_speak/widgets/stack_container_center.dart';
 import 'package:spectrum_speak/widgets/center_information.dart';
-import 'package:spectrum_speak/widgets/top_bar.dart';
 
 import 'login.dart';
 
@@ -23,11 +25,38 @@ class CenterProfile extends StatefulWidget {
 
 class _CenterProfileState extends State<CenterProfile> {
   double userRating = 0.0;
+  String name = "";
+  List<dynamic> reviews = [];
+  String CenterID = "";
 
   @override
   void initState() {
     super.initState();
     checkLoginStatus();
+    loadReviews(); // Call the method to load reviews
+    getCenterID();
+    getName();
+  }
+
+  Future<void> getCenterID() async {
+    try {
+      String? result = await _getSpecialist(widget.userId);
+      if (result != null) {
+        setState(() {
+          CenterID = result;
+        });
+      }
+    } catch (error) {
+      // Handle errors here
+      print('Error in getSpecialistID: $error');
+    }
+  }
+
+  Future<void> loadReviews() async {
+    var reviewsData = await getReviews(widget.userId);
+    setState(() {
+      reviews = reviewsData;
+    });
   }
 
   // Method to check if the user is logged in
@@ -40,6 +69,21 @@ class _CenterProfileState extends State<CenterProfile> {
         context,
         MaterialPageRoute(builder: (context) => Login()),
       );
+    }
+  }
+
+  Future getName() async {
+    try {
+      String? loginID = await AuthManager.getUserId();
+      var data = await getUserName(loginID!);
+      if (data != null) {
+        setState(() {
+          name = data;
+        });
+      }
+      print(name);
+    } catch (e) {
+      print("error$e");
     }
   }
 
@@ -64,8 +108,12 @@ class _CenterProfileState extends State<CenterProfile> {
               SingleChildScrollView(
                 child: Column(
                   children: <Widget>[
-                    StackContainerCenter(userId: widget.userId,),
-                    CenterInformation(userId: widget.userId,),
+                    StackContainerCenter(
+                      userId: widget.userId,
+                    ),
+                    CenterInformation(
+                      userId: widget.userId,
+                    ),
                     Divider(
                       color: kDarkerColor, // You can customize the color
                       thickness: 2.0, // You can customize the thickness
@@ -74,14 +122,15 @@ class _CenterProfileState extends State<CenterProfile> {
                     ),
                     AddReview(
                       image: 'images/prof.png',
-                      name: 'User Name',
-                      //comment: 'xx',
+                      name: name,
                       userRating: userRating,
                       onRating: (double newRating) {
                         setState(() {
                           userRating = newRating;
                         });
                       },
+                      specialistID: "",
+                      centerID: CenterID,
                     ),
                     Divider(
                       color: kDarkerColor, // You can customize the color
@@ -100,16 +149,37 @@ class _CenterProfileState extends State<CenterProfile> {
                         ),
                       ),
                     ),
+                    if (reviews.isNotEmpty)
                     SingleChildScrollView(
                       scrollDirection: Axis.horizontal,
                       child: Row(
-                        children: <Widget>[
-                          CardReview(userId: widget.userId,),
-                          CardReview(userId: widget.userId,),
-                          // Add more CardItems as needed
-                        ],
+                        children: reviews.map((review) {
+                              return CardReview(
+                                userId: widget.userId.toString(),
+                                rateId: review["RateID"].toString(),
+                                userName: review["UserName"] ??
+                                    "", // Replace "UserName" with the actual key in your review data
+                                date: review["Date"] ?? "",
+                                comment: review["Comment"] ?? "",
+                                rate: review["Rate"].toString(),
+                                isCenter: true,
+                              );
+                            }).toList() ??
+                            [],
                       ),
                     ),
+                    if (reviews.isEmpty)
+                      Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Text(
+                          "No Reviews Found",
+                          style: TextStyle(
+                            color: kDarkerColor.withOpacity(0.7),
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
                     const SizedBox(height: 80.0),
                   ],
                 ),
@@ -156,4 +226,27 @@ class _CenterProfileState extends State<CenterProfile> {
           ),
         );
       });
+}
+
+Future<dynamic> getReviews(String userID) async {
+  try {
+    var data = await getReviewCenter(userID);
+    print(data);
+    return data;
+  } catch (e) {
+    print("error$e");
+  }
+}
+
+Future<String?> _getSpecialist(String userID) async {
+  try {
+    // Check if userId is not null before calling profileShadowTeacher
+    var result = await profileSpecialist(userID);
+    print(result?.specialistID);
+    return result?.centerID.toString();
+  } catch (error) {
+    // Handle errors here
+    print('Error in _getSpecialist: $error');
+    return null;
+  }
 }

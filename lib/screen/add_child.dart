@@ -43,7 +43,10 @@ class _AddChildState extends State<AddChild> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => AddProfilePhoto(comeFromSignUp: true,)),
+                            builder: (context) => AddProfilePhoto(
+                              comeFromSignUp: true,
+                            ),
+                          ),
                         );
                       },
                       child: Row(
@@ -75,7 +78,9 @@ class _AddChildState extends State<AddChild> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => const ParentProfile()),
+                              builder: (context) => ParentProfile(
+                                    userID: '',
+                                  )),
                         );
                       },
                       child: Row(
@@ -309,11 +314,19 @@ class _AddChildState extends State<AddChild> {
         await childrenSignUp(userId, name, birthDate, gender, degreeOfAutism);
     if (rest['success']) {
       if (widget.comeFromSignUp) {
-        Navigator.of(context)
-            .push(MaterialPageRoute(builder: (context) => const MainPage()));
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => const MainPage(),
+          ),
+        );
       } else {
         Navigator.of(context).push(
-            MaterialPageRoute(builder: (context) => const ParentProfile()));
+          MaterialPageRoute(
+            builder: (context) => ParentProfile(
+              userID: userId,
+            ),
+          ),
+        );
       }
     } else {
       setState(() {

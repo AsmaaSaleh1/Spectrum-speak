@@ -7,7 +7,6 @@ import 'package:spectrum_speak/rest/rest_api_profile.dart';
 import 'package:spectrum_speak/rest/rest_api_profile_edit.dart';
 import 'package:spectrum_speak/screen/parent_profile.dart';
 import 'package:spectrum_speak/units/build_date_text_field.dart';
-import 'package:spectrum_speak/units/build_profile_image.dart';
 import 'package:spectrum_speak/units/build_text_field.dart';
 import 'package:spectrum_speak/units/custom_button.dart';
 import 'package:spectrum_speak/units/build_drop_down_menu.dart';
@@ -96,8 +95,8 @@ class _EditProfileState extends State<EditProfile> {
                         shape: BoxShape.circle,
                       ),
                       child: ClipOval(
-                        //child: ProfileImageDisplay(),
-                      ),
+                          //child: ProfileImageDisplay(),
+                          ),
                     ),
                   ),
                   Positioned(
@@ -412,7 +411,13 @@ class _EditProfileState extends State<EditProfile> {
         );
         if (rest['success']) {
           Navigator.pushReplacement(
-              context, MaterialPageRoute(builder: (_) => ParentProfile()));
+            context,
+            MaterialPageRoute(
+              builder: (_) => ParentProfile(
+                userID: userID,
+              ),
+            ),
+          );
         } else {
           setState(() {
             _showErrorText = true;

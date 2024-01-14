@@ -8,6 +8,7 @@ import 'package:spectrum_speak/screen/edit_child_card.dart';
 import 'package:spectrum_speak/screen/parent_profile.dart';
 
 class CardItem extends StatelessWidget {
+  final String userID;
   final String childId;
   final String userName;
   final String gender;
@@ -15,6 +16,7 @@ class CardItem extends StatelessWidget {
   final String degreeOfAutism;
   const CardItem({
     super.key,
+    required this.userID,
     required this.childId,
     required this.userName,
     required this.gender,
@@ -84,7 +86,7 @@ class CardItem extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.all(3.0),
                       child: Text(
-                        toBeginningOfSentenceCase(userName)??"",
+                        toBeginningOfSentenceCase(userName) ?? "",
                         style: TextStyle(
                           fontSize: 20.0,
                           fontWeight: FontWeight.bold,
@@ -139,7 +141,8 @@ class CardItem extends StatelessWidget {
                   if (value == 'Edit') {
                     Navigator.pushReplacement(
                       context,
-                      MaterialPageRoute(builder: (_) => EditChildCard(childId: childId)),
+                      MaterialPageRoute(
+                          builder: (_) => EditChildCard(childId: childId)),
                     );
                   } else if (value == 'Delete') {
                     // Handle delete logic
@@ -164,6 +167,7 @@ class CardItem extends StatelessWidget {
       ),
     );
   }
+
   Future<void> showDeleteConfirmationDialog(BuildContext context) async {
     return showDialog<void>(
       context: context,
@@ -172,7 +176,11 @@ class CardItem extends StatelessWidget {
           title: Text('Confirmation'),
           content: Text('Are you sure you want to delete this child?'
               'This action cannot be undone.'),
-          icon: Icon(Icons.warning_amber,size: 45,color: kYellow,),
+          icon: Icon(
+            Icons.warning_amber,
+            size: 45,
+            color: kYellow,
+          ),
           actions: <Widget>[
             TextButton(
               onPressed: () {
@@ -187,7 +195,11 @@ class CardItem extends StatelessWidget {
 
                 Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(builder: (_) => ParentProfile()),
+                  MaterialPageRoute(
+                    builder: (_) => ParentProfile(
+                      userID: userID,
+                    ),
+                  ),
                 );
               },
               child: Text('Delete'),

@@ -90,7 +90,9 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const ParentProfile(),
+                      builder: (context) => ParentProfile(
+                        userID: userId,
+                      ),
                     ),
                   );
                   break;
@@ -98,9 +100,10 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => SpecialistProfile(
-                              userId: userId,
-                            )),
+                      builder: (context) => SpecialistProfile(
+                        userId: userId,
+                      ),
+                    ),
                   );
                   break;
                 case "ShadowTeacher":
@@ -204,8 +207,10 @@ class TopBar extends StatelessWidget {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) =>
-                                          const ParentProfile()),
+                                    builder: (context) => ParentProfile(
+                                      userID: userId!,
+                                    ),
+                                  ),
                                 );
                                 break;
                               case "Specialist":
@@ -246,7 +251,9 @@ class TopBar extends StatelessWidget {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => const ParentProfile(),
+                                builder: (context) => ParentProfile(
+                                  userID: userId!,
+                                ),
                               ),
                             );
                             break;

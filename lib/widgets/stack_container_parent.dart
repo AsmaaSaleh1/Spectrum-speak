@@ -13,11 +13,12 @@ import 'package:spectrum_speak/units/custom_button.dart';
 import 'package:spectrum_speak/units/custom_clipper.dart';
 
 class StackContainerParent extends StatelessWidget {
-  const StackContainerParent({super.key});
+  final String userID;
+  const StackContainerParent({super.key, required this.userID});
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<Parent?>(
-        future: _getParent(),
+        future: _getParent(userID),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             // You can return a loading indicator here if needed
@@ -131,18 +132,12 @@ class StackContainerParent extends StatelessWidget {
         });
   }
 
-  Future<Parent?> _getParent() async {
+  Future<Parent?> _getParent(String userId) async {
     try {
-      String? userId = await AuthManager.getUserId();
       // Check if userId is not null before calling profileShadowTeacher
-      if (userId != null) {
-        var result = await profileParent(userId);
-        return result;
-      } else {
-        print('UserId is null');
-        return null;
-      }
-    } catch (error) {
+      var result = await profileParent(userId);
+      return result;
+        } catch (error) {
       // Handle errors here
       print('Error in _getParent: $error');
       return null;

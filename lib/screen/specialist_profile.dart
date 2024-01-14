@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:spectrum_speak/constant/const_color.dart';
 import 'package:spectrum_speak/rest/auth_manager.dart';
+import 'package:spectrum_speak/rest/rest_api_menu.dart';
+import 'package:spectrum_speak/rest/rest_api_profile.dart';
+import 'package:spectrum_speak/rest/rest_api_rate.dart';
 import 'package:spectrum_speak/widgets/card_review.dart';
 
 import 'package:spectrum_speak/widgets/stack_container_specialist.dart';
@@ -26,10 +29,52 @@ class _SpecialistProfileState extends State<SpecialistProfile> {
   double userRating = 0.0;
   bool x = false; // Set your boolean value here
 
+  List<dynamic> reviews = [];
+  String name = "";
+  String specialistID = "";
   @override
   void initState() {
     super.initState();
     checkLoginStatus();
+    loadReviews(); // Call the method to load reviews
+    getName();
+    getSpecialistID();
+  }
+  Future<void> getSpecialistID() async {
+    try {
+      String? result = await _getSpecialist(widget.userId);
+      if (result != null) {
+        setState(() {
+          specialistID = result;
+        });
+      }
+    } catch (error) {
+      // Handle errors here
+      print('Error in getSpecialistID: $error');
+    }
+  }
+  Future<void> loadReviews() async {
+    var reviewsData = await getReviews(widget.userId);
+    if (reviewsData != null) {
+      setState(() {
+        reviews = reviewsData;
+      });
+    }
+  }
+
+  Future getName() async {
+    try {
+      String? loginID = await AuthManager.getUserId();
+      var data = await getUserName(loginID!);
+      if (data != null) {
+        setState(() {
+          name = data;
+        });
+      }
+      print(name);
+    } catch (e) {
+      print("error$e");
+    }
   }
 
   // Method to check if the user is logged in
@@ -81,13 +126,15 @@ class _SpecialistProfileState extends State<SpecialistProfile> {
                       ),
                       AddReview(
                         image: 'images/prof.png',
-                        name: 'User Name',
+                        name: name,
                         userRating: userRating,
                         onRating: (double newRating) {
                           setState(() {
                             userRating = newRating;
                           });
                         },
+                        specialistID: specialistID,
+                        centerID: "",
                       ),
                       Divider(
                         color: kDarkerColor,
@@ -106,17 +153,35 @@ class _SpecialistProfileState extends State<SpecialistProfile> {
                           ),
                         ),
                       ),
-                      SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: Row(
-                          children: <Widget>[
-                            CardReview(
-                              userId: widget.userId,
-                            ),
-                            // Add more CardItems as needed
-                          ],
+                      if (reviews.isNotEmpty)
+                        SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Row(
+                            children: reviews.map((review) {
+                              return CardReview(
+                                userId: review["UserID"].toString(),
+                                rateId: review["RateID"].toString(),
+                                userName: review["UserName"] ?? "",
+                                date: review["Date"] ?? "",
+                                comment: review["Comment"] ?? "",
+                                rate: review["Rate"].toString(),
+                                isCenter: false,
+                              );
+                            }).toList(),
+                          ),
                         ),
-                      ),
+                      if (reviews.isEmpty)
+                        Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Text(
+                            "No Reviews Found",
+                            style: TextStyle(
+                              color: kDarkerColor.withOpacity(0.7),
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
                       const SizedBox(
                         height: 80,
                       ),
@@ -137,7 +202,7 @@ class _SpecialistProfileState extends State<SpecialistProfile> {
                           kPrimary.withOpacity(0.8),
                           kPrimary.withOpacity(0.5),
                           kPrimary.withOpacity(0.1),
-                          kPrimary.withOpacity(0.0)
+                          kPrimary.withOpacity(0.0),
                         ],
                       ),
                     ),
@@ -149,3 +214,27 @@ class _SpecialistProfileState extends State<SpecialistProfile> {
         },
       );
 }
+
+Future<dynamic> getReviews(String userID) async {
+  try {
+    var data = await getReviewSpecialist(userID);
+    print(data);
+    return data;
+  } catch (e) {
+    print("error$e");
+  }
+}
+
+Future<String?> _getSpecialist(String userID) async {
+  try {
+    // Check if userId is not null before calling profileShadowTeacher
+    var result = await profileSpecialist(userID);
+    print(result?.specialistID);
+    return result?.specialistID.toString();
+  } catch (error) {
+    // Handle errors here
+    print('Error in _getSpecialist: $error');
+    return null;
+  }
+}
+

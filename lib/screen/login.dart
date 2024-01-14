@@ -29,6 +29,7 @@ class _LoginState extends State<Login> {
   bool _notCorrect = false;
   @override
   void initState() {
+    super.initState();
     _showErrorText = false;
     _notValid = false;
     _notCorrect = false;

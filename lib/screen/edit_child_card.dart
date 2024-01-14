@@ -218,9 +218,10 @@ class _EditChildCardState extends State<EditChildCard> {
                     CustomButton(
                       foregroundColor: kDarkerColor,
                       backgroundColor: kPrimary,
-                      onPressed: () {
+                      onPressed: () async{
+                        String? userId = await AuthManager.getUserId();
                         Navigator.pushReplacement(context,
-                            MaterialPageRoute(builder: (_) => ParentProfile()));
+                            MaterialPageRoute(builder: (_) => ParentProfile(userID: userId!,),),);
                       },
                       buttonText: 'Cansel',
                       icon: const Icon(
@@ -300,7 +301,13 @@ class _EditChildCardState extends State<EditChildCard> {
             birthDate.trim(), gender.trim(), degreeOfAutism.trim());
         if (rest['success']) {
           Navigator.pushReplacement(
-              context, MaterialPageRoute(builder: (_) => ParentProfile()));
+            context,
+            MaterialPageRoute(
+              builder: (_) => ParentProfile(
+                userID: userID,
+              ),
+            ),
+          );
         } else {
           setState(() {
             _showErrorText = true;
