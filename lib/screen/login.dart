@@ -265,14 +265,14 @@ class _LoginState extends State<Login> {
         result = await _getShadowTeacher(context, userID);
       } else if (category == "Specialist") {
         result = await _getSpecialist(context, userID);
-      } else {
+      }
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
             builder: (_) => const MainPage(),
           ),
         );
-      }
+
     } else {
       setState(() {
         _showErrorText = true;
