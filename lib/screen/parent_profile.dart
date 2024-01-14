@@ -25,7 +25,7 @@ class _ParentProfileState extends State<ParentProfile> {
   @override
   void initState() {
     super.initState();
-    _loadChildren();
+    _loadChildren(widget.userID);
     checkLoginStatus();
   }
 
@@ -63,8 +63,12 @@ class _ParentProfileState extends State<ParentProfile> {
                 SingleChildScrollView(
                   child: Column(
                     children: <Widget>[
-                      StackContainerParent(userID: widget.userID,),
-                      ParentInformation(userID: widget.userID,),
+                      StackContainerParent(
+                        userID: widget.userID,
+                      ),
+                      ParentInformation(
+                        userID: widget.userID,
+                      ),
                       Divider(
                         color: kDarkerColor,
                         thickness: 2.0,
@@ -185,15 +189,11 @@ class _ParentProfileState extends State<ParentProfile> {
           );
         },
       );
-  Future<void> _loadChildren() async {
-    String? userId = await AuthManager.getUserId();
-    if (userId != null) {
-      List<Child> loadedChildren = await childCard(userId);
-      setState(() {
-        children = loadedChildren;
-      });
-    } else {
-      print('UserId is null');
-    }
+  Future<void> _loadChildren(String userId) async {
+
+    List<Child> loadedChildren = await childCard(userId);
+    setState(() {
+      children = loadedChildren;
+    });
   }
 }
