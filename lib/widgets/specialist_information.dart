@@ -5,6 +5,7 @@ import 'package:spectrum_speak/modules/specialist.dart';
 import 'package:spectrum_speak/rest/auth_manager.dart';
 import 'package:spectrum_speak/rest/rest_api_signUp.dart';
 import 'package:spectrum_speak/rest/rest_api_profile.dart';
+import 'package:spectrum_speak/screen/sign_up_specialist.dart';
 
 class SpecialistInformation extends StatelessWidget {
   final String userId;
@@ -31,7 +32,7 @@ class SpecialistInformation extends StatelessWidget {
                 const EdgeInsets.symmetric(vertical: 20, horizontal: 20.0);
           }
           return FutureBuilder<Specialist?>(
-              future: _getSpecialist(),
+              future: _getSpecialist(context),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   // You can return a loading indicator here if needed
@@ -338,10 +339,24 @@ class SpecialistInformation extends StatelessWidget {
               });
         },
       );
-  Future<Specialist?> _getSpecialist() async {
+  Future<Specialist?> _getSpecialist(BuildContext context) async {
     try {
       // Check if userId is not null before calling profileShadowTeacher
       var result = await profileSpecialist(userId);
+      // Check if result is null or if specialist sign-up is not complete
+      if (result == null) {
+        var check = await checkSpecialistSignUpComplete(userId);
+        if (!check!) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => SignUpSpecialist(),
+            ),
+          );
+        } else {
+          print("error in checker specialist");
+        }
+      }
       return result;
     } catch (error) {
       // Handle errors here

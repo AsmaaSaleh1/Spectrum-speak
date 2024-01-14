@@ -62,83 +62,89 @@ class _SpecialistProfileState extends State<SpecialistProfile> {
             appBar: AppBar(
               title: Text('Profile'),
             ),
-              body: Stack(
-                children: [
-                  SingleChildScrollView(
-                    child: Column(
-                      children: <Widget>[
-                        StackContainerSpecialist(userId: widget.userId),
-                        SpecialistInformation(userId: widget.userId),
-                        Divider(
-                          color: kDarkerColor,
-                          thickness: 2.0,
-                          indent: linePadding,
-                          endIndent: linePadding,
+            body: Stack(
+              children: [
+                SingleChildScrollView(
+                  child: Column(
+                    children: <Widget>[
+                      StackContainerSpecialist(
+                        userId: widget.userId,
+                      ),
+                      SpecialistInformation(
+                        userId: widget.userId,
+                      ),
+                      Divider(
+                        color: kDarkerColor,
+                        thickness: 2.0,
+                        indent: linePadding,
+                        endIndent: linePadding,
+                      ),
+                      AddReview(
+                        image: 'images/prof.png',
+                        name: 'User Name',
+                        userRating: userRating,
+                        onRating: (double newRating) {
+                          setState(() {
+                            userRating = newRating;
+                          });
+                        },
+                      ),
+                      Divider(
+                        color: kDarkerColor,
+                        thickness: 2.0,
+                        indent: linePadding,
+                        endIndent: linePadding,
+                      ),
+                      Align(
+                        alignment: AlignmentDirectional.topCenter,
+                        child: Text(
+                          "Review",
+                          style: TextStyle(
+                            fontSize: 30.0,
+                            fontWeight: FontWeight.bold,
+                            color: kDarkerColor,
+                          ),
                         ),
-                        AddReview(
-                          image: 'images/prof.png',
-                          name: 'User Name',
-                          userRating: userRating,
-                          onRating: (double newRating) {
-                            setState(() {
-                              userRating = newRating;
-                            });
-                          },
-                        ),
-                        Divider(
-                          color: kDarkerColor,
-                          thickness: 2.0,
-                          indent: linePadding,
-                          endIndent: linePadding,
-                        ),
-                        Align(
-                          alignment: AlignmentDirectional.topCenter,
-                          child: Text(
-                            "Review",
-                            style: TextStyle(
-                              fontSize: 30.0,
-                              fontWeight: FontWeight.bold,
-                              color: kDarkerColor,
+                      ),
+                      SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          children: <Widget>[
+                            CardReview(
+                              userId: widget.userId,
                             ),
-                          ),
-                        ),
-                        SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: Row(
-                            children: <Widget>[
-                              CardReview(userId: widget.userId,),
-                              // Add more CardItems as needed
-                            ],
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 80,
-                        ),
-                      ],
-                    ),
-                  ),
-                  Positioned(
-                    bottom: 0,
-                    left: 0,
-                    right: 0,
-                    child: Container(
-                      height: 80,
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment.bottomCenter,
-                          end: Alignment.topCenter,
-                          colors: [
-                            kPrimary.withOpacity(0.8),
-                            kPrimary.withOpacity(0.5),
-                            kPrimary.withOpacity(0.1),
-                            kPrimary.withOpacity(0.0)
+                            // Add more CardItems as needed
                           ],
                         ),
                       ),
+                      const SizedBox(
+                        height: 80,
+                      ),
+                    ],
+                  ),
+                ),
+                Positioned(
+                  bottom: 0,
+                  left: 0,
+                  right: 0,
+                  child: Container(
+                    height: 80,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.bottomCenter,
+                        end: Alignment.topCenter,
+                        colors: [
+                          kPrimary.withOpacity(0.8),
+                          kPrimary.withOpacity(0.5),
+                          kPrimary.withOpacity(0.1),
+                          kPrimary.withOpacity(0.0)
+                        ],
+                      ),
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
+            ),
           );
         },
       );

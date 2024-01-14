@@ -67,7 +67,7 @@ Future<Specialist?> profileSpecialist(String userId) async {
         centerID: decodedData['CenterID'].toString(),
       );
     } else {
-      print("Error in profileShadowTeacher: ${response.statusCode}");
+      print("Error in profileSpecialist: ${response.statusCode}");
       return null;
     }
   } catch (error) {
@@ -230,4 +230,40 @@ Future<File> getPhoto(String userID) async {
   }
 }
 
-//TODO: handle the null from the database in shadowTeacher and specialist profile
+Future<bool?> checkSpecialistSignUpComplete(String userID)async{
+  try{
+    final response = await http.get(
+      Uri.parse('${Utils.baseUrl}/users/specialist/check/$userID'),
+      headers: {"Accept": "application/json"},
+    );
+    if (response.statusCode == 200) {
+      var decodedData = jsonDecode(response.body);
+      return decodedData["result"];
+    }else {
+      print('Failed to retrieve checkSpecialistSignUpComplete. Status code: ${response.statusCode}');
+      return false;
+    }
+  }catch(e){
+    print("error in checkSpecialistSignUpComplete: $e");
+  }
+  return null;
+}
+
+Future<bool?> checkShadowTeacherSignUpComplete(String userID)async{
+  try{
+    final response = await http.get(
+      Uri.parse('${Utils.baseUrl}/users/shadowTeacher/check/$userID'),
+      headers: {"Accept": "application/json"},
+    );
+    if (response.statusCode == 200) {
+      var decodedData = jsonDecode(response.body);
+      return decodedData["result"];
+    }else {
+      print('Failed to retrieve checkShadowTeacherSignUpComplete. Status code: ${response.statusCode}');
+      return false;
+    }
+  }catch(e){
+    print("error in checkShadowTeacherSignUpComplete: $e");
+  }
+  return null;
+}

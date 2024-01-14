@@ -34,7 +34,6 @@ class _ForgetPasswordState extends State<ForgetPassword> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,7 +42,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
         child: Column(
           children: [
             Padding(
-              padding: EdgeInsets.only(right: 30,left: 30, top: 70),
+              padding: EdgeInsets.only(right: 30, left: 15, top: 55),
               child: GestureDetector(
                 onTap: () {
                   Navigator.of(context).pop();
@@ -170,8 +169,15 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                         content: Text('OTP has been sent'),
                       ),
                     );
-                    Navigator.push(context, MaterialPageRoute(builder: (context)=> OTPScreen(myAuth: myAuth,email: _emailController.text,comeFromSignUp: false,)));
-                  }else{
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => OTPScreen(
+                                  myAuth: myAuth,
+                                  email: _emailController.text,
+                                  comeFromSignUp: false,
+                                )));
+                  } else {
                     print("error");
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
@@ -181,6 +187,9 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                   }
                 },
               ),
+            ),
+            const SizedBox(
+              height: 15,
             ),
           ],
         ),

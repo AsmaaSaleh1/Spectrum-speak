@@ -8,6 +8,8 @@ import 'package:spectrum_speak/modules/shadow_teacher.dart';
 import 'package:spectrum_speak/rest/auth_manager.dart';
 import 'package:spectrum_speak/rest/rest_api_profile.dart';
 import 'package:spectrum_speak/screen/edit_shadow_teacher_profile.dart';
+import 'package:spectrum_speak/screen/sign_up_shadow_teacher.dart';
+import 'package:spectrum_speak/screen/sign_up_specialist.dart';
 import 'package:spectrum_speak/units/custom_button.dart';
 import 'package:spectrum_speak/units/custom_clipper.dart';
 import 'package:tuple/tuple.dart';
@@ -21,7 +23,7 @@ class StackContainerShadowTeacher extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<Tuple2<ShadowTeacher?, String?>>(
-        future: _getShadowTeacher(),
+        future: _getShadowTeacher(context),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             // You can return a loading indicator here if needed
@@ -187,10 +189,24 @@ class StackContainerShadowTeacher extends StatelessWidget {
         });
   }
 
-  Future<Tuple2<ShadowTeacher?, String?>> _getShadowTeacher() async {
+  Future<Tuple2<ShadowTeacher?, String?>> _getShadowTeacher(BuildContext context) async {
     try {
       String? userIdLogin = await AuthManager.getUserId();
       var result = await profileShadowTeacher(userId);
+      // Check if result is null or if Shadow Teacher sign-up is not complete
+      if (result == null) {
+        var check = await checkShadowTeacherSignUpComplete(userId);
+        if (!check!) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => SignUpShadowTeacher(),
+            ),
+          );
+        } else {
+          print("error in checker ShadowTeacher");
+        }
+      }
       return Tuple2(result, userIdLogin);
     } catch (error) {
       // Handle errors here

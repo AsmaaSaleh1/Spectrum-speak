@@ -78,7 +78,7 @@ class _OTPScreenState extends State<OTPScreen> {
           children: [
             widget.comeFromSignUp
                 ? Padding(
-                    padding: EdgeInsets.only(right: 30, left: 30, top: 70),
+                    padding: EdgeInsets.only(right: 30, left: 15, top: 55),
                     child: GestureDetector(
                       onTap: () {
                         showDialog(
@@ -172,7 +172,7 @@ class _OTPScreenState extends State<OTPScreen> {
                     ),
                   )
                 : Padding(
-                    padding: EdgeInsets.only(right: 30, left: 30, top: 70),
+                    padding: EdgeInsets.only(right: 30, left: 15, top: 55),
                     child: GestureDetector(
                       onTap: () {
                         Navigator.of(context).pop();

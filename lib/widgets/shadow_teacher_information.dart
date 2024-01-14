@@ -4,6 +4,8 @@ import 'package:intl/intl.dart';
 import 'package:spectrum_speak/constant/const_color.dart';
 import 'package:spectrum_speak/modules/shadow_teacher.dart';
 import 'package:spectrum_speak/rest/rest_api_profile.dart';
+import 'package:spectrum_speak/screen/sign_up_shadow_teacher.dart';
+import 'package:spectrum_speak/screen/sign_up_specialist.dart';
 
 //TODO: make it suitable at all width size (like I make in About in CenterProfile) specially Academic Qualification
 class ShadowTeacherInformation extends StatelessWidget {
@@ -31,7 +33,7 @@ class ShadowTeacherInformation extends StatelessWidget {
     }
 
     return FutureBuilder<ShadowTeacher?>(
-      future: _getShadowTeacher(),
+      future: _getShadowTeacher(context),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           // You can return a loading indicator here if needed
@@ -385,9 +387,23 @@ class ShadowTeacherInformation extends StatelessWidget {
     );
   }
 
-  Future<ShadowTeacher?> _getShadowTeacher() async {
+  Future<ShadowTeacher?> _getShadowTeacher(BuildContext context) async {
     try {
       var result = await profileShadowTeacher(userId);
+      // Check if result is null or if Shadow Teacher sign-up is not complete
+      if (result == null) {
+        var check = await checkShadowTeacherSignUpComplete(userId);
+        if (!check!) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => SignUpShadowTeacher(),
+            ),
+          );
+        } else {
+          print("error in checker ShadowTeacher");
+        }
+      }
       return result;
     } catch (error) {
       // Handle errors here

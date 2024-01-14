@@ -6,12 +6,16 @@ import 'package:spectrum_speak/constant/const_color.dart';
 import 'package:spectrum_speak/modules/parent.dart';
 import 'package:spectrum_speak/rest/auth_manager.dart';
 import 'package:spectrum_speak/rest/rest_api_login.dart';
+import 'package:spectrum_speak/rest/rest_api_menu.dart';
 import 'package:spectrum_speak/rest/rest_api_signUp.dart';
+import 'package:spectrum_speak/screen/sign_up_shadow_teacher.dart';
+import 'package:spectrum_speak/screen/sign_up_specialist.dart';
 import 'package:spectrum_speak/units/build_date_text_field.dart';
 import 'package:spectrum_speak/units/build_drop_down_menu.dart';
 import 'package:spectrum_speak/units/build_radio_button.dart';
 import 'package:spectrum_speak/units/build_text_field.dart';
 import 'package:spectrum_speak/units/validate_input_from_user.dart';
+import 'add_child.dart';
 import 'login.dart';
 import 'otp_screen.dart';
 
@@ -194,7 +198,7 @@ class _SignUpState extends State<SignUp> {
                     labelText: "Password",
                     placeholder: "**********",
                     isPasswordTextField: true,
-                    controller: _passwordController)),
+                    controller: _passwordController),),
             Container(
                 alignment: Alignment.center,
                 margin: const EdgeInsets.only(bottom: 15),
@@ -205,7 +209,7 @@ class _SignUpState extends State<SignUp> {
                     labelText: "Confirm Password",
                     placeholder: "**********",
                     isPasswordTextField: true,
-                    controller: _confirmPasswordController)),
+                    controller: _confirmPasswordController),),
             Visibility(
               visible: _showTextPassword || _showTextPasswordValid,
               child: Container(
@@ -483,13 +487,14 @@ class _SignUpState extends State<SignUp> {
     );
   }
 
-  doLoginForSignUp(
-      String email, String password, UserCategory selectedCategory) async {
+  doLoginForSignUp(String email, String password, UserCategory selectedCategory) async {
     var rest = await userLogin(email.trim(), password.trim());
+
     if (rest['success']) {
       String userEmail = rest['data'][0]['Email'];
       String userID = rest['data'][0]['UserID'].toString();
       await AuthManager.storeUserData(userID, userEmail);
+
       myAuth.setConfig(
         appEmail: "asmaatareq1999@gmail.com",
         appName: "Spectrum Speak",
@@ -497,7 +502,8 @@ class _SignUpState extends State<SignUp> {
         otpLength: 4,
         otpType: OTPType.digitsOnly,
       );
-      if (await myAuth.sendOTP() == true) {
+
+      if (await myAuth.sendOTP()) {
         print("done send");
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
@@ -516,17 +522,91 @@ class _SignUpState extends State<SignUp> {
         );
       } else {
         print("error");
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Oops, OTP send failed'),
-          ),
-        );
+        bool? shouldSkipStep = (await _showCancelOrYesDialog(context));
+        if (shouldSkipStep==true) {
+          String? userId = await AuthManager.getUserId();
+          String category = await getUserCategory(userId!);
+
+          switch (category) {
+            case "Parent":
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => const AddChild(
+                    comeFromSignUp: true,
+                  ),
+                ),
+              );
+              break;
+            case "Specialist":
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => const SignUpSpecialist(),
+                ),
+              );
+              break;
+            case "ShadowTeacher":
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => const SignUpShadowTeacher(),
+                ),
+              );
+              break;
+            default:
+              print("error in category");
+              break;
+          }
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Oops, OTP send failed'),
+            ),
+          );
+        }
       }
+
     } else {
       setState(() {
         _showErrorText = true;
       });
     }
+  }
+
+  Future<bool?> _showCancelOrYesDialog(BuildContext context) async {
+    return showDialog<bool?>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          surfaceTintColor: kDarkerColor,
+          title: Text("Confirmation"),
+          content: Text(
+            "Are you sure you want to skip? Skipping email verification may lead to issues in the future, and you won't be able to verify your email later.",
+          ),
+          icon: Icon(
+            Icons.warning_amber,
+            size: 45,
+            color: kYellow,
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(false); // No, do not skip
+              },
+              child: Text("Cancel"),
+            ),
+            TextButton(
+              onPressed: () async {
+                // Your logic here if the user selects "Yes"
+                Navigator.of(context).pop(true); // Yes, skip to the next step
+              },
+              child: Text("Yes"),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   doSignUp(

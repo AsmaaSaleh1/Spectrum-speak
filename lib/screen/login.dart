@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:spectrum_speak/constant/const_color.dart';
+import 'package:spectrum_speak/modules/shadow_teacher.dart';
+import 'package:spectrum_speak/modules/specialist.dart';
 import 'package:spectrum_speak/rest/auth_manager.dart';
 import 'package:spectrum_speak/rest/rest_api_login.dart';
+import 'package:spectrum_speak/rest/rest_api_menu.dart';
+import 'package:spectrum_speak/rest/rest_api_profile.dart';
 import 'package:spectrum_speak/screen/main_page.dart';
+import 'package:spectrum_speak/screen/sign_up_shadow_teacher.dart';
+import 'package:spectrum_speak/screen/sign_up_specialist.dart';
 import 'package:spectrum_speak/units/build_text_field.dart';
 import 'forget_password.dart';
 import 'sign_up.dart';
@@ -145,9 +151,11 @@ class _LoginState extends State<Login> {
                 onPressed: () {
                   // Navigate to ForgetPassword screen
                   Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => ForgetPassword()));
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ForgetPassword(),
+                    ),
+                  );
                 },
                 child: const Text(
                   'Forgot Password?',
@@ -251,13 +259,77 @@ class _LoginState extends State<Login> {
       String userEmail = rest['data'][0]['Email'];
       String userID = rest['data'][0]['UserID'].toString();
       await AuthManager.storeUserData(userID, userEmail);
-      Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (_) => const MainPage()));
+      var category = await getUserCategory(userID);
+      var result;
+      if (category == "ShadowTeacher") {
+        result = await _getShadowTeacher(context, userID);
+      } else if (category == "Specialist") {
+        result = await _getSpecialist(context, userID);
+      } else {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (_) => const MainPage(),
+          ),
+        );
+      }
     } else {
       setState(() {
         _showErrorText = true;
         _notCorrect = true;
       });
     }
+  }
+}
+
+Future<ShadowTeacher?> _getShadowTeacher(
+    BuildContext context, String userId) async {
+  try {
+    var result = await profileShadowTeacher(userId);
+    // Check if result is null or if Shadow Teacher sign-up is not complete
+    if (result == null) {
+      var check = await checkShadowTeacherSignUpComplete(userId);
+      if (!check!) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => SignUpShadowTeacher(),
+          ),
+        );
+      } else {
+        print("error in checker ShadowTeacher");
+      }
+    }
+    return result;
+  } catch (error) {
+    // Handle errors here
+    print('Error in _getShadowTeacher: $error');
+    return null;
+  }
+}
+
+Future<Specialist?> _getSpecialist(BuildContext context, String userId) async {
+  try {
+    // Check if userId is not null before calling profileShadowTeacher
+    var result = await profileSpecialist(userId);
+    // Check if result is null or if specialist sign-up is not complete
+    if (result == null) {
+      var check = await checkSpecialistSignUpComplete(userId);
+      if (!check!) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => SignUpSpecialist(),
+          ),
+        );
+      } else {
+        print("error in checker specialist");
+      }
+    }
+    return result;
+  } catch (error) {
+    // Handle errors here
+    print('Error in _getSpecialist: $error');
+    return null;
   }
 }

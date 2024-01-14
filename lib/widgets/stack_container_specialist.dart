@@ -9,6 +9,7 @@ import 'package:spectrum_speak/rest/rest_api_profile.dart';
 import 'package:spectrum_speak/screen/center_profile.dart';
 import 'package:spectrum_speak/screen/edit_specialist_profile.dart';
 import 'package:spectrum_speak/screen/sign_up_center.dart';
+import 'package:spectrum_speak/screen/sign_up_specialist.dart';
 import 'package:spectrum_speak/units/custom_button.dart';
 import 'package:spectrum_speak/units/custom_clipper.dart';
 import 'package:tuple/tuple.dart';
@@ -22,7 +23,7 @@ class StackContainerSpecialist extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<Tuple2<Specialist?, String?>>(
-        future: _getSpecialist(),
+        future: _getSpecialist(context),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             // You can return a loading indicator here if needed
@@ -221,11 +222,28 @@ class StackContainerSpecialist extends StatelessWidget {
         });
   }
 
-  Future<Tuple2<Specialist?, String?>> _getSpecialist() async {
+  Future<Tuple2<Specialist?, String?>> _getSpecialist(
+      BuildContext context) async {
     try {
       // Check if userId is not null before calling profileSpecialist
       var result = await profileSpecialist(userId);
       String? userIdLogin = await AuthManager.getUserId();
+
+      // Check if result is null or if specialist sign-up is not complete
+      if (result == null) {
+        var check = await checkSpecialistSignUpComplete(userId);
+        if (!check!) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => SignUpSpecialist(),
+            ),
+          );
+        } else {
+          print("error in checker specialist");
+        }
+      }
+
       return Tuple2(result, userIdLogin);
     } catch (error) {
       // Handle errors here
@@ -233,5 +251,4 @@ class StackContainerSpecialist extends StatelessWidget {
       return Tuple2(null, null);
     }
   }
-
 }
