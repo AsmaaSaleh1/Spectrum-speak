@@ -4,13 +4,16 @@ import 'package:intl/intl.dart';
 import 'package:spectrum_speak/constant/const_color.dart';
 import 'package:spectrum_speak/rest/auth_manager.dart';
 import 'package:spectrum_speak/rest/rest_api_rate.dart';
+import 'package:spectrum_speak/screen/center_profile.dart';
 import 'package:spectrum_speak/widgets/smooth_star_rating.dart';
 
+import '../screen/specialist_profile.dart';
 import 'build_text_field.dart';
 import 'custom_button.dart';
 
 class AddReview extends StatefulWidget {
-  final String image, name, specialistID, centerID;
+  final String image, name, specialistID, centerID, ID;
+  final bool isCenter;
   final double userRating;
   final Function(double val) onRating;
   const AddReview({
@@ -21,6 +24,8 @@ class AddReview extends StatefulWidget {
     required this.onRating,
     required this.specialistID,
     required this.centerID,
+    required this.isCenter,
+    required this.ID,
   });
 
   @override
@@ -147,16 +152,19 @@ class _AddReviewState extends State<AddReview> {
                     foregroundColor: kDarkerColor,
                     backgroundColor: kPrimary,
                     onPressed: () {
-                      //TODO:Hide all the addReview part and display on it the own card review
                       if (_commentController.text.isEmpty) {
                         return;
                       }
                       doSaveReview(
-                          widget.userRating,
-                          formattedDate,
-                          _commentController.text,
-                          widget.specialistID,
-                          widget.centerID);
+                        context,
+                        widget.userRating,
+                        formattedDate,
+                        _commentController.text,
+                        widget.specialistID,
+                        widget.centerID,
+                        widget.isCenter,
+                        widget.ID,
+                      );
                     },
                     buttonText: 'Save',
                     icon: const Icon(
@@ -174,11 +182,14 @@ class _AddReviewState extends State<AddReview> {
 }
 
 doSaveReview(
+  BuildContext context,
   double rate,
   String date,
   String comment,
   String specialistID,
   String centerID,
+  bool isCenter,
+  String ID,
 ) async {
   String? loginID = await AuthManager.getUserId();
   var rest = await addRate(
@@ -190,6 +201,21 @@ doSaveReview(
     centerID,
   );
   if (rest['success']) {
+    if (isCenter) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (_) => CenterProfile(userId: ID),
+        ),
+      );
+    } else {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (_) => SpecialistProfile(userId: ID),
+        ),
+      );
+    }
     print("correct");
   } else {
     print("error to add rate");

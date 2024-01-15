@@ -27,23 +27,27 @@ class _CenterProfileState extends State<CenterProfile> {
   double userRating = 0.0;
   String name = "";
   List<dynamic> reviews = [];
-  String CenterID = "";
+  String centerID = "";
+  String userIdLogin = "";
 
   @override
   void initState() {
     super.initState();
     checkLoginStatus();
-    loadReviews(); // Call the method to load reviews
     getCenterID();
     getName();
+    getID();
+    loadReviews();
   }
 
   Future<void> getCenterID() async {
     try {
       String? result = await _getSpecialist(widget.userId);
+      print(widget.userId);
       if (result != null) {
         setState(() {
-          CenterID = result;
+          centerID = result;
+          print(centerID);
         });
       }
     } catch (error) {
@@ -87,166 +91,234 @@ class _CenterProfileState extends State<CenterProfile> {
     }
   }
 
+  Future getID() async {
+    try {
+      String? userId = await AuthManager.getUserId();
+      if (userId != null) {
+        setState(() {
+          userIdLogin = userId;
+        });
+      }
+    } catch (e) {
+      print("error in user ID");
+    }
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) => LayoutBuilder(
-          builder: (BuildContext context, BoxConstraints constraints) {
-        double screenWidth = constraints.maxWidth;
-        double linePadding;
-        if (screenWidth >= 1200) {
-          linePadding = 110;
-        } else if (screenWidth >= 800) {
-          linePadding = 70;
-        } else {
-          linePadding = 20;
-        }
-        return Scaffold(
-          appBar: AppBar(
-            title: Text('Center Profile'),
-          ),
-          body: Stack(
-            children: [
-              SingleChildScrollView(
-                child: Column(
-                  children: <Widget>[
-                    StackContainerCenter(
-                      userId: widget.userId,
-                    ),
-                    CenterInformation(
-                      userId: widget.userId,
-                    ),
-                    Divider(
-                      color: kDarkerColor, // You can customize the color
-                      thickness: 2.0, // You can customize the thickness
-                      indent: linePadding,
-                      endIndent: linePadding,
-                    ),
-                    AddReview(
-                      image: 'images/prof.png',
-                      name: name,
-                      userRating: userRating,
-                      onRating: (double newRating) {
-                        setState(() {
-                          userRating = newRating;
-                        });
-                      },
-                      specialistID: "",
-                      centerID: CenterID,
-                    ),
-                    Divider(
-                      color: kDarkerColor, // You can customize the color
-                      thickness: 2.0, // You can customize the thickness
-                      indent: linePadding,
-                      endIndent: linePadding,
-                    ),
-                    Align(
-                      alignment: AlignmentDirectional.topCenter,
-                      child: Text(
-                        "Review",
-                        style: TextStyle(
-                          fontSize: 30.0,
-                          fontWeight: FontWeight.bold,
-                          color: kDarkerColor,
-                        ),
+        builder: (BuildContext context, BoxConstraints constraints) {
+          double screenWidth = constraints.maxWidth;
+          double linePadding;
+          if (screenWidth >= 1200) {
+            linePadding = 110;
+          } else if (screenWidth >= 800) {
+            linePadding = 70;
+          } else {
+            linePadding = 20;
+          }
+          return FutureBuilder<bool?>(
+              future: checkCenterRate(userIdLogin, centerID),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  // You can return a loading indicator here if needed
+                  return Container(
+                    color: kPrimary,
+                    child: Container(
+                      alignment: Alignment.center,
+                      child: const CircularProgressIndicator(
+                        backgroundColor: kDarkBlue,
+                        color: kDarkBlue,
                       ),
                     ),
-                    if (reviews.isNotEmpty)
-                    SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        children: reviews.map((review) {
-                              return CardReview(
-                                userId: widget.userId.toString(),
-                                rateId: review["RateID"].toString(),
-                                userName: review["UserName"] ??
-                                    "", // Replace "UserName" with the actual key in your review data
-                                date: review["Date"] ?? "",
-                                comment: review["Comment"] ?? "",
-                                rate: review["Rate"].toString(),
-                                isCenter: true,
-                              );
-                            }).toList() ??
-                            [],
-                      ),
+                  );
+                } else if (snapshot.hasError) {
+                  // Handle the error
+                  return Text('Error: ${snapshot.error}');
+                } else if (snapshot.hasData) {
+                  // Build your UI with the fetched data
+                  bool checkCenter = snapshot.data!;
+                  return Scaffold(
+                    appBar: AppBar(
+                      title: Text('Center Profile'),
                     ),
-                    if (reviews.isEmpty)
-                      Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Text(
-                          "No Reviews Found",
-                          style: TextStyle(
-                            color: kDarkerColor.withOpacity(0.7),
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
+                    body: Stack(
+                      children: [
+                        SingleChildScrollView(
+                          child: Column(
+                            children: <Widget>[
+                              StackContainerCenter(
+                                userId: widget.userId,
+                              ),
+                              CenterInformation(
+                                userId: widget.userId,
+                              ),
+                              Visibility(
+                                visible: !checkCenter,
+                                child: Divider(
+                                  color:
+                                      kDarkerColor, // You can customize the color
+                                  thickness:
+                                      2.0, // You can customize the thickness
+                                  indent: linePadding,
+                                  endIndent: linePadding,
+                                ),
+                              ),
+                              Visibility(
+                                visible: !checkCenter,
+                                child: AddReview(
+                                  image: 'images/prof.png',
+                                  name: name,
+                                  userRating: userRating,
+                                  onRating: (double newRating) {
+                                    setState(() {
+                                      userRating = newRating;
+                                    });
+                                  },
+                                  specialistID: "",
+                                  centerID: centerID,
+                                  isCenter: true,
+                                  ID: widget.userId.toString(),
+                                ),
+                              ),
+                              Divider(
+                                color:
+                                    kDarkerColor, // You can customize the color
+                                thickness:
+                                    2.0, // You can customize the thickness
+                                indent: linePadding,
+                                endIndent: linePadding,
+                              ),
+                              Align(
+                                alignment: AlignmentDirectional.topCenter,
+                                child: Text(
+                                  "Review",
+                                  style: TextStyle(
+                                    fontSize: 30.0,
+                                    fontWeight: FontWeight.bold,
+                                    color: kDarkerColor,
+                                  ),
+                                ),
+                              ),
+                              if (reviews.isNotEmpty)
+                                SingleChildScrollView(
+                                  scrollDirection: Axis.horizontal,
+                                  child: Row(
+                                    children: reviews.map((review) {
+                                      return CardReview(
+                                        ID: widget.userId.toString(),
+                                        userId: review["UserID"].toString(),
+                                        rateId: review["RateID"].toString(),
+                                        userName: review["UserName"] ??
+                                            "", // Replace "UserName" with the actual key in your review data
+                                        date: review["Date"] ?? "",
+                                        comment: review["Comment"] ?? "",
+                                        rate: review["Rate"].toString(),
+                                        isCenter: true,
+                                        userIdLogin: userIdLogin,
+                                      );
+                                    }).toList(),
+                                  ),
+                                ),
+                              if (reviews.isEmpty)
+                                Padding(
+                                  padding: const EdgeInsets.all(16.0),
+                                  child: Text(
+                                    "No Reviews Found",
+                                    style: TextStyle(
+                                      color: kDarkerColor.withOpacity(0.7),
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              const SizedBox(height: 80.0),
+                            ],
                           ),
                         ),
-                      ),
-                    const SizedBox(height: 80.0),
-                  ],
-                ),
-              ),
-              Positioned(
-                bottom: 0,
-                left: 0,
-                right: 0,
-                child: Container(
-                  height: 80, // Adjust the height as needed
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.bottomCenter,
-                      end: Alignment.topCenter,
-                      colors: [
-                        kPrimary.withOpacity(0.8),
-                        kPrimary.withOpacity(0.5),
-                        kPrimary.withOpacity(0.1),
-                        kPrimary.withOpacity(0.0)
+                        Positioned(
+                          bottom: 0,
+                          left: 0,
+                          right: 0,
+                          child: Container(
+                            height: 80, // Adjust the height as needed
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                begin: Alignment.bottomCenter,
+                                end: Alignment.topCenter,
+                                colors: [
+                                  kPrimary.withOpacity(0.8),
+                                  kPrimary.withOpacity(0.5),
+                                  kPrimary.withOpacity(0.1),
+                                  kPrimary.withOpacity(0.0)
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                        Positioned(
+                          bottom: 20.0,
+                          right: 20.0,
+                          child: FloatingActionButton(
+                            onPressed: () {
+                              // Handle the message button press
+                              print('Message button pressed');
+                            },
+                            shape: const CircleBorder(),
+                            materialTapTargetSize:
+                                MaterialTapTargetSize.shrinkWrap,
+                            backgroundColor: kDarkBlue,
+                            child: const Icon(
+                              FontAwesomeIcons.message,
+                              color: kPrimary,
+                              size: 30,
+                            ), // Customize the button color
+                          ),
+                        ),
                       ],
                     ),
-                  ),
-                ),
-              ),
-              Positioned(
-                bottom: 20.0,
-                right: 20.0,
-                child: FloatingActionButton(
-                  onPressed: () {
-                    // Handle the message button press
-                    print('Message button pressed');
-                  },
-                  shape: const CircleBorder(),
-                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                  backgroundColor: kDarkBlue,
-                  child: const Icon(
-                    FontAwesomeIcons.message,
-                    color: kPrimary,
-                    size: 30,
-                  ), // Customize the button color
-                ),
-              ),
-            ],
-          ),
-        );
-      });
-}
+                  );
+                } else {
+                  // Return a default UI if no data is available
+                  return const Text('No data available');
+                }
+              });
+        },
+      );
 
-Future<dynamic> getReviews(String userID) async {
-  try {
-    var data = await getReviewCenter(userID);
-    print(data);
-    return data;
-  } catch (e) {
-    print("error$e");
+  Future<dynamic> getReviews(String userID) async {
+    try {
+      var data = await getReviewCenter(userID);
+      print(data);
+      return data;
+    } catch (e) {
+      print("error$e");
+    }
   }
-}
 
-Future<String?> _getSpecialist(String userID) async {
-  try {
-    // Check if userId is not null before calling profileShadowTeacher
-    var result = await profileSpecialist(userID);
-    print(result?.specialistID);
-    return result?.centerID.toString();
-  } catch (error) {
-    // Handle errors here
-    print('Error in _getSpecialist: $error');
+  Future<String?> _getSpecialist(String userID) async {
+    try {
+      // Check if userId is not null before calling profileShadowTeacher
+      var result = await profileSpecialist(userID);
+      print(result?.specialistID);
+      return result?.centerID.toString();
+    } catch (error) {
+      // Handle errors here
+      print('Error in _getSpecialist: $error');
+      return null;
+    }
+  }
+
+  Future<bool?> checkCenterRate(
+    String userID,
+    String centerID,
+  ) async {
+    try {
+      bool? checkCenter = await checkIfUserRateCenterBefore(userID, centerID);
+      return checkCenter;
+    } catch (e) {
+      print("error in checkCenterRate");
+    }
     return null;
   }
 }

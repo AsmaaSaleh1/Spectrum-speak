@@ -4,7 +4,9 @@ import 'package:spectrum_speak/units/review_ui.dart';
 
 class CardReview extends StatefulWidget {
   final bool isCenter;
+  final String ID;
   final String userId;
+  final String userIdLogin;
   final String rateId;
   final String userName;
   final String date;
@@ -19,6 +21,8 @@ class CardReview extends StatefulWidget {
     required this.date,
     required this.comment,
     required this.rate,
+    required this.userIdLogin,
+    required this.ID,
   });
 
   @override
@@ -56,6 +60,8 @@ class _CardReviewState extends State<CardReview> {
           comment: widget.comment,
           rating: double.parse(widget.rate),
           userId: widget.userId,
+          userIdLogin: widget.userIdLogin,
+          ID: widget.ID,
           onTap: () => setState(() {
             isMore = !isMore;
           }),

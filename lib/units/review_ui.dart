@@ -13,7 +13,7 @@ import 'package:spectrum_speak/widgets/smooth_star_rating.dart';
 
 class ReviewUi extends StatelessWidget {
   final bool isCenter;
-  final String image, name, date, comment, rateID, userId;
+  final String image, name, date, comment, rateID, userId, userIdLogin, ID;
   final double rating;
   final VoidCallback onTap;
   final VoidCallback onDelete;
@@ -28,10 +28,12 @@ class ReviewUi extends StatelessWidget {
     required this.comment,
     required this.rateID,
     required this.userId,
+    required this.userIdLogin,
     required this.rating,
     required this.onTap,
     required this.onDelete,
     required this.isLess,
+    required this.ID,
   });
 
   @override
@@ -145,45 +147,48 @@ class ReviewUi extends StatelessWidget {
                   ),
                 ),
               ),
-              PopupMenuButton<String>(
-                shadowColor: kDarkerColor,
-                onSelected: (value) {
-                  if (value == 'delete') {
-                    deleteRateByRateID(rateID);
-                    if (isCenter) {
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => CenterProfile(userId: userId),
-                        ),
-                      );
-                    } else {
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => SpecialistProfile(userId: userId),
-                        ),
-                      );
-                    }
-                  }
-                },
-                itemBuilder: (BuildContext context) {
-                  return ['Delete'].map((String choice) {
-                    return PopupMenuItem<String>(
-                      value: 'delete',
-                      child: Row(
-                        children: [
-                          Icon(
-                            Icons.delete,
-                            color: kDarkerColor,
+              Visibility(
+                visible: userId == userIdLogin,
+                child: PopupMenuButton<String>(
+                  shadowColor: kDarkerColor,
+                  onSelected: (value) {
+                    if (value == 'delete') {
+                      deleteRateByRateID(rateID);
+                      if (isCenter) {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => CenterProfile(userId: ID),
                           ),
-                          const SizedBox(width: 8),
-                          Text(choice),
-                        ],
-                      ),
-                    );
-                  }).toList();
-                },
+                        );
+                      } else {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => SpecialistProfile(userId: ID),
+                          ),
+                        );
+                      }
+                    }
+                  },
+                  itemBuilder: (BuildContext context) {
+                    return ['Delete'].map((String choice) {
+                      return PopupMenuItem<String>(
+                        value: 'delete',
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.delete,
+                              color: kDarkerColor,
+                            ),
+                            const SizedBox(width: 8),
+                            Text(choice),
+                          ],
+                        ),
+                      );
+                    }).toList();
+                  },
+                ),
               ),
             ],
           ),

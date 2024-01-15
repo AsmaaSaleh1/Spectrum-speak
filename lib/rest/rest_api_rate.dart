@@ -69,3 +69,55 @@ Future deleteRate(String rateId)async{
     throw Exception('Failed to delete rate');
   }
 }
+Future<bool> checkIfUserRateSpecialistBefore(String userID, String specialistID, ) async {
+  try {
+    final response = await http.get(
+      Uri.parse('${Utils.baseUrl}/rate/check/specialist?UserID=$userID&SpecialistID=$specialistID'),
+      headers: {
+        'Accept': 'application/json',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      // Check if the response body is not empty before decoding
+      if (response.body.isNotEmpty) {
+        var decodedData = jsonDecode(response.body);
+        print(decodedData['data']);
+        return decodedData['data']; // Return the array directly
+      } else {
+        throw Exception('Empty response body');
+      }
+    } else {
+      throw Exception('Failed to get data. Status code: ${response.statusCode}');
+    }
+  } catch (error) {
+    print(error);
+    throw Exception('Failed to get data error: $error');
+  }
+}
+Future<bool> checkIfUserRateCenterBefore(String userID, String centerID, ) async {
+  try {
+    final response = await http.get(
+      Uri.parse('${Utils.baseUrl}/rate/check/center?UserID=$userID&CenterID=$centerID'),
+      headers: {
+        'Accept': 'application/json',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      // Check if the response body is not empty before decoding
+      if (response.body.isNotEmpty) {
+        var decodedData = jsonDecode(response.body);
+        print(decodedData['data']);
+        return decodedData['data']; // Return the array directly
+      } else {
+        throw Exception('Empty response body');
+      }
+    } else {
+      throw Exception('Failed to get data. Status code: ${response.statusCode}');
+    }
+  } catch (error) {
+    print(error);
+    throw Exception('Failed to get data error: $error');
+  }
+}

@@ -31,6 +31,7 @@ class _SpecialistProfileState extends State<SpecialistProfile> {
 
   List<dynamic> reviews = [];
   String name = "";
+  String userIdLogin = "";
   String specialistID = "";
   @override
   void initState() {
@@ -38,8 +39,10 @@ class _SpecialistProfileState extends State<SpecialistProfile> {
     checkLoginStatus();
     loadReviews(); // Call the method to load reviews
     getName();
+    getID();
     getSpecialistID();
   }
+
   Future<void> getSpecialistID() async {
     try {
       String? result = await _getSpecialist(widget.userId);
@@ -53,6 +56,7 @@ class _SpecialistProfileState extends State<SpecialistProfile> {
       print('Error in getSpecialistID: $error');
     }
   }
+
   Future<void> loadReviews() async {
     var reviewsData = await getReviews(widget.userId);
     if (reviewsData != null) {
@@ -71,10 +75,23 @@ class _SpecialistProfileState extends State<SpecialistProfile> {
           name = data;
         });
       }
-      print(name);
     } catch (e) {
       print("error$e");
     }
+  }
+
+  Future getID() async {
+    try {
+      String? userId = await AuthManager.getUserId();
+      if (userId != null) {
+        setState(() {
+          userIdLogin = userId;
+        });
+      }
+    } catch (e) {
+      print("error in user ID");
+    }
+    return null;
   }
 
   // Method to check if the user is logged in
@@ -102,139 +119,192 @@ class _SpecialistProfileState extends State<SpecialistProfile> {
           } else {
             linePadding = 20;
           }
-
-          return Scaffold(
-            appBar: AppBar(
-              title: Text('Profile'),
-            ),
-            body: Stack(
-              children: [
-                SingleChildScrollView(
-                  child: Column(
-                    children: <Widget>[
-                      StackContainerSpecialist(
-                        userId: widget.userId,
+          return FutureBuilder<bool?>(
+              future: checkSpecialistRate(userIdLogin, specialistID),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  // You can return a loading indicator here if needed
+                  return Container(
+                    color: kPrimary,
+                    child: Container(
+                      alignment: Alignment.center,
+                      child: const CircularProgressIndicator(
+                        backgroundColor: kDarkBlue,
+                        color: kDarkBlue,
                       ),
-                      SpecialistInformation(
-                        userId: widget.userId,
-                      ),
-                      Divider(
-                        color: kDarkerColor,
-                        thickness: 2.0,
-                        indent: linePadding,
-                        endIndent: linePadding,
-                      ),
-                      AddReview(
-                        image: 'images/prof.png',
-                        name: name,
-                        userRating: userRating,
-                        onRating: (double newRating) {
-                          setState(() {
-                            userRating = newRating;
-                          });
-                        },
-                        specialistID: specialistID,
-                        centerID: "",
-                      ),
-                      Divider(
-                        color: kDarkerColor,
-                        thickness: 2.0,
-                        indent: linePadding,
-                        endIndent: linePadding,
-                      ),
-                      Align(
-                        alignment: AlignmentDirectional.topCenter,
-                        child: Text(
-                          "Review",
-                          style: TextStyle(
-                            fontSize: 30.0,
-                            fontWeight: FontWeight.bold,
-                            color: kDarkerColor,
-                          ),
-                        ),
-                      ),
-                      if (reviews.isNotEmpty)
+                    ),
+                  );
+                } else if (snapshot.hasError) {
+                  // Handle the error
+                  return Text('Error: ${snapshot.error}');
+                } else if (snapshot.hasData) {
+                  // Build your UI with the fetched data
+                  bool checkSpecialist = snapshot.data!;
+                  return Scaffold(
+                    appBar: AppBar(
+                      title: Text('Profile'),
+                    ),
+                    body: Stack(
+                      children: [
                         SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: Row(
-                            children: reviews.map((review) {
-                              return CardReview(
-                                userId: review["UserID"].toString(),
-                                rateId: review["RateID"].toString(),
-                                userName: review["UserName"] ?? "",
-                                date: review["Date"] ?? "",
-                                comment: review["Comment"] ?? "",
-                                rate: review["Rate"].toString(),
-                                isCenter: false,
-                              );
-                            }).toList(),
+                          child: Column(
+                            children: <Widget>[
+                              StackContainerSpecialist(
+                                userId: widget.userId,
+                              ),
+                              SpecialistInformation(
+                                userId: widget.userId,
+                              ),
+                              Visibility(
+                                visible: widget.userId != userIdLogin,
+                                child: Visibility(
+                                  visible: !checkSpecialist,
+                                  child: Divider(
+                                    color: kDarkerColor,
+                                    thickness: 2.0,
+                                    indent: linePadding,
+                                    endIndent: linePadding,
+                                  ),
+                                ),
+                              ),
+                              Visibility(
+                                visible: widget.userId != userIdLogin,
+                                child: Visibility(
+                                  visible: !checkSpecialist,
+                                  child: AddReview(
+                                    image: 'images/prof.png',
+                                    name: name,
+                                    userRating: userRating,
+                                    onRating: (double newRating) {
+                                      setState(() {
+                                        userRating = newRating;
+                                      });
+                                    },
+                                    specialistID: specialistID,
+                                    centerID: "",
+                                    isCenter: false,
+                                    ID: widget.userId.toString(),
+                                  ),
+                                ),
+                              ),
+                              Divider(
+                                color: kDarkerColor,
+                                thickness: 2.0,
+                                indent: linePadding,
+                                endIndent: linePadding,
+                              ),
+                              Align(
+                                alignment: AlignmentDirectional.topCenter,
+                                child: Text(
+                                  "Review",
+                                  style: TextStyle(
+                                    fontSize: 30.0,
+                                    fontWeight: FontWeight.bold,
+                                    color: kDarkerColor,
+                                  ),
+                                ),
+                              ),
+                              if (reviews.isNotEmpty)
+                                SingleChildScrollView(
+                                  scrollDirection: Axis.horizontal,
+                                  child: Row(
+                                    children: reviews.map((review) {
+                                      return CardReview(
+                                        ID: widget.userId.toString(),
+                                        userId: review["UserID"].toString(),
+                                        rateId: review["RateID"].toString(),
+                                        userName: review["UserName"] ?? "",
+                                        date: review["Date"] ?? "",
+                                        comment: review["Comment"] ?? "",
+                                        rate: review["Rate"].toString(),
+                                        isCenter: false,
+                                        userIdLogin: userIdLogin,
+                                      );
+                                    }).toList(),
+                                  ),
+                                ),
+                              if (reviews.isEmpty)
+                                Padding(
+                                  padding: const EdgeInsets.all(16.0),
+                                  child: Text(
+                                    "No Reviews Found",
+                                    style: TextStyle(
+                                      color: kDarkerColor.withOpacity(0.7),
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              const SizedBox(
+                                height: 80,
+                              ),
+                            ],
                           ),
                         ),
-                      if (reviews.isEmpty)
-                        Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Text(
-                            "No Reviews Found",
-                            style: TextStyle(
-                              color: kDarkerColor.withOpacity(0.7),
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
+                        Positioned(
+                          bottom: 0,
+                          left: 0,
+                          right: 0,
+                          child: Container(
+                            height: 80,
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                begin: Alignment.bottomCenter,
+                                end: Alignment.topCenter,
+                                colors: [
+                                  kPrimary.withOpacity(0.8),
+                                  kPrimary.withOpacity(0.5),
+                                  kPrimary.withOpacity(0.1),
+                                  kPrimary.withOpacity(0.0),
+                                ],
+                              ),
                             ),
                           ),
                         ),
-                      const SizedBox(
-                        height: 80,
-                      ),
-                    ],
-                  ),
-                ),
-                Positioned(
-                  bottom: 0,
-                  left: 0,
-                  right: 0,
-                  child: Container(
-                    height: 80,
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.bottomCenter,
-                        end: Alignment.topCenter,
-                        colors: [
-                          kPrimary.withOpacity(0.8),
-                          kPrimary.withOpacity(0.5),
-                          kPrimary.withOpacity(0.1),
-                          kPrimary.withOpacity(0.0),
-                        ],
-                      ),
+                      ],
                     ),
-                  ),
-                ),
-              ],
-            ),
-          );
+                  );
+                } else {
+                  // Return a default UI if no data is available
+                  return const Text('No data available');
+                }
+              });
         },
       );
-}
-
-Future<dynamic> getReviews(String userID) async {
-  try {
-    var data = await getReviewSpecialist(userID);
-    print(data);
-    return data;
-  } catch (e) {
-    print("error$e");
+  Future<dynamic> getReviews(String userID) async {
+    try {
+      var data = await getReviewSpecialist(userID);
+      print(data);
+      return data;
+    } catch (e) {
+      print("error$e");
+    }
   }
-}
 
-Future<String?> _getSpecialist(String userID) async {
-  try {
-    // Check if userId is not null before calling profileShadowTeacher
-    var result = await profileSpecialist(userID);
-    print(result?.specialistID);
-    return result?.specialistID.toString();
-  } catch (error) {
-    // Handle errors here
-    print('Error in _getSpecialist: $error');
+  Future<String?> _getSpecialist(String userID) async {
+    try {
+      // Check if userId is not null before calling profileShadowTeacher
+      var result = await profileSpecialist(userID);
+      print(result?.specialistID);
+      return result?.specialistID.toString();
+    } catch (error) {
+      // Handle errors here
+      print('Error in _getSpecialist: $error');
+      return null;
+    }
+  }
+
+  Future<bool?> checkSpecialistRate(
+    String userID,
+    String specialistID,
+  ) async {
+    try {
+      bool? checkSpecialist =
+          await checkIfUserRateSpecialistBefore(userID, specialistID);
+      return checkSpecialist;
+    } catch (e) {
+      print("error in checkSpecialistRate");
+    }
     return null;
   }
 }
-
