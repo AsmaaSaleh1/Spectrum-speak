@@ -174,3 +174,29 @@ Future<List<dynamic>> searchToAddSpecialist(String namePrefix) async {
   }
 }
 
+Future <dynamic> getSpecialistAdminForCenter(String centerID) async {
+  try {
+    final response = await http.get(
+      Uri.parse('${Utils.baseUrl}/center/admin/Specialist/$centerID'),
+      headers: {
+        'Accept': 'application/json',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      // Check if the response body is not empty before decoding
+      if (response.body.isNotEmpty) {
+        var decodedData = jsonDecode(response.body);
+        print(decodedData['specialists'][0]["Username"]);
+        return decodedData['specialists'][0]["Username"]; // Return the array directly
+      } else {
+        throw Exception('Empty response body');
+      }
+    } else {
+      throw Exception('Failed to get data. Status code: ${response.statusCode}');
+    }
+  } catch (error) {
+    print(error);
+    throw Exception('Failed to get data error: $error');
+  }
+}

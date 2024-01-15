@@ -1,10 +1,9 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:spectrum_speak/constant/const_color.dart';
 import 'package:spectrum_speak/modules/center.dart';
-import 'package:spectrum_speak/rest/auth_manager.dart';
 import 'package:spectrum_speak/rest/rest_api_center.dart';
+import 'package:tuple/tuple.dart';
 
 class CenterInformation extends StatefulWidget {
   final String userId;
@@ -43,7 +42,7 @@ class _CenterInformationState extends State<CenterInformation> {
             horizontal: 20.0,
           );
         }
-        return FutureBuilder<CenterAutism?>(
+        return FutureBuilder<Tuple2<CenterAutism?,dynamic>>(
           future: _getCenter(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
@@ -63,7 +62,8 @@ class _CenterInformationState extends State<CenterInformation> {
               return Text('Error: ${snapshot.error}');
             } else if (snapshot.hasData) {
               // Build your UI with the fetched data
-              CenterAutism center = snapshot.data!;
+              CenterAutism? center = snapshot.data!.item1;
+              String admin=snapshot.data!.item2.toString();
               return Padding(
                 padding: contentPadding,
                 child: IntrinsicHeight(
@@ -86,7 +86,7 @@ class _CenterInformationState extends State<CenterInformation> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              AboutSection(center: center),
+                              AboutSection(center: center!),
                               const SizedBox(height: 10),
                               Text(
                                 "Center Information",
@@ -110,7 +110,7 @@ class _CenterInformationState extends State<CenterInformation> {
                                           color: kDarkerColor,
                                         ),
                                         const SizedBox(
-                                          height: 10.0,
+                                          height: 15.0,
                                         ),
                                         Icon(
                                           FontAwesomeIcons.locationDot,
@@ -118,7 +118,7 @@ class _CenterInformationState extends State<CenterInformation> {
                                           color: kDarkerColor,
                                         ),
                                         const SizedBox(
-                                          height: 10.0,
+                                          height: 15.0,
                                         ),
                                         Icon(
                                           FontAwesomeIcons.userDoctor,
@@ -200,7 +200,7 @@ class _CenterInformationState extends State<CenterInformation> {
                                           height: 10.0,
                                         ),
                                         Text(
-                                          "Specialist Admin", //TODO
+                                          admin, //TODO
                                           style: TextStyle(
                                             fontSize: 15.0,
                                             fontWeight: FontWeight.bold,
@@ -327,14 +327,16 @@ class _CenterInformationState extends State<CenterInformation> {
     );
   }
 
-  Future<CenterAutism?> _getCenter() async {
+  Future <Tuple2<CenterAutism?,dynamic>> _getCenter() async {
     try {
       print('UserId: ${widget.userId}');
       var result = await profileCenter(widget.userId);
-      return result;
+      dynamic admin=await getSpecialistAdminForCenter(result!.centerID);
+      print(admin);
+      return Tuple2(result,admin);
     } catch (error) {
       print('Error in _getCenter: $error');
-      return null;
+      return Tuple2(null,null);
     }
   }
 }
