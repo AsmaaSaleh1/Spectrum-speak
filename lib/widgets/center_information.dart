@@ -42,7 +42,7 @@ class _CenterInformationState extends State<CenterInformation> {
             horizontal: 20.0,
           );
         }
-        return FutureBuilder<Tuple2<CenterAutism?,dynamic>>(
+        return FutureBuilder<Tuple2<CenterAutism?, dynamic>>(
           future: _getCenter(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
@@ -63,7 +63,7 @@ class _CenterInformationState extends State<CenterInformation> {
             } else if (snapshot.hasData) {
               // Build your UI with the fetched data
               CenterAutism? center = snapshot.data!.item1;
-              String admin=snapshot.data!.item2.toString();
+              String admin = snapshot.data!.item2.toString();
               return Padding(
                 padding: contentPadding,
                 child: IntrinsicHeight(
@@ -200,7 +200,7 @@ class _CenterInformationState extends State<CenterInformation> {
                                           height: 10.0,
                                         ),
                                         Text(
-                                          admin, //TODO
+                                          admin,
                                           style: TextStyle(
                                             fontSize: 15.0,
                                             fontWeight: FontWeight.bold,
@@ -237,7 +237,7 @@ class _CenterInformationState extends State<CenterInformation> {
                                           color: kDarkerColor,
                                         ),
                                         const SizedBox(
-                                          height: 10.0,
+                                          height: 15.0,
                                         ),
                                         Icon(
                                           FontAwesomeIcons.phone,
@@ -327,16 +327,16 @@ class _CenterInformationState extends State<CenterInformation> {
     );
   }
 
-  Future <Tuple2<CenterAutism?,dynamic>> _getCenter() async {
+  Future<Tuple2<CenterAutism?, dynamic>> _getCenter() async {
     try {
       print('UserId: ${widget.userId}');
       var result = await profileCenter(widget.userId);
-      dynamic admin=await getSpecialistAdminForCenter(result!.centerID);
+      dynamic admin = await getSpecialistAdminForCenter(result!.centerID);
       print(admin);
-      return Tuple2(result,admin);
+      return Tuple2(result, admin);
     } catch (error) {
       print('Error in _getCenter: $error');
-      return Tuple2(null,null);
+      return Tuple2(null, null);
     }
   }
 }

@@ -200,3 +200,39 @@ Future <dynamic> getSpecialistAdminForCenter(String centerID) async {
     throw Exception('Failed to get data error: $error');
   }
 }
+
+Future<String> getCenterName(String centerID) async {
+  try {
+    final response = await http.get(
+      Uri.parse('${Utils.baseUrl}/center/name/$centerID'),
+      headers: {
+        'Accept': 'application/json',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      // Check if the response body is not empty before decoding
+      if (response.body.isNotEmpty) {
+        var decodedData = jsonDecode(response.body);
+        // Check if the response indicates success
+        if (decodedData['success']) {
+          // Extract the center name from the response
+          var centerName = decodedData['center']['CenterName'];
+          print(centerName);
+          return centerName;
+        } else {
+          // The server response indicates failure
+          print('Center not found');
+          return 'No Center';
+        }
+      } else {
+        throw Exception('Empty response body');
+      }
+    } else {
+      throw Exception('Failed to get data. Status code: ${response.statusCode}');
+    }
+  } catch (error) {
+    print(error);
+    throw Exception('Failed to get data error: $error');
+  }
+}

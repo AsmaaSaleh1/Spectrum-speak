@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:spectrum_speak/constant/const_color.dart';
 import 'package:spectrum_speak/modules/specialist.dart';
-import 'package:spectrum_speak/rest/auth_manager.dart';
-import 'package:spectrum_speak/rest/rest_api_signUp.dart';
+import 'package:spectrum_speak/rest/rest_api_center.dart';
 import 'package:spectrum_speak/rest/rest_api_profile.dart';
 import 'package:spectrum_speak/screen/sign_up_specialist.dart';
+import 'package:tuple/tuple.dart';
 
 class SpecialistInformation extends StatelessWidget {
   final String userId;
@@ -31,7 +31,7 @@ class SpecialistInformation extends StatelessWidget {
             contentPadding =
                 const EdgeInsets.symmetric(vertical: 20, horizontal: 20.0);
           }
-          return FutureBuilder<Specialist?>(
+          return FutureBuilder<Tuple2<Specialist?, String>>(
               future: _getSpecialist(context),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
@@ -51,7 +51,8 @@ class SpecialistInformation extends StatelessWidget {
                   return Text('Error: ${snapshot.error}');
                 } else if (snapshot.hasData) {
                   // Build your UI with the fetched data
-                  Specialist specialist = snapshot.data!;
+                  Specialist? specialist = snapshot.data!.item1;
+                  String workCenter = snapshot.data!.item2.toString();
                   return Padding(
                     padding: contentPadding,
                     child: IntrinsicHeight(
@@ -97,7 +98,7 @@ class SpecialistInformation extends StatelessWidget {
                                               color: kDarkerColor,
                                             ),
                                             const SizedBox(
-                                              height: 10.0,
+                                              height: 15.0,
                                             ),
                                             Icon(
                                               FontAwesomeIcons.locationDot,
@@ -105,7 +106,7 @@ class SpecialistInformation extends StatelessWidget {
                                               color: kDarkerColor,
                                             ),
                                             const SizedBox(
-                                              height: 10.0,
+                                              height: 15.0,
                                             ),
                                             Icon(
                                               FontAwesomeIcons.buildingUser,
@@ -113,7 +114,7 @@ class SpecialistInformation extends StatelessWidget {
                                               color: kDarkerColor,
                                             ),
                                             const SizedBox(
-                                              height: 10.0,
+                                              height: 15.0,
                                             ),
                                             Icon(
                                               FontAwesomeIcons.sackDollar,
@@ -153,7 +154,6 @@ class SpecialistInformation extends StatelessWidget {
                                             const SizedBox(
                                               height: 10.0,
                                             ),
-                                            //TODO: hide if not work in any center from the application
                                             Text(
                                               "Work Center",
                                               style: TextStyle(
@@ -165,13 +165,26 @@ class SpecialistInformation extends StatelessWidget {
                                             const SizedBox(
                                               height: 10.0,
                                             ),
-                                            Text(
-                                              "Price for one session",
-                                              style: TextStyle(
-                                                fontSize: 15.0,
-                                                fontWeight: FontWeight.bold,
-                                                color: kDarkerColor,
-                                              ),
+                                            Row(
+                                              children: [
+                                                Text(
+                                                  "Price ",
+                                                  style: TextStyle(
+                                                    fontSize: 15.0,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: kDarkerColor,
+                                                  ),
+                                                ),
+                                                const SizedBox(width: 5,),
+                                                Text(
+                                                  "(for one session)",
+                                                  style: TextStyle(
+                                                    fontSize: 12.0,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Colors.grey[700],
+                                                  ),
+                                                ),
+                                              ],
                                             ),
                                           ],
                                         ),
@@ -185,7 +198,7 @@ class SpecialistInformation extends StatelessWidget {
                                               CrossAxisAlignment.start,
                                           children: [
                                             Text(
-                                              specialist.userName,
+                                              specialist!.userName,
                                               style: TextStyle(
                                                 fontSize: 15.0,
                                                 fontWeight: FontWeight.bold,
@@ -207,7 +220,7 @@ class SpecialistInformation extends StatelessWidget {
                                               height: 10.0,
                                             ),
                                             Text(
-                                              "Work Center", //TODO
+                                              workCenter,
                                               style: TextStyle(
                                                 fontSize: 15.0,
                                                 fontWeight: FontWeight.bold,
@@ -339,7 +352,8 @@ class SpecialistInformation extends StatelessWidget {
               });
         },
       );
-  Future<Specialist?> _getSpecialist(BuildContext context) async {
+  Future<Tuple2<Specialist?, String>> _getSpecialist(
+      BuildContext context) async {
     try {
       // Check if userId is not null before calling profileShadowTeacher
       var result = await profileSpecialist(userId);
@@ -357,11 +371,12 @@ class SpecialistInformation extends StatelessWidget {
           print("error in checker specialist");
         }
       }
-      return result;
+      String centerName = await getCenterName(result!.centerID);
+      return Tuple2(result, centerName);
     } catch (error) {
       // Handle errors here
       print('Error in _getSpecialist: $error');
-      return null;
+      return Tuple2(null, "");
     }
   }
 }
