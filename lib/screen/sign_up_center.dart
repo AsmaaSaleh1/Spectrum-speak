@@ -212,7 +212,7 @@ class _SignUpCenterState extends State<SignUpCenter> {
               child: Text(
                 '$_characterCount/$_maxCharacterCount',
                 style: TextStyle(
-                  color: _characterCount > _maxCharacterCount
+                  color: _characterCount >= _maxCharacterCount
                       ? kRed
                       : kDarkerColor.withOpacity(0.8),
                   fontSize: 16,

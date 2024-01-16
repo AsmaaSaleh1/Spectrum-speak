@@ -113,10 +113,10 @@ class _SearchToCallState extends State<SearchToCall> {
                 begin: Alignment.bottomCenter,
                 end: Alignment.topCenter,
                 colors: [
-                  kPrimary.withOpacity(0.8),
-                  kPrimary.withOpacity(0.5),
-                  kPrimary.withOpacity(0.1),
-                  kPrimary.withOpacity(0.0)
+                  kDarkerColor.withOpacity(0.5),
+                  kDarkerColor.withOpacity(0.3),
+                  kDarkerColor.withOpacity(0.1),
+                  kDarkerColor.withOpacity(0.0),
                 ],
               ),
             ),
