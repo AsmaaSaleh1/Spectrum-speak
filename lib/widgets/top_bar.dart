@@ -11,6 +11,7 @@ import 'package:spectrum_speak/rest/rest_api_center.dart';
 import 'package:spectrum_speak/rest/rest_api_menu.dart';
 import 'package:spectrum_speak/rest/rest_api_profile_delete.dart';
 import 'package:spectrum_speak/screen/center_profile.dart';
+import 'package:spectrum_speak/screen/contact_us.dart';
 import 'package:spectrum_speak/screen/login.dart';
 import 'package:spectrum_speak/screen/main_page.dart';
 import 'package:spectrum_speak/screen/parent_profile.dart';
@@ -374,18 +375,38 @@ class TopBar extends StatelessWidget {
                     ),
                     ListTile(
                       leading: Icon(
-                        FontAwesomeIcons.message,
+                        FontAwesomeIcons.brain,
                         color: kDarkerColor,
                         size: 22,
                       ),
                       title: const Text(
-                        "AI chat",
+                        "Spectrum Bot",
                         style: TextStyle(
                           fontWeight: FontWeight.w700,
                           fontSize: 17,
                         ),
                       ),
                       onTap: () {},
+                    ),
+                    ListTile(
+                      leading: Icon(
+                        FontAwesomeIcons.message,
+                        color: kDarkerColor,
+                        size: 22,
+                      ),
+                      title: const Text(
+                        "contact us",
+                        style: TextStyle(
+                          fontWeight: FontWeight.w700,
+                          fontSize: 17,
+                        ),
+                      ),
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const ContactUs(),
+                        ),
+                      ),
                     ),
                     ListTile(
                       leading: Icon(
