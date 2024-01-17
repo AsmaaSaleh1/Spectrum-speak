@@ -55,6 +55,7 @@ dependencies:
   image: ^3.3.0
   firebase_messaging: ^14.7.9
   mailer: ^6.0.1
+  syncfusion_flutter_charts: ^24.1.45+2
 
 
 dev_dependencies:
