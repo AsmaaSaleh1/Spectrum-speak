@@ -470,6 +470,27 @@ class TopBar extends StatelessWidget {
                           ),
                         ),
                       ),
+                    if (isAdminForSystem)
+                      ListTile(
+                        leading: Icon(
+                          FontAwesomeIcons.chartPie,
+                          color: kDarkerColor,
+                          size: 22,
+                        ),
+                        title: const Text(
+                          "Some Analysis",
+                          style: TextStyle(
+                            fontWeight: FontWeight.w700,
+                            fontSize: 17,
+                          ),
+                        ),
+                        onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const RemoveUser(),
+                          ),
+                        ),
+                      ),
                     ListTile(
                       leading: Icon(
                         FontAwesomeIcons.doorOpen,
