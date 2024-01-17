@@ -78,6 +78,9 @@ class _AllChatState extends State<AllChat> {
                         print(
                             'Deletion detected: ${_previousText.substring(currentText.length)}');
                       } else if (_previousText.length < currentText.length) {
+                        setState(() {
+                          searchList.clear();
+                        });
                         // Addition happened
                         print(
                             'Addition detected: ${currentText.substring(_previousText.length)}');
