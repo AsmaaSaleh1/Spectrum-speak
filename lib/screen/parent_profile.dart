@@ -132,6 +132,21 @@ class _ParentProfileState extends State<ParentProfile> {
                               ),
                               Visibility(
                                 visible: children.isEmpty &&
+                                    userIdLogin != widget.userID,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                    child: Text(
+                                      "No children For this user",
+                                      style: TextStyle(
+                                        fontSize: 17.0,
+                                        fontWeight: FontWeight.bold,
+                                        color: kBlue,
+                                      ),
+                                    ),
+                                ),
+                              ),
+                              Visibility(
+                                visible: children.isEmpty &&
                                     userIdLogin == widget.userID,
                                 child: Padding(
                                   padding: const EdgeInsets.all(8.0),
