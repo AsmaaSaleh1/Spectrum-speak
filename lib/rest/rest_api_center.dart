@@ -6,11 +6,11 @@ import 'package:spectrum_speak/modules/center.dart';
 Future<bool> isEmailAlreadyExistsCenter(String email) async {
   final response = await http.post(
     Uri.parse('${Utils.baseUrl}/center/checkEmail'),
-    headers: {"Accept": "application/json"},
-    body: {
+    headers: {"Accept": "application/json","Content-Type":"application/json"},
+    body: jsonEncode({
       'Email': email,
     },
-  );
+  ));
   var decodedData = jsonDecode(response.body);
 
   if (response.statusCode == 200) {
@@ -25,15 +25,15 @@ Future centerSignUp(String specialistID, String centerName, String email,
   final response = await http.post(
       Uri.parse('${Utils.baseUrl}/center/register/$specialistID'),
       headers: {
-        "Accept": "application/json"
+        "Accept": "application/json","Content-Type":"application/json"
       },
-      body: {
+      body: jsonEncode({
         "CenterName": centerName,
         'Email': email,
         "Phone": phone,
         "Description": description,
         "City": selectedCity,
-      });
+      }));
   var decodedData = jsonDecode(response.body);
   return decodedData;
 }
@@ -43,7 +43,7 @@ Future<String?> getCenterIdForSpecialist(String specialistId) async {
   try {
     final response = await http.get(
       Uri.parse('${Utils.baseUrl}/center/getID/$specialistId'),
-      headers: {"Accept": "application/json"},
+      headers: {"Accept": "application/json","Content-Type":"application/json"},
     );
 
     if (response.statusCode == 200) {
@@ -63,7 +63,7 @@ Future<CenterAutism?> profileCenter(String userId) async {
   try {
     final response = await http.get(
       Uri.parse('${Utils.baseUrl}/center/getCenter/$userId'),
-      headers: {"Accept": "application/json"},
+      headers: {"Accept": "application/json","Content-Type":"application/json"},
     );
     if (response.statusCode == 200) {
       var decodedData = jsonDecode(response.body)["centerInfo"];
@@ -98,16 +98,16 @@ Future editProfileCenter(
   final response = await http.patch(
     Uri.parse('${Utils.baseUrl}/center/edit/$userId'),
     headers: {
-      "Accept": "application/json",
+      "Accept": "application/json","Content-Type":"application/json"
     },
-    body: {
+    body: jsonEncode({
       'CenterName': centerName,
       'Email': email,
       'Phone': phone,
       'Description': description,
       'City': city,
     },
-  );
+  ));
   var decodedData = jsonDecode(response.body);
   return decodedData;
 }
@@ -116,7 +116,7 @@ Future deleteCenter(String userId)async{
   final response = await http.delete(
     Uri.parse('${Utils.baseUrl}/center/delete/$userId'),
     headers: {
-      "Accept": "application/json",
+      "Accept": "application/json","Content-Type":"application/json"
     },
   );
   if (response.statusCode == 200) {
@@ -132,7 +132,7 @@ Future<bool> checkAdmin(String userId) async {
     final response = await http.get(
       Uri.parse('${Utils.baseUrl}/center/admin/$userId'),
       headers: {
-        'Accept': 'application/json',
+        'Accept': 'application/json',"Content-Type":"application/json"
       },
     );
     if (response.statusCode == 200) {
@@ -152,7 +152,7 @@ Future<List<dynamic>> searchToAddSpecialist(String namePrefix) async {
     final response = await http.get(
       Uri.parse('${Utils.baseUrl}/search/center/specialist?namePrefix=$namePrefix'),
       headers: {
-        'Accept': 'application/json',
+        'Accept': 'application/json',"Content-Type":"application/json"
       },
     );
 
@@ -179,7 +179,7 @@ Future <dynamic> getSpecialistAdminForCenter(String centerID) async {
     final response = await http.get(
       Uri.parse('${Utils.baseUrl}/center/admin/Specialist/$centerID'),
       headers: {
-        'Accept': 'application/json',
+        'Accept': 'application/json',"Content-Type":"application/json"
       },
     );
 
@@ -206,7 +206,7 @@ Future<String> getCenterName(String centerID) async {
     final response = await http.get(
       Uri.parse('${Utils.baseUrl}/center/name/$centerID'),
       headers: {
-        'Accept': 'application/json',
+        'Accept': 'application/json',"Content-Type":"application/json"
       },
     );
 

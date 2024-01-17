@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "707258923816",
-    "project_id": "spectrum-speak",
-    "storage_bucket": "spectrum-speak.appspot.com"
+    "project_number": "915405090420",
+    "project_id": "spectrumspeak2024",
+    "storage_bucket": "spectrumspeak2024.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:707258923816:android:a57f2209acc79fb85c2e1d",
+        "mobilesdk_app_id": "1:915405090420:android:17f9c9846935c2994ceb21",
         "android_client_info": {
           "package_name": "com.example.spectrum_speak"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyCt0lhkdsgkBRaO2AQmnjpB7ryVa7UfDDQ"
+          "current_key": "AIzaSyD7SGYbg45QIrkifhhwYx5RT8Lgo4odFlg"
         }
       ],
       "services": {

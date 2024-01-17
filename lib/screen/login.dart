@@ -12,7 +12,6 @@ import 'package:spectrum_speak/screen/sign_up_specialist.dart';
 import 'package:spectrum_speak/units/build_text_field.dart';
 import 'forget_password.dart';
 import 'sign_up.dart';
-import 'package:spectrum_speak/rest/rest_api_signUp.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -259,7 +258,8 @@ class _LoginState extends State<Login> {
     if (rest['success']) {
       String userEmail = rest['data'][0]['Email'];
       String userID = rest['data'][0]['UserID'].toString();
-      await AuthManager.storeUserData(userID, userEmail);
+      String userName = rest['data'][0]['Username'].toString();
+      await AuthManager.storeUserData(userID, userEmail, userName,false);
       var category = await getUserCategory(userID);
       var result;
       if (category == "ShadowTeacher") {
@@ -267,13 +267,12 @@ class _LoginState extends State<Login> {
       } else if (category == "Specialist") {
         result = await _getSpecialist(context, userID);
       }
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (_) => const MainPage(),
-          ),
-        );
-
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (_) => const MainPage(),
+        ),
+      );
     } else {
       setState(() {
         _showErrorText = true;

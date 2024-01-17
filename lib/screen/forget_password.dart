@@ -17,11 +17,11 @@ class ForgetPassword extends StatefulWidget {
 
 class _ForgetPasswordState extends State<ForgetPassword> {
   final TextEditingController _emailController = TextEditingController();
-  EmailOTP myAuth = EmailOTP();
 
   bool _validEmail = false;
   bool _existEmail = false;
   bool _emptyEmail = false;
+  EmailOTP myAuth = EmailOTP();
   String messages() {
     if (_validEmail) {
       return "The provided email address is not valid.";
@@ -162,7 +162,8 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                     otpLength: 4,
                     otpType: OTPType.digitsOnly,
                   );
-                  if (await myAuth.sendOTP() == true) {
+
+                  if (await myAuth.sendOTP()) {
                     print("done send");
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
@@ -170,15 +171,16 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                       ),
                     );
                     Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => OTPScreen(
-                                  myAuth: myAuth,
-                                  email: _emailController.text,
-                                  comeFromSignUp: false,
-                                )));
-                  } else {
-                    print("error");
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => OTPScreen(
+                          myAuth: myAuth,
+                          email: _emailController.text,
+                          comeFromSignUp: true,
+                        ),
+                      ),
+                    );
+                  } else{
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
                         content: Text('Oops, OTP send failed'),

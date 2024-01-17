@@ -6,6 +6,11 @@ const Color kRed= Color(0xffE61B23);
 const Color kDarkBlue= Color(0xff0E5F88);
 const Color kYellow=Color(0xffFFC40C);//#F6EE04
 const Color kGreen=Color(0xff00A550);
+const Color kDarkerBlue=Color.fromARGB(255, 11, 75, 107);
+const Color ksenderMessage=Color.fromARGB(255, 28, 220, 121);
+const Color ksenderMessageBorder=Color.fromARGB(255, 0, 102, 49);
+const Color kreceiverMessage=Color.fromARGB(255, 80, 217, 251);
+const Color kreceiverMessageBorder=Color.fromARGB(255, 3, 118, 163);
 Color kDarkerColor = Color.fromARGB(
   kDarkBlue.alpha,  // Keep the alpha channel the same
   kDarkBlue.red ~/ 2, // Reduce the red component by half

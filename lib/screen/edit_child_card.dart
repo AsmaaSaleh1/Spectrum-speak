@@ -223,7 +223,7 @@ class _EditChildCardState extends State<EditChildCard> {
                         Navigator.pushReplacement(context,
                             MaterialPageRoute(builder: (_) => ParentProfile(userID: userId!,),),);
                       },
-                      buttonText: 'Cansel',
+                      buttonText: 'Cancel',
                       icon: const Icon(
                         Icons.cancel,
                         size: 18.0,

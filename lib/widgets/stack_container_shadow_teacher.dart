@@ -9,7 +9,6 @@ import 'package:spectrum_speak/rest/auth_manager.dart';
 import 'package:spectrum_speak/rest/rest_api_profile.dart';
 import 'package:spectrum_speak/screen/edit_shadow_teacher_profile.dart';
 import 'package:spectrum_speak/screen/sign_up_shadow_teacher.dart';
-import 'package:spectrum_speak/screen/sign_up_specialist.dart';
 import 'package:spectrum_speak/units/custom_button.dart';
 import 'package:spectrum_speak/units/custom_clipper.dart';
 import 'package:tuple/tuple.dart';

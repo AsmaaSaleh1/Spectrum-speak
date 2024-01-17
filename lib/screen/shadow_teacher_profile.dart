@@ -5,7 +5,6 @@ import 'package:spectrum_speak/rest/auth_manager.dart';
 import 'package:spectrum_speak/widgets/stack_container_shadow_teacher.dart';
 
 import 'package:spectrum_speak/widgets/shadow_teacher_information.dart';
-import 'package:spectrum_speak/widgets/top_bar.dart';
 
 import 'login.dart';
 

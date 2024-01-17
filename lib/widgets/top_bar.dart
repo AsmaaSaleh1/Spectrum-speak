@@ -1,11 +1,13 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:circular_profile_avatar/circular_profile_avatar.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:spectrum_speak/constant/const_color.dart';
+import 'package:spectrum_speak/constant/utils.dart';
+import 'package:spectrum_speak/modules/ChatUser.dart';
 import 'package:spectrum_speak/rest/auth_manager.dart';
 import 'package:spectrum_speak/rest/rest_api_center.dart';
 import 'package:spectrum_speak/rest/rest_api_menu.dart';
@@ -19,7 +21,6 @@ import 'package:spectrum_speak/screen/search_page.dart';
 import 'package:spectrum_speak/screen/shadow_teacher_profile.dart';
 import 'package:spectrum_speak/screen/specialist_profile.dart';
 import 'package:spectrum_speak/screen/splash_screen_chat.dart';
-import 'package:spectrum_speak/units/build_profile_image.dart';
 import 'package:tuple/tuple.dart';
 
 import 'card_user_chat.dart';
@@ -31,6 +32,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     super.key,
     required this.scaffoldKey,
   });
+
   @override
   Widget build(BuildContext context) {
     return AppBar(
@@ -592,7 +594,8 @@ class TopBar extends StatelessWidget {
 void _showPopupMenu(BuildContext context, int numberOfCards) async {
   final RenderBox overlay =
       Overlay.of(context).context.findRenderObject() as RenderBox;
-
+  Utils.getMyUsersIDsTopBar();
+  Utils.getAllUserssTopBar(Utils.firstList);
   await showMenu(
     color: kPrimary,
     context: context,
@@ -609,10 +612,10 @@ void _showPopupMenu(BuildContext context, int numberOfCards) async {
           width: 300,
           child: Column(
             children: [
-              for (int i = 0; i < numberOfCards; i++)
-                const ListTile(
+              for (int i = 0; i < Utils.secondList.length; i++)
+                ListTile(
                   contentPadding: EdgeInsets.zero,
-                  title: CardUserChat(),
+                  title: CardUserChat(user:Utils.secondList[i]),
                 ),
               ListTile(
                 title: TextButton(

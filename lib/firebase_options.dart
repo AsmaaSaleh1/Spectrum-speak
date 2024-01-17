@@ -23,15 +23,9 @@ class DefaultFirebaseOptions {
       case TargetPlatform.android:
         return android;
       case TargetPlatform.iOS:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for ios - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return ios;
       case TargetPlatform.macOS:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for macos - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return macos;
       case TargetPlatform.windows:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for windows - '
@@ -50,19 +44,38 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyA2EkWoKfex-P7nhjcgjXmGSjNapUU3OEk',
-    appId: '1:707258923816:web:2a82417e331ac1535c2e1d',
-    messagingSenderId: '707258923816',
-    projectId: 'spectrum-speak',
-    authDomain: 'spectrum-speak.firebaseapp.com',
-    storageBucket: 'spectrum-speak.appspot.com',
+    apiKey: 'AIzaSyCM17_z7KV6QHjUNHRtnUO4x7jnHEF4UiI',
+    appId: '1:915405090420:web:aaf0bf6d56c116c54ceb21',
+    messagingSenderId: '915405090420',
+    projectId: 'spectrumspeak2024',
+    authDomain: 'spectrumspeak2024.firebaseapp.com',
+    storageBucket: 'spectrumspeak2024.appspot.com',
+    measurementId: 'G-NXP6YFRRT6',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyCt0lhkdsgkBRaO2AQmnjpB7ryVa7UfDDQ',
-    appId: '1:707258923816:android:a57f2209acc79fb85c2e1d',
-    messagingSenderId: '707258923816',
-    projectId: 'spectrum-speak',
-    storageBucket: 'spectrum-speak.appspot.com',
+    apiKey: 'AIzaSyD7SGYbg45QIrkifhhwYx5RT8Lgo4odFlg',
+    appId: '1:915405090420:android:17f9c9846935c2994ceb21',
+    messagingSenderId: '915405090420',
+    projectId: 'spectrumspeak2024',
+    storageBucket: 'spectrumspeak2024.appspot.com',
+  );
+
+  static const FirebaseOptions ios = FirebaseOptions(
+    apiKey: 'AIzaSyDZ0JFNNhcaPpwxOQeFTDjZUK6WzhiH7cc',
+    appId: '1:915405090420:ios:8816e4dc032440854ceb21',
+    messagingSenderId: '915405090420',
+    projectId: 'spectrumspeak2024',
+    storageBucket: 'spectrumspeak2024.appspot.com',
+    iosBundleId: 'com.example.spectrumSpeak',
+  );
+
+  static const FirebaseOptions macos = FirebaseOptions(
+    apiKey: 'AIzaSyDZ0JFNNhcaPpwxOQeFTDjZUK6WzhiH7cc',
+    appId: '1:915405090420:ios:7154a8faf32c42484ceb21',
+    messagingSenderId: '915405090420',
+    projectId: 'spectrumspeak2024',
+    storageBucket: 'spectrumspeak2024.appspot.com',
+    iosBundleId: 'com.example.spectrumSpeak.RunnerTests',
   );
 }

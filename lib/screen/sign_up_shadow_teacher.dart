@@ -3,13 +3,11 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:spectrum_speak/constant/const_color.dart';
 import 'package:spectrum_speak/rest/auth_manager.dart';
 import 'package:spectrum_speak/rest/rest_api_signUp.dart';
-import 'package:spectrum_speak/units/build_date_text_field.dart';
 import 'package:spectrum_speak/units/build_drop_down_menu.dart';
 import 'package:spectrum_speak/units/build_text_field.dart';
 import 'package:spectrum_speak/units/validate_input_from_user.dart';
 
 import 'add_profile_photo.dart';
-import 'main_page.dart';
 
 class SignUpShadowTeacher extends StatefulWidget {
   const SignUpShadowTeacher({super.key});

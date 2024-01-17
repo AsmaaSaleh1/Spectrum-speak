@@ -493,8 +493,8 @@ class _SignUpState extends State<SignUp> {
     if (rest['success']) {
       String userEmail = rest['data'][0]['Email'];
       String userID = rest['data'][0]['UserID'].toString();
-      await AuthManager.storeUserData(userID, userEmail);
-
+      String userName = rest['data'][0]['Username'].toString();
+      await AuthManager.storeUserData(userID, userEmail,userName,true);
       myAuth.setConfig(
         appEmail: "asmaatareq1999@gmail.com",
         appName: "Spectrum Speak",

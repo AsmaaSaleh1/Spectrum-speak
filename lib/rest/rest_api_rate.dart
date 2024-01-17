@@ -5,15 +5,16 @@ Future addRate(String userID, double rate, String date, String comment,
     String specialistID, String centerID,) async {
   final response =
   await http.post(Uri.parse('${Utils.baseUrl}/rate'), headers: {
+    "Content-Type":"application/json",
     "Accept": "application/json"
-  }, body: {
+  }, body: jsonEncode({
     'UserID': userID,
     'Rate': rate.toString(),
     'Date': date,
     "Comment": comment,
     "SpecialistID": specialistID,
     'CenterID': centerID
-  });
+  }));
   var decodedData = jsonDecode(response.body);
   return decodedData;
 }
@@ -21,7 +22,10 @@ Future <dynamic> getReviewSpecialist(String userId) async {
   try {
     final response = await http.get(
       Uri.parse('${Utils.baseUrl}/rate/specialist/$userId'),
-      headers: {"Accept": "application/json"},
+      headers: {
+        "Content-Type":"application/json",
+        "Accept": "application/json"
+      },
     );
     if (response.statusCode == 200) {
       var decodedData = jsonDecode(response.body)["data"];
@@ -40,7 +44,10 @@ Future <dynamic> getReviewCenter(String userId) async {
   try {
     final response = await http.get(
       Uri.parse('${Utils.baseUrl}/rate/center/$userId'),
-      headers: {"Accept": "application/json"},
+      headers: {
+        "Content-Type":"application/json",
+        "Accept": "application/json"
+      },
     );
     if (response.statusCode == 200) {
       var decodedData = jsonDecode(response.body)["data"];
@@ -59,8 +66,9 @@ Future deleteRate(String rateId)async{
   final response = await http.delete(
     Uri.parse('${Utils.baseUrl}/rate/delete/$rateId'),
     headers: {
-      "Accept": "application/json",
-    },
+    "Content-Type":"application/json",
+    "Accept": "application/json"
+  },
   );
   if (response.statusCode == 200) {
     var decodedData = jsonDecode(response.body);
@@ -74,7 +82,8 @@ Future<bool> checkIfUserRateSpecialistBefore(String userID, String specialistID,
     final response = await http.get(
       Uri.parse('${Utils.baseUrl}/rate/check/specialist?UserID=$userID&SpecialistID=$specialistID'),
       headers: {
-        'Accept': 'application/json',
+        "Content-Type":"application/json",
+        "Accept": "application/json"
       },
     );
 
@@ -100,7 +109,8 @@ Future<bool> checkIfUserRateCenterBefore(String userID, String centerID, ) async
     final response = await http.get(
       Uri.parse('${Utils.baseUrl}/rate/check/center?UserID=$userID&CenterID=$centerID'),
       headers: {
-        'Accept': 'application/json',
+        "Content-Type":"application/json",
+        "Accept": "application/json"
       },
     );
 

@@ -6,6 +6,7 @@ Future deleteChild(String childId) async {
     Uri.parse('${Utils.baseUrl}/profileDelete/child/$childId'),
     headers: {
       "Accept": "application/json",
+      "Content-Type":"application/json"
     },
   );
   if (response.statusCode == 200) {
@@ -20,6 +21,7 @@ Future deleteParent(String userId)async{
     Uri.parse('${Utils.baseUrl}/profileDelete/parent/$userId'),
     headers: {
       "Accept": "application/json",
+      "Content-Type":"application/json"
     },
   );
   if (response.statusCode == 200) {
@@ -34,6 +36,7 @@ Future deleteSpecialist(String userId)async{
     Uri.parse('${Utils.baseUrl}/profileDelete/specialist/$userId'),
     headers: {
       "Accept": "application/json",
+      "Content-Type":"application/json"
     },
   );
   if (response.statusCode == 200) {
@@ -48,6 +51,7 @@ Future deleteShadowTeacher(String userId)async{
     Uri.parse('${Utils.baseUrl}/profileDelete/shadowTeacher/$userId'),
     headers: {
       "Accept": "application/json",
+      "Content-Type":"application/json"
     },
   );
   if (response.statusCode == 200) {

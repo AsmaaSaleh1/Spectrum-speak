@@ -7,7 +7,6 @@ import 'package:spectrum_speak/rest/rest_api_profile.dart';
 import 'package:spectrum_speak/rest/rest_api_profile_edit.dart';
 import 'package:spectrum_speak/screen/specialist_profile.dart';
 import 'package:spectrum_speak/units/build_date_text_field.dart';
-import 'package:spectrum_speak/units/build_profile_image.dart';
 import 'package:spectrum_speak/units/build_text_field.dart';
 import 'package:spectrum_speak/units/custom_button.dart';
 import 'package:spectrum_speak/units/build_drop_down_menu.dart';
@@ -24,6 +23,7 @@ class EditSpecialistProfile extends StatefulWidget {
 }
 
 class _EditSpecialistProfileState extends State<EditSpecialistProfile> {
+  EmailOTP myAuth = EmailOTP();
   String? selectedCity;
   String? selectedSpecialist;
   final TextEditingController _emailController = TextEditingController();
@@ -31,7 +31,6 @@ class _EditSpecialistProfileState extends State<EditSpecialistProfile> {
   final TextEditingController _birthDateController = TextEditingController();
   final TextEditingController _phoneNumberController = TextEditingController();
   final TextEditingController _priceController = TextEditingController();
-  EmailOTP myAuth = EmailOTP();
 
   bool _phoneError = false;
   bool _showDateError = false;
@@ -312,7 +311,8 @@ class _EditSpecialistProfileState extends State<EditSpecialistProfile> {
                       otpLength: 4,
                       otpType: OTPType.digitsOnly,
                     );
-                    if (await myAuth.sendOTP() == true) {
+
+                    if (await myAuth.sendOTP()) {
                       print("done send");
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
@@ -325,12 +325,11 @@ class _EditSpecialistProfileState extends State<EditSpecialistProfile> {
                           builder: (context) => OTPScreen(
                             myAuth: myAuth,
                             email: _emailController.text,
-                            comeFromSignUp: false,
+                            comeFromSignUp: true,
                           ),
                         ),
                       );
                     } else {
-                      print("error");
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
                           content: Text('Oops, OTP send failed'),
@@ -458,13 +457,11 @@ class _EditSpecialistProfileState extends State<EditSpecialistProfile> {
         );
         if (rest['success']) {
           Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (_) => SpecialistProfile(
-                userId: userID,
-              ),
-            ),
-          );
+              context,
+              MaterialPageRoute(
+                  builder: (_) => SpecialistProfile(
+                        userId: userID,
+                      )));
         } else {
           setState(() {
             _showErrorText = true;

@@ -24,7 +24,7 @@ if (flutterVersionName == null) {
 
 android {
     namespace "com.example.spectrum_speak"
-    compileSdkVersion flutter.compileSdkVersion
+    compileSdkVersion 34
     ndkVersion flutter.ndkVersion
 
     compileOptions {
@@ -55,7 +55,8 @@ android {
         release {
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig signingConfigs.debug
+            signingConfig signingConfigs.debug         
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'            
         }
     }
 }

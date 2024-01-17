@@ -2,9 +2,11 @@ import 'package:email_otp/email_otp.dart';
 import 'package:flutter/material.dart';
 import 'package:spectrum_speak/constant/const_color.dart';
 import 'package:spectrum_speak/modules/shadow_teacher.dart';
+
 import 'package:spectrum_speak/rest/auth_manager.dart';
 import 'package:spectrum_speak/rest/rest_api_profile.dart';
 import 'package:spectrum_speak/rest/rest_api_profile_edit.dart';
+
 import 'package:spectrum_speak/screen/shadow_teacher_profile.dart';
 import 'package:spectrum_speak/units/build_date_text_field.dart';
 import 'package:spectrum_speak/units/build_text_field.dart';
@@ -25,6 +27,7 @@ class EditShadowTeacherProfile extends StatefulWidget {
 }
 
 class _EditShadowTeacherProfileState extends State<EditShadowTeacherProfile> {
+  EmailOTP myAuth = EmailOTP();
   String? selectedGender;
   String? availability;
   String? selectedCity;
@@ -39,7 +42,6 @@ class _EditShadowTeacherProfileState extends State<EditShadowTeacherProfile> {
   bool _showDateError = false;
   bool _showErrorText = false;
   bool _showSalaryError = false;
-  EmailOTP myAuth = EmailOTP();
 
   @override
   void initState() {
@@ -351,14 +353,15 @@ class _EditShadowTeacherProfileState extends State<EditShadowTeacherProfile> {
                   icon: Icon(Icons.key_sharp),
                   iconColor: kPrimary,
                   onPressed: () async {
-                    myAuth.setConfig(
+                      myAuth.setConfig(
                       appEmail: "asmaatareq1999@gmail.com",
                       appName: "Spectrum Speak",
                       userEmail: _emailController.text,
                       otpLength: 4,
                       otpType: OTPType.digitsOnly,
                     );
-                    if (await myAuth.sendOTP() == true) {
+
+                    if (await myAuth.sendOTP()) {
                       print("done send");
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
@@ -371,12 +374,11 @@ class _EditShadowTeacherProfileState extends State<EditShadowTeacherProfile> {
                           builder: (context) => OTPScreen(
                             myAuth: myAuth,
                             email: _emailController.text,
-                            comeFromSignUp: false,
+                            comeFromSignUp: true,
                           ),
                         ),
                       );
-                    } else {
-                      print("error");
+                    } else{
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
                           content: Text('Oops, OTP send failed'),
@@ -518,13 +520,11 @@ class _EditShadowTeacherProfileState extends State<EditShadowTeacherProfile> {
             availability.trim());
         if (rest['success']) {
           Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (_) => ShadowTeacherProfile(
-                userId: userID,
-              ),
-            ),
-          );
+              context,
+              MaterialPageRoute(
+                  builder: (_) => ShadowTeacherProfile(
+                        userId: userID,
+                      )));
         } else {
           setState(() {
             _showErrorText = true;

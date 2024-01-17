@@ -2,7 +2,6 @@ import 'package:email_otp/email_otp.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:spectrum_speak/constant/const_color.dart';
-import 'package:spectrum_speak/modules/parent.dart';
 import 'package:spectrum_speak/rest/auth_manager.dart';
 import 'package:spectrum_speak/rest/rest_api_menu.dart';
 import 'package:spectrum_speak/screen/reset_password.dart';
@@ -78,7 +77,7 @@ class _OTPScreenState extends State<OTPScreen> {
           children: [
             widget.comeFromSignUp
                 ? Padding(
-                    padding: EdgeInsets.only(right: 30, left: 15, top: 55),
+                    padding: EdgeInsets.only(right: 30, left: 30, top: 70),
                     child: GestureDetector(
                       onTap: () {
                         showDialog(
@@ -172,7 +171,7 @@ class _OTPScreenState extends State<OTPScreen> {
                     ),
                   )
                 : Padding(
-                    padding: EdgeInsets.only(right: 30, left: 15, top: 55),
+                    padding: EdgeInsets.only(right: 30, left: 30, top: 70),
                     child: GestureDetector(
                       onTap: () {
                         Navigator.of(context).pop();

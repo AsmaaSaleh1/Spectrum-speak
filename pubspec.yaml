@@ -39,7 +39,8 @@ dependencies:
   google_fonts: ^6.1.0
   circular_profile_avatar: ^2.0.5
   firebase_core: ^2.22.0
-  intl: ^0.18.1
+  cloud_firestore: ^4.13.6
+  intl: ^0.19.0
   universal_platform: ^1.0.0+1
   video_player: ^2.8.1
   web_socket_channel: ^2.4.0
@@ -53,7 +54,18 @@ dependencies:
   path_provider: ^2.1.1
   flutter_image_compress: ^2.1.0
   image: ^3.3.0
-  firebase_messaging: ^14.7.9
+  firebase_auth: ^4.15.3
+  firebase_storage: ^11.5.6
+  firebase_messaging: ^14.7.10
+  emoji_picker_flutter: ^1.5.4
+  cached_network_image: ^3.3.1
+  flutter_notification_channel: ^2.0.0
+  http: ^1.1.2
+  flutter_screenutil: ">=5.5.3+2 <5.6.1"
+  device_info_plus: any
+  zego_uikit: ^2.15.1
+  zego_uikit_prebuilt_call: ^3.18.0
+  awesome_notifications: ^0.9.0
 
 
 dev_dependencies:

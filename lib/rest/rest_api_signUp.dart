@@ -7,8 +7,9 @@ Future userSignUp(String email, String userName, String phone, String password,
     String birthDate, String selectedCity, String selectedCategory) async {
   final response =
       await http.post(Uri.parse('${Utils.baseUrl}/signUp'), headers: {
-    "Accept": "application/json"
-  }, body: {
+    "Accept": "application/json",
+    "Content-Type":"application/json"
+  }, body: jsonEncode({
     'Username': userName,
     'Email': email,
     'Password': password,
@@ -16,7 +17,7 @@ Future userSignUp(String email, String userName, String phone, String password,
     "City": selectedCity,
     'Phone': phone,
     "Category": selectedCategory
-  });
+  }));
   var decodedData = jsonDecode(response.body);
   return decodedData;
 }
@@ -24,15 +25,17 @@ Future userSignUp(String email, String userName, String phone, String password,
 Future specialistSignUp(
     String userId, double price, String selectedSpecialistCategory) async {
   final response = await http
-      .post(Uri.parse('${Utils.baseUrl}/signUp/specialist/$userId'), headers: {
-    "Accept": "application/json"
-  }, body: {
-    'Price': price.toString(),
-    "SpecialistCategory": selectedSpecialistCategory
-  });
-  var decodedData = jsonDecode(response.body);
-  print(decodedData);
-  return decodedData;
+      .post(Uri.parse('${Utils.baseUrl}/signUp/specialist/$userId'), 
+      headers: {"Content-Type":"application/json",
+                "Accept": "application/json",
+              }, 
+      body: jsonEncode({
+        'Price': price.toString(),
+        "SpecialistCategory": selectedSpecialistCategory
+      }));
+      var decodedData = jsonDecode(response.body);
+      print(decodedData);
+      return decodedData;
 }
 
 Future shadowTeacherSignUp(String userId, String salary, String availability,
@@ -40,14 +43,15 @@ Future shadowTeacherSignUp(String userId, String salary, String availability,
   final response = await http.post(
       Uri.parse('${Utils.baseUrl}/signUp/shadowTeacher/$userId'),
       headers: {
-        "Accept": "application/json"
+        "Accept": "application/json",
+        "Content-Type":"application/json"
       },
-      body: {
+      body: jsonEncode({
         'Salary': salary,
         'Availability': availability,
         'AcademicQualification': qualification,
         'Gender': gender,
-      });
+      }));
   var decodedData = jsonDecode(response.body);
   return decodedData;
 }
@@ -56,13 +60,14 @@ Future childrenSignUp(String userId, String name, String birthDate,
     String gender, String degreeOfAutism) async {
   final response = await http
       .post(Uri.parse('${Utils.baseUrl}/signUp/children/$userId'), headers: {
-    "Accept": "application/json"
-  }, body: {
+    "Accept": "application/json",
+    "Content-Type":"application/json"
+  }, body: jsonEncode({
     'Name': name,
     'BirthDate': birthDate,
     'Gender': gender,
     'DegreeOfAutism': degreeOfAutism,
-  });
+  }));
   var decodedData = jsonDecode(response.body);
   return decodedData;
 }
@@ -70,11 +75,13 @@ Future childrenSignUp(String userId, String name, String birthDate,
 Future<bool> isEmailAlreadyExists(String email) async {
   final response = await http.post(
     Uri.parse('${Utils.baseUrl}/users/checkEmail/user'),
-    headers: {"Accept": "application/json"},
-    body: {
+    headers: {"Accept": "application/json",
+    "Content-Type": "application/json"
+    },
+    body: jsonEncode({
       'Email': email,
     },
-  );
+  ));
   var decodedData = jsonDecode(response.body);
 
   if (response.statusCode == 200) {

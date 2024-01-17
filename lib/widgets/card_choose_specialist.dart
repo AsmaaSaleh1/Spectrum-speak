@@ -2,7 +2,6 @@ import 'package:circular_profile_avatar/circular_profile_avatar.dart';
 import 'package:flutter/material.dart';
 import 'package:spectrum_speak/constant/const_color.dart';
 import 'package:spectrum_speak/screen/specialist_profile.dart';
-import 'package:spectrum_speak/units/custom_button.dart';
 
 class CardChooseSpecialist extends StatefulWidget {
   final String userID;

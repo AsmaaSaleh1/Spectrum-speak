@@ -24,12 +24,11 @@ class EditProfile extends StatefulWidget {
 }
 
 class _EditProfileState extends State<EditProfile> {
+  EmailOTP myAuth = EmailOTP();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _userNameController = TextEditingController();
   final TextEditingController _phoneNumberController = TextEditingController();
   final TextEditingController _birthDateController = TextEditingController();
-  EmailOTP myAuth = EmailOTP();
-
   String? selectedCity;
   bool _phoneError = false;
   bool _showDateError = false;
@@ -276,7 +275,8 @@ class _EditProfileState extends State<EditProfile> {
                       otpLength: 4,
                       otpType: OTPType.digitsOnly,
                     );
-                    if (await myAuth.sendOTP() == true) {
+
+                    if (await myAuth.sendOTP()) {
                       print("done send");
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
@@ -289,12 +289,11 @@ class _EditProfileState extends State<EditProfile> {
                           builder: (context) => OTPScreen(
                             myAuth: myAuth,
                             email: _emailController.text,
-                            comeFromSignUp: false,
+                            comeFromSignUp: true,
                           ),
                         ),
                       );
                     } else {
-                      print("error");
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
                           content: Text('Oops, OTP send failed'),

@@ -5,7 +5,6 @@ import 'package:spectrum_speak/constant/const_color.dart';
 import 'package:spectrum_speak/modules/shadow_teacher.dart';
 import 'package:spectrum_speak/rest/rest_api_profile.dart';
 import 'package:spectrum_speak/screen/sign_up_shadow_teacher.dart';
-import 'package:spectrum_speak/screen/sign_up_specialist.dart';
 
 //TODO: make it suitable at all width size (like I make in About in CenterProfile) specially Academic Qualification
 class ShadowTeacherInformation extends StatelessWidget {

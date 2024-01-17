@@ -7,6 +7,7 @@ Future<List<dynamic>> searchSpecialist(String namePrefix,String city,String spec
       Uri.parse('${Utils.baseUrl}/search/specialist?city=$city&namePrefix=$namePrefix&specialistCategory=$specialistCategory'),
       headers: {
         'Accept': 'application/json',
+        'Content-Type':'application/json'
       },
     );
 
@@ -33,6 +34,7 @@ Future<List<dynamic>> searchCenter(String namePrefix,String city) async {
       Uri.parse('${Utils.baseUrl}/search/center?city=$city&namePrefix=$namePrefix'),
       headers: {
         'Accept': 'application/json',
+        'Content-Type':'application/json'
       },
     );
 
@@ -59,6 +61,7 @@ Future<List<dynamic>> searchShadowTeacher(String namePrefix,String city,String g
       Uri.parse('${Utils.baseUrl}/search/shadowTeacher?city=$city&namePrefix=$namePrefix&Gender=$gender'),
       headers: {
         'Accept': 'application/json',
+        'Content-Type':'application/json'
       },
     );
 

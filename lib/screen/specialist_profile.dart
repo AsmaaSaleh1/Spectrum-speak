@@ -303,7 +303,7 @@ class _SpecialistProfileState extends State<SpecialistProfile> {
           await checkIfUserRateSpecialistBefore(userID, specialistID);
       return checkSpecialist;
     } catch (e) {
-      print("error in checkSpecialistRate");
+      print("error in checkSpecialistRate $e");
     }
     return null;
   }

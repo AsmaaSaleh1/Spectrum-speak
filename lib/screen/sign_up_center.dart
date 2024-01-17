@@ -9,7 +9,6 @@ import 'package:spectrum_speak/units/build_text_field.dart';
 import 'package:spectrum_speak/units/validate_input_from_user.dart';
 
 import 'add_profile_photo.dart';
-import 'center_profile.dart';
 
 class SignUpCenter extends StatefulWidget {
   final String SpecialistID;
