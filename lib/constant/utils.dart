@@ -89,12 +89,22 @@ class Utils {
   }
 
   static Stream<QuerySnapshot<Map<String, dynamic>>> getAllUsers() {
+    
     return firestore
         .collection('users')
         .where('Email', isNotEqualTo: u.Email)
         .snapshots();
   }
+  static Future<List<ChatUser>> getAllUsersSearch() async {
+    
+     QuerySnapshot<Map<String, dynamic>> snapshot=await firestore
+        .collection('users')
+        .where('UserID', isNotEqualTo: u.UserID)
+        .get();
+    return snapshot.docs.map((doc) => ChatUser.fromJson(doc.data()))
+                                    .toList();
 
+  }
   // for getting specific user info
   static Stream<QuerySnapshot<Map<String, dynamic>>> getUserInfo(
       ChatUser chatUser) {

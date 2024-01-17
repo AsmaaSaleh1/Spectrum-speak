@@ -7,6 +7,7 @@ import 'package:spectrum_speak/modules/ChatUser.dart';
 import 'package:spectrum_speak/modules/Dialogs.dart';
 import 'package:spectrum_speak/rest/auth_manager.dart';
 import 'package:spectrum_speak/widgets/card_user_chat.dart';
+import 'package:zego_uikit/zego_uikit.dart';
 
 class AllChat extends StatefulWidget {
   const AllChat({super.key});
@@ -21,6 +22,7 @@ class _AllChatState extends State<AllChat> {
   List<ChatUser> searchList = [];
   bool _isSearching = false;
   TextEditingController _search = TextEditingController();
+  String _previousText = '';
   @override
   void initState() {
     super.initState();
@@ -66,13 +68,45 @@ class _AllChatState extends State<AllChat> {
                     ),
                     autofocus: true,
                     style: TextStyle(fontSize: 17, letterSpacing: 0.5),
-                    onChanged: (val) {
-                      searchList.clear();
-                      for (var i in list) {
-                        if (i.Name.toLowerCase().contains(val.toLowerCase()))
+                    onChanged: (val) async {
+                      String currentText = val.trim();
+
+                      if (_previousText.length > currentText.length) {
+                        setState(() {
+                          searchList.clear();
+                        });
+                        print(
+                            'Deletion detected: ${_previousText.substring(currentText.length)}');
+                      } else if (_previousText.length < currentText.length) {
+                        // Addition happened
+                        print(
+                            'Addition detected: ${currentText.substring(_previousText.length)}');
+                      }
+
+                      _previousText = currentText;
+                      setState(() {
+                        searchList.clear();
+                      });
+
+                      if (val.isEmpty) {
+                        return; // Don't perform search if the text is empty
+                      }
+
+                      List<ChatUser> listt = await Utils.getAllUsersSearch();
+                      for (var i in listt) {
+                        if ((i.Name?.toLowerCase()
+                                    ?.startsWith(val.toLowerCase()) ??
+                                false) ||
+                            (i.Name?.split(" ")[1]
+                                    ?.toLowerCase()
+                                    ?.startsWith(val.toLowerCase()) ??
+                                false)) {
+                          print('${i.Name}\n');
                           searchList.add(i);
+                        }
                       }
                       setState(() {
+                        // Set the state after the entire loop has finished
                         searchList;
                       });
                     },
@@ -80,12 +114,16 @@ class _AllChatState extends State<AllChat> {
                 : Text(
                     "Chat",
                   ),
-            leading:  Container(child:Icon(CupertinoIcons.house),),
+            leading: Container(
+              child: Icon(CupertinoIcons.house),
+            ),
             actions: [
               IconButton(
                   onPressed: () {
                     setState(() {
                       _isSearching = !_isSearching;
+                      if (_search.text.isEmpty) searchList.clear();
+                      _search.clear();
                     });
                   },
                   icon: Icon(_isSearching
@@ -142,7 +180,7 @@ class _AllChatState extends State<AllChat> {
                             if (list.isEmpty) {
                               print('What a waste');
                             }
-                            
+                            print(searchList);
                             return ListView.builder(
                                 itemCount: _isSearching
                                     ? searchList.length
