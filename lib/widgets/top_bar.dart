@@ -343,7 +343,8 @@ class TopBar extends StatelessWidget {
                       onTap: () => Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => const MainPage()),
+                          builder: (context) => const MainPage(),
+                        ),
                       ),
                     ),
                     ListTile(
@@ -361,7 +362,9 @@ class TopBar extends StatelessWidget {
                       ),
                       onTap: () => Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => const Search()),
+                        MaterialPageRoute(
+                          builder: (context) => const Search(),
+                        ),
                       ),
                     ),
                     ListTile(
@@ -483,9 +486,11 @@ class TopBar extends StatelessWidget {
                       onTap: () async {
                         await AuthManager.clearUserData();
                         Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const Login()));
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const Login(),
+                          ),
+                        );
                       },
                     ),
                     Divider(
