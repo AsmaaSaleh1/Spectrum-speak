@@ -7,16 +7,20 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:spectrum_speak/constant/const_color.dart';
 import 'package:spectrum_speak/rest/auth_manager.dart';
+import 'package:spectrum_speak/rest/rest_api_admin.dart';
 import 'package:spectrum_speak/rest/rest_api_center.dart';
 import 'package:spectrum_speak/rest/rest_api_menu.dart';
 import 'package:spectrum_speak/rest/rest_api_profile_delete.dart';
+import 'package:spectrum_speak/screen/add_remove_admin.dart';
 import 'package:spectrum_speak/screen/center_profile.dart';
 import 'package:spectrum_speak/screen/contact_us.dart';
 import 'package:spectrum_speak/screen/login.dart';
 import 'package:spectrum_speak/screen/main_page.dart';
 import 'package:spectrum_speak/screen/parent_profile.dart';
+import 'package:spectrum_speak/screen/remove_user.dart';
 import 'package:spectrum_speak/screen/search_page.dart';
 import 'package:spectrum_speak/screen/shadow_teacher_profile.dart';
+import 'package:spectrum_speak/screen/show_all_contact_us.dart';
 import 'package:spectrum_speak/screen/specialist_profile.dart';
 import 'package:spectrum_speak/screen/splash_screen_chat.dart';
 import 'package:spectrum_speak/units/build_profile_image.dart';
@@ -144,7 +148,8 @@ class TopBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<Tuple5<String?, String?, String?, bool?, String?>>(
+    return FutureBuilder<
+            Tuple6<String?, String?, String?, bool?, String?, bool?>>(
         future: _getEmailNameAndCategory(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -167,8 +172,9 @@ class TopBar extends StatelessWidget {
             String? email = snapshot.data!.item1;
             String? userName = snapshot.data!.item2;
             String? category = snapshot.data!.item3;
-            bool? isAdmin = snapshot.data!.item4;
+            bool? isAdminForCenter = snapshot.data!.item4;
             String? userId = snapshot.data!.item5;
+            bool? isAdminForSystem = snapshot.data!.item6;
             return Scaffold(
               key: _scaffoldKey,
               appBar: CustomAppBar(scaffoldKey: _scaffoldKey),
@@ -284,7 +290,7 @@ class TopBar extends StatelessWidget {
                       },
                       otherAccountsPicturesSize: const Size.square(45),
                       otherAccountsPictures: [
-                        if (category == "Specialist" && isAdmin!)
+                        if (category == "Specialist" && isAdminForCenter!)
                           Container(
                             width: 90.0,
                             height: 90.0,
@@ -395,19 +401,72 @@ class TopBar extends StatelessWidget {
                         size: 22,
                       ),
                       title: const Text(
-                        "contact us",
+                        "Contact us",
                         style: TextStyle(
                           fontWeight: FontWeight.w700,
                           fontSize: 17,
                         ),
                       ),
-                      onTap: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const ContactUs(),
+                      onTap: () {
+                        if (isAdminForSystem!) {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const ContactUsAdmin(),
+                            ),
+                          );
+                        } else {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const ContactUs(),
+                            ),
+                          );
+                        }
+                      },
+                    ),
+                    if (isAdminForSystem!)
+                      ListTile(
+                        leading: Icon(
+                          FontAwesomeIcons.userShield,
+                          color: kDarkerColor,
+                          size: 22,
+                        ),
+                        title: const Text(
+                          "Add or Remove Admin",
+                          style: TextStyle(
+                            fontWeight: FontWeight.w700,
+                            fontSize: 17,
+                          ),
+                        ),
+                        onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const AddRemoveAdmin(),
+                          ),
                         ),
                       ),
-                    ),
+                    if (isAdminForSystem)
+                      ListTile(
+                        leading: Icon(
+                          FontAwesomeIcons.personCircleMinus,
+                          color: kDarkerColor,
+                          size: 22,
+                        ),
+                        title: const Text(
+                          "Remove user",
+                          style: TextStyle(
+                            fontWeight: FontWeight.w700,
+                            fontSize: 17,
+                          ),
+                        ),
+                        onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const RemoveUser(),
+                          ),
+                        ),
+                      ),
                     ListTile(
                       leading: Icon(
                         FontAwesomeIcons.doorOpen,
@@ -454,7 +513,7 @@ class TopBar extends StatelessWidget {
                         }
                       },
                     ),
-                    if (category == "Specialist" && isAdmin!)
+                    if (category == "Specialist" && isAdminForCenter!)
                       ListTile(
                         leading: Icon(
                           FontAwesomeIcons.trashCan,
@@ -488,7 +547,7 @@ class TopBar extends StatelessWidget {
         });
   }
 
-  Future<Tuple5<String?, String?, String?, bool?, String?>>
+  Future<Tuple6<String?, String?, String?, bool?, String?, bool?>>
       _getEmailNameAndCategory() async {
     try {
       String? userId = await AuthManager.getUserId();
@@ -498,17 +557,19 @@ class TopBar extends StatelessWidget {
         var email = await AuthManager.getUserEmail();
         var userName = await getUserName(userId);
         var category = await getUserCategory(userId);
-        bool isAdmin = await checkAdmin(userId);
+        bool isAdminForCenter = await checkAdmin(userId);
+        bool? isAdminForSystem = await isAdminSystem(userId);
         // Return a tuple of email, userName, and category
-        return Tuple5(email, userName, category, isAdmin, userId);
+        return Tuple6(email, userName, category, isAdminForCenter, userId,
+            isAdminForSystem);
       } else {
         print('UserId is null');
-        return Tuple5(null, null, null, false, null);
+        return Tuple6(null, null, null, false, null, false);
       }
     } catch (error) {
       // Handle errors here
       print('Error in _getEmailNameAndCategory: $error');
-      return const Tuple5(null, null, null, false, null);
+      return const Tuple6(null, null, null, false, null, false);
     }
   }
 
