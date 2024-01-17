@@ -114,7 +114,7 @@ class _SignUpState extends State<SignUp> {
               child: CustomTextField(
                   preIcon: Icons.mail,
                   labelText: "Email Address",
-                  placeholder: "Asmaa@gmail.com",
+                  placeholder: "example@gmail.com",
                   isPasswordTextField: false,
                   controller: _emailController),
             ),
