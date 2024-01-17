@@ -188,18 +188,17 @@ class _ResetPasswordState extends State<ResetPassword> {
               ),
             ),
             Container(
-              width: 280,
-              height: 110,
+              width: 300,
+              height: 50,
               padding: const EdgeInsets.all(5),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(color: Colors.grey.shade700),
-              ),
-              child: Text(
-                "Note: After that you must login",
-                style: TextStyle(
-                  color: Colors.red,
-                  fontSize: 13,
+              child: Center(
+                child: Text(
+                  "Note: After that you must login",
+                  style: TextStyle(
+                    color: Colors.red,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             ),
@@ -214,7 +213,11 @@ class _ResetPasswordState extends State<ResetPassword> {
     if (rest['success']) {
       AuthManager.clearUserData();
       Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (_) => const Login()));
+        context,
+        MaterialPageRoute(
+          builder: (_) => const Login(),
+        ),
+      );
     } else {
       print("doResetError");
     }
