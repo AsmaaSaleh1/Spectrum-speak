@@ -54,6 +54,7 @@ dependencies:
   flutter_image_compress: ^2.1.0
   image: ^3.3.0
   firebase_messaging: ^14.7.9
+  mailer: ^6.0.1
 
 
 dev_dependencies:
