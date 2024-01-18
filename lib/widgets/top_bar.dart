@@ -12,6 +12,7 @@ import 'package:spectrum_speak/rest/rest_api_center.dart';
 import 'package:spectrum_speak/rest/rest_api_menu.dart';
 import 'package:spectrum_speak/rest/rest_api_profile_delete.dart';
 import 'package:spectrum_speak/screen/add_remove_admin.dart';
+import 'package:spectrum_speak/screen/analysis_page.dart';
 import 'package:spectrum_speak/screen/center_profile.dart';
 import 'package:spectrum_speak/screen/contact_us.dart';
 import 'package:spectrum_speak/screen/login.dart';
@@ -487,7 +488,7 @@ class TopBar extends StatelessWidget {
                         onTap: () => Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => const RemoveUser(),
+                            builder: (context) => const Analysis(),
                           ),
                         ),
                       ),
