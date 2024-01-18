@@ -378,4 +378,43 @@ class Utils {
     DocumentSnapshot snapshot = await ref.get();
     return snapshot.exists;
   }
+
+  static Future<int> getUnreadConversations() async {
+    int count = 0;
+    QuerySnapshot<Map<String, dynamic>> snapshot1 = await firestore
+        .collection('users')
+        .doc(u.UserID.toString())
+        .collection('my_users')
+        .get();
+
+    final List<QueryDocumentSnapshot<Map<String, dynamic>>> documents1 =
+        snapshot1.docs;
+    List<String> list = documents1.map((e) => e.id).toList();
+    List<int> intList = list.map((str) => int.parse(str)).toList();
+
+    QuerySnapshot<Map<String, dynamic>> snapshot2 = await firestore
+        .collection('users')
+        .where('UserID', whereIn: intList.isEmpty ? [''] : intList)
+        .get();
+    final List<QueryDocumentSnapshot<Map<String, dynamic>>> documents2 =
+        snapshot2.docs;
+
+    List<ChatUser> secondList =
+        documents2.map((e) => ChatUser.fromJson(e.data())).toList();
+
+    for (int i = 0; i < secondList.length; i++) {
+      QuerySnapshot<Map<String, dynamic>> snapshot3 = await firestore
+          .collection(
+              'chats/${getConversationID(secondList[i].UserID)}/messages/')
+          .orderBy('sent', descending: true)
+          .limit(1)
+          .get();
+      final List<QueryDocumentSnapshot<Map<String, dynamic>>> documents3 =
+          snapshot3.docs;
+      List<Message> msgs =
+          documents3.map((e) => Message.fromJson(e.data())).toList();
+      if (msgs[msgs.length - 1].read.isEmpty) count++;
+    }
+    return count;
+  }
 }

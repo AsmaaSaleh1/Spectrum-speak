@@ -7,7 +7,6 @@ import 'package:spectrum_speak/modules/ChatUser.dart';
 import 'package:spectrum_speak/modules/Dialogs.dart';
 import 'package:spectrum_speak/rest/auth_manager.dart';
 import 'package:spectrum_speak/widgets/card_user_chat.dart';
-import 'package:zego_uikit/zego_uikit.dart';
 
 class AllChat extends StatefulWidget {
   const AllChat({super.key});

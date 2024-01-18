@@ -1,14 +1,13 @@
 import 'dart:async';
-
+import 'package:badges/badges.dart' as badges;
+import 'package:badges/badges.dart';
 import 'package:circular_profile_avatar/circular_profile_avatar.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:spectrum_speak/constant/const_color.dart';
 import 'package:spectrum_speak/constant/utils.dart';
 import 'package:spectrum_speak/modules/CenterNotification.dart';
-import 'package:spectrum_speak/modules/ChatUser.dart';
 import 'package:spectrum_speak/rest/auth_manager.dart';
 import 'package:spectrum_speak/rest/rest_api_center.dart';
 import 'package:spectrum_speak/rest/rest_api_menu.dart';
@@ -28,116 +27,132 @@ import 'card_user_chat.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final GlobalKey<ScaffoldState> scaffoldKey;
-
   const CustomAppBar({
     super.key,
     required this.scaffoldKey,
   });
-
   @override
   Widget build(BuildContext context) {
-    return AppBar(
-      leading: IconButton(
-        icon: const Icon(
-          CupertinoIcons.list_bullet,
-          color: kPrimary,
-          size: 30,
-        ),
-        onPressed: () {
-          scaffoldKey.currentState?.openDrawer();
-        },
-      ),
-      actions: [
-        IconButton(
-          onPressed: () {
-            _showPopupMenu(context, 5);
-          },
-          icon: const Icon(
-            CupertinoIcons.envelope_open,
-            color: kPrimary,
-            size: 30,
-          ),
-        ),
-        IconButton(
-          onPressed: () {
-            print('Calendar button pressed');
-          },
-          icon: const Icon(
-            CupertinoIcons.calendar,
-            color: kPrimary,
-            size: 30,
-          ),
-        ),
-        IconButton(
-          onPressed: () {
-            print('Notification button pressed');
-            CenterNotification cn = CenterNotification(
-                fromID: "1",
-                time: "time",
-                toID: "4",
-                read: false,
-                type: "request",
-                value: false);
-            Utils.storeCenterNotification(cn);
-          },
-          icon: const Icon(
-            CupertinoIcons.bell,
-            color: kPrimary,
-            size: 30,
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: CircularProfileAvatar(
-            '',
-            borderWidth: 1.0,
-            borderColor: kPrimary.withOpacity(0.5),
-            radius: 20.0,
-            backgroundColor: kPrimary,
-            onTap: () async {
-              String? userId = await AuthManager.getUserId();
-              String category = await getUserCategory(userId!);
-              switch (category) {
-                case "Parent":
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ParentProfile(
-                        userID: userId,
-                      ),
-                    ),
-                  );
-                  break;
-                case "Specialist":
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => SpecialistProfile(
-                        userId: userId,
-                      ),
-                    ),
-                  );
-                  break;
-                case "ShadowTeacher":
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ShadowTeacherProfile(
-                        userId: userId,
-                      ),
-                    ),
-                  );
-                  break;
-                default:
-                  print("error in category");
-                  break;
-              }
-            },
-            //child: ProfileImageDisplay(updateStreamController: updateStreamController,),
-          ),
-        )
-      ],
-    );
+    return FutureBuilder<int>(
+      future: Utils.getUnreadConversations(),
+      builder: (context, snapshot) {
+        int unreadCount=0;
+        if (snapshot.connectionState == ConnectionState.done) {
+           unreadCount= snapshot.data ?? 0;
+        }
+          return AppBar(
+            leading: IconButton(
+              icon: const Icon(
+                CupertinoIcons.list_bullet,
+                color: kPrimary,
+                size: 30,
+              ),
+              onPressed: () {
+                scaffoldKey.currentState?.openDrawer();
+              },
+            ),
+            actions: [
+              badges.Badge(
+                badgeContent: Text(
+                  '$unreadCount',
+                  style: TextStyle(color: kPrimary),
+                ),
+                animationType:BadgeAnimationType.slide,
+                animationDuration: Duration(milliseconds: 1200),
+                badgeColor: kRed,
+                position: badges.BadgePosition.topEnd(top: 0, end: 3),
+                child:IconButton(
+                  onPressed: () {
+                    _showPopupMenu(context, 5);
+                  },
+                  icon: const Icon(
+                    CupertinoIcons.envelope_open,
+                    color: kPrimary,
+                    size: 30,
+                  ),
+                ),
+              ),
+              IconButton(
+                onPressed: () {
+                  print('Calendar button pressed');
+                },
+                icon: const Icon(
+                  CupertinoIcons.calendar,
+                  color: kPrimary,
+                  size: 30,
+                ),
+              ),
+              IconButton(
+                  onPressed: () async {
+                    print('Notification button pressed');
+                    CenterNotification cn = CenterNotification(
+                        fromID: "1",
+                        time: "time",
+                        toID: "4",
+                        read: false,
+                        type: "request",
+                        value: false);
+                    Utils.storeCenterNotification(cn);
+                  },
+                  icon: const Icon(
+                    CupertinoIcons.bell,
+                    color: kPrimary,
+                    size: 30,
+                  ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: CircularProfileAvatar(
+                  '',
+                  borderWidth: 1.0,
+                  borderColor: kPrimary.withOpacity(0.5),
+                  radius: 20.0,
+                  backgroundColor: kPrimary,
+                  onTap: () async {
+                    String? userId = await AuthManager.getUserId();
+                    String category = await getUserCategory(userId!);
+                    switch (category) {
+                      case "Parent":
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ParentProfile(
+                              userID: userId,
+                            ),
+                          ),
+                        );
+                        break;
+                      case "Specialist":
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => SpecialistProfile(
+                              userId: userId,
+                            ),
+                          ),
+                        );
+                        break;
+                      case "ShadowTeacher":
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ShadowTeacherProfile(
+                              userId: userId,
+                            ),
+                          ),
+                        );
+                        break;
+                      default:
+                        print("error in category");
+                        break;
+                    }
+                  },
+                  //child: ProfileImageDisplay(updateStreamController: updateStreamController,),
+                ),
+              )
+            ],
+          );
+        });
   }
 
   @override
