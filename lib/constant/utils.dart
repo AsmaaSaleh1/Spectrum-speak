@@ -402,7 +402,8 @@ class Utils {
 
     List<ChatUser> secondList =
         documents2.map((e) => ChatUser.fromJson(e.data())).toList();
-    popUpMenuList = secondList;
+    if(b)
+      popUpMenuList = secondList;
     for (int i = 0; i < secondList.length; i++) {
       QuerySnapshot<Map<String, dynamic>> snapshot3 = await firestore
           .collection(
