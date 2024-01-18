@@ -61,15 +61,6 @@ class Utils {
         .snapshots();
   }
 
-  static Future<void> getMyUsersIDsTopBar() async {
-    QuerySnapshot<Map<String, dynamic>> snapshot = await firestore
-        .collection('users')
-        .doc(u.UserID.toString())
-        .collection('my_users')
-        .get();
-    firstList = snapshot.docs.map((doc) => doc.id).toList();
-  }
-
   static Stream<QuerySnapshot<Map<String, dynamic>>> getAllUserss(
       List<String> userIDs) {
     List<int> intList = userIDs.map((str) => int.parse(str)).toList();
@@ -77,23 +68,6 @@ class Utils {
     return firestore
         .collection('users')
         .where('UserID', whereIn: intList.isEmpty ? [''] : intList)
-        .snapshots();
-  }
-
-  static Future<void> getAllUserssTopBar(List<String> userIDs) async {
-    List<int> intList = userIDs.map((str) => int.parse(str)).toList();
-    QuerySnapshot<Map<String, dynamic>> snapshot = await firestore
-        .collection('users')
-        .where('UserID', whereIn: intList.isEmpty ? [''] : intList)
-        .get();
-    secondList =
-        snapshot.docs.map((doc) => ChatUser.fromJson(doc.data())).toList();
-  }
-
-  static Stream<QuerySnapshot<Map<String, dynamic>>> getAllUsers() {
-    return firestore
-        .collection('users')
-        .where('Email', isNotEqualTo: u.Email)
         .snapshots();
   }
 
