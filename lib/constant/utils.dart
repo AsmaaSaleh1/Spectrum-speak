@@ -9,6 +9,7 @@ import 'package:spectrum_speak/modules/CenterNotification.dart';
 import 'package:spectrum_speak/modules/ChatUser.dart';
 import 'package:spectrum_speak/modules/Message.dart';
 import 'package:spectrum_speak/rest/auth_manager.dart';
+import 'package:spectrum_speak/widgets/top_bar.dart';
 
 class Utils {
   static String baseUrl = "http://192.168.1.12:3000";
@@ -379,7 +380,7 @@ class Utils {
     return snapshot.exists;
   }
 
-  static Future<int> getUnreadConversations() async {
+  static Future<int> getUnreadConversations(bool b) async {
     int count = 0;
     QuerySnapshot<Map<String, dynamic>> snapshot1 = await firestore
         .collection('users')
@@ -401,7 +402,7 @@ class Utils {
 
     List<ChatUser> secondList =
         documents2.map((e) => ChatUser.fromJson(e.data())).toList();
-
+    popUpMenuList = secondList;
     for (int i = 0; i < secondList.length; i++) {
       QuerySnapshot<Map<String, dynamic>> snapshot3 = await firestore
           .collection(

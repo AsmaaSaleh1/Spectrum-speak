@@ -6,6 +6,7 @@ import 'package:spectrum_speak/constant/utils.dart';
 import 'package:spectrum_speak/modules/ChatUser.dart';
 import 'package:spectrum_speak/modules/Dialogs.dart';
 import 'package:spectrum_speak/rest/auth_manager.dart';
+import 'package:spectrum_speak/screen/main_page.dart';
 import 'package:spectrum_speak/widgets/card_user_chat.dart';
 
 class AllChat extends StatefulWidget {
@@ -54,6 +55,7 @@ class _AllChatState extends State<AllChat> {
             });
             return Future.value(false);
           } else {
+            Navigator.pushReplacement(context, MaterialPageRoute(builder: ((context) => MainPage())));
             return Future.value(true);
           }
         },

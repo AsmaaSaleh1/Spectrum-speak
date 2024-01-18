@@ -8,6 +8,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:spectrum_speak/constant/const_color.dart';
 import 'package:spectrum_speak/constant/utils.dart';
 import 'package:spectrum_speak/modules/CenterNotification.dart';
+import 'package:spectrum_speak/modules/ChatUser.dart';
 import 'package:spectrum_speak/rest/auth_manager.dart';
 import 'package:spectrum_speak/rest/rest_api_center.dart';
 import 'package:spectrum_speak/rest/rest_api_menu.dart';
@@ -25,6 +26,8 @@ import 'package:tuple/tuple.dart';
 
 import 'card_user_chat.dart';
 
+List<ChatUser> popUpMenuList = [];
+
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final GlobalKey<ScaffoldState> scaffoldKey;
   const CustomAppBar({
@@ -34,12 +37,12 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<int>(
-      future: Utils.getUnreadConversations(),
-      builder: (context, snapshot) {
-        int unreadCount=0;
-        if (snapshot.connectionState == ConnectionState.done) {
-           unreadCount= snapshot.data ?? 0;
-        }
+        future: Utils.getUnreadConversations(false),
+        builder: (context, snapshot) {
+          int unreadCount = 0;
+          if (snapshot.connectionState == ConnectionState.done) {
+            unreadCount = snapshot.data ?? 0;
+          }
           return AppBar(
             leading: IconButton(
               icon: const Icon(
@@ -57,13 +60,14 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                   '$unreadCount',
                   style: TextStyle(color: kPrimary),
                 ),
-                animationType:BadgeAnimationType.slide,
+                animationType: BadgeAnimationType.slide,
                 animationDuration: Duration(milliseconds: 1200),
                 badgeColor: kRed,
                 position: badges.BadgePosition.topEnd(top: 0, end: 3),
-                child:IconButton(
+                child: IconButton(
                   onPressed: () {
-                    _showPopupMenu(context, 5);
+                    Utils.getUnreadConversations(true);
+                    _showPopupMenu(context, popUpMenuList);
                   },
                   icon: const Icon(
                     CupertinoIcons.envelope_open,
@@ -83,22 +87,22 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                 ),
               ),
               IconButton(
-                  onPressed: () async {
-                    print('Notification button pressed');
-                    CenterNotification cn = CenterNotification(
-                        fromID: "1",
-                        time: "time",
-                        toID: "4",
-                        read: false,
-                        type: "request",
-                        value: false);
-                    Utils.storeCenterNotification(cn);
-                  },
-                  icon: const Icon(
-                    CupertinoIcons.bell,
-                    color: kPrimary,
-                    size: 30,
-                  ),
+                onPressed: () async {
+                  print('Notification button pressed');
+                  CenterNotification cn = CenterNotification(
+                      fromID: "1",
+                      time: "time",
+                      toID: "4",
+                      read: false,
+                      type: "request",
+                      value: false);
+                  Utils.storeCenterNotification(cn);
+                },
+                icon: const Icon(
+                  CupertinoIcons.bell,
+                  color: kPrimary,
+                  size: 30,
+                ),
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -615,11 +619,9 @@ class TopBar extends StatelessWidget {
   }
 }
 
-void _showPopupMenu(BuildContext context, int numberOfCards) async {
+void _showPopupMenu(BuildContext context, List<ChatUser> list) async {
   final RenderBox overlay =
       Overlay.of(context).context.findRenderObject() as RenderBox;
-  Utils.getMyUsersIDsTopBar();
-  Utils.getAllUserssTopBar(Utils.firstList);
   await showMenu(
     color: kPrimary,
     context: context,
@@ -636,10 +638,10 @@ void _showPopupMenu(BuildContext context, int numberOfCards) async {
           width: 300,
           child: Column(
             children: [
-              for (int i = 0; i < Utils.secondList.length; i++)
+              for (int i = 0; i < list.length; i++)
                 ListTile(
                   contentPadding: EdgeInsets.zero,
-                  title: CardUserChat(user: Utils.secondList[i]),
+                  title: CardUserChat(user: list[i]),
                 ),
               ListTile(
                 title: TextButton(
