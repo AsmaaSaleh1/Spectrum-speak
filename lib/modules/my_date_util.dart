@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class MyDateUtil {
   // for getting formatted time from milliSecondsSinceEpochs String
@@ -7,6 +8,16 @@ class MyDateUtil {
     final date = DateTime.fromMillisecondsSinceEpoch(int.parse(time));
     return TimeOfDay.fromDateTime(date).format(context);
   }
+  static String getCurrentDateTime() {
+  // Get the current time
+  DateTime now = DateTime.now();
+
+  // Format the time in 12-hour format with AM/PM indicator
+  String formattedTime = DateFormat('MM/dd hh:mm a').format(now);
+
+  return formattedTime;
+  }
+
 
   // for getting formatted time for sent & read
   static String getMessageTime(

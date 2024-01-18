@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:http/http.dart';
+import 'package:spectrum_speak/modules/CenterNotification.dart';
 import 'package:spectrum_speak/modules/ChatUser.dart';
 import 'package:spectrum_speak/modules/Message.dart';
 import 'package:spectrum_speak/rest/auth_manager.dart';
@@ -89,22 +90,20 @@ class Utils {
   }
 
   static Stream<QuerySnapshot<Map<String, dynamic>>> getAllUsers() {
-    
     return firestore
         .collection('users')
         .where('Email', isNotEqualTo: u.Email)
         .snapshots();
   }
+
   static Future<List<ChatUser>> getAllUsersSearch() async {
-    
-     QuerySnapshot<Map<String, dynamic>> snapshot=await firestore
+    QuerySnapshot<Map<String, dynamic>> snapshot = await firestore
         .collection('users')
         .where('UserID', isNotEqualTo: u.UserID)
         .get();
-    return snapshot.docs.map((doc) => ChatUser.fromJson(doc.data()))
-                                    .toList();
-
+    return snapshot.docs.map((doc) => ChatUser.fromJson(doc.data())).toList();
   }
+
   // for getting specific user info
   static Stream<QuerySnapshot<Map<String, dynamic>>> getUserInfo(
       ChatUser chatUser) {
@@ -362,5 +361,21 @@ class Utils {
         .collection('users')
         .doc(id.toString())
         .set(chatUser.toJson(), SetOptions(merge: true));
+  }
+
+  static Future<void> storeCenterNotification(CenterNotification cn) async {
+    await firestore
+        .collection('center_notifications')
+        .doc('${cn.fromID}_${cn.toID}')
+        .set(cn.toJson());
+  }
+
+  static Future<bool> checkIfRequestHasBeenMade(
+      String toID, String fromID) async {
+    DocumentReference ref = await firestore
+        .collection('center_notifications')
+        .doc('${fromID}_${toID}');
+    DocumentSnapshot snapshot = await ref.get();
+    return snapshot.exists;
   }
 }

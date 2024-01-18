@@ -4,6 +4,7 @@ import 'package:spectrum_speak/modules/ChatUser.dart';
 
 class AuthManager {
   static late ChatUser u;
+
   static Future<void> storeUserData(String userId, String userEmail,
       String userName, bool cameFromSignUp) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();

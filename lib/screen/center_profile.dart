@@ -12,6 +12,8 @@ import 'package:spectrum_speak/widgets/center_information.dart';
 
 import 'login.dart';
 
+String globalCenterID = "";
+
 class CenterProfile extends StatefulWidget {
   final String userId;
   const CenterProfile({
@@ -47,7 +49,8 @@ class _CenterProfileState extends State<CenterProfile> {
       if (result != null) {
         setState(() {
           centerID = result;
-          print(centerID);
+          globalCenterID = centerID;
+          print("CenterID $centerID");
         });
       }
     } catch (error) {

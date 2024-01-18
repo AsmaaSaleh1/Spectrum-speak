@@ -1,7 +1,12 @@
 import 'package:circular_profile_avatar/circular_profile_avatar.dart';
 import 'package:flutter/material.dart';
 import 'package:spectrum_speak/constant/const_color.dart';
+import 'package:spectrum_speak/constant/utils.dart';
+import 'package:spectrum_speak/modules/my_date_util.dart';
+import 'package:spectrum_speak/screen/center_profile.dart';
 import 'package:spectrum_speak/screen/specialist_profile.dart';
+
+import '../modules/CenterNotification.dart';
 
 class CardChooseSpecialist extends StatefulWidget {
   final String userID;
@@ -19,7 +24,24 @@ class CardChooseSpecialist extends StatefulWidget {
 }
 
 class _CardChooseSpecialistState extends State<CardChooseSpecialist> {
-  bool isButtonPressed = false;
+  bool isButtonPressed=false;
+  bool _hasRequestBeenMade = false;
+  Future<void> updateVar() async {
+    bool r =
+        await Utils.checkIfRequestHasBeenMade(widget.userID, globalCenterID);
+    setState(() {
+      _hasRequestBeenMade = r;
+      if (_hasRequestBeenMade) isButtonPressed = true;
+    });
+    print('bool value is $_hasRequestBeenMade\nButton pressed value is $isButtonPressed');
+  }
+
+  @override
+  initState() {
+    super.initState();
+    updateVar();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -63,11 +85,23 @@ class _CardChooseSpecialistState extends State<CardChooseSpecialist> {
             maxLines: 1,
           ),
           trailing: ElevatedButton.icon(
-            onPressed: () {
+            onPressed: () async {
+              _hasRequestBeenMade = await Utils.checkIfRequestHasBeenMade(
+                  widget.userID, globalCenterID);
               setState(() {
                 // Toggle the button state
                 isButtonPressed = !isButtonPressed;
               });
+              if (isButtonPressed && !_hasRequestBeenMade) {
+                CenterNotification cn = CenterNotification(
+                    fromID: globalCenterID,
+                    time: MyDateUtil.getCurrentDateTime(),
+                    toID: widget.userID,
+                    read: false,
+                    type: "request",
+                    value: false);
+                Utils.storeCenterNotification(cn);
+              }
             },
             style: ElevatedButton.styleFrom(
               foregroundColor: kPrimary,

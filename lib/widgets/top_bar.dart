@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:spectrum_speak/constant/const_color.dart';
 import 'package:spectrum_speak/constant/utils.dart';
+import 'package:spectrum_speak/modules/CenterNotification.dart';
 import 'package:spectrum_speak/modules/ChatUser.dart';
 import 'package:spectrum_speak/rest/auth_manager.dart';
 import 'package:spectrum_speak/rest/rest_api_center.dart';
@@ -70,6 +71,14 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         IconButton(
           onPressed: () {
             print('Notification button pressed');
+            CenterNotification cn = CenterNotification(
+                fromID: "1",
+                time: "time",
+                toID: "4",
+                read: false,
+                type: "request",
+                value: false);
+            Utils.storeCenterNotification(cn);
           },
           icon: const Icon(
             CupertinoIcons.bell,
@@ -615,7 +624,7 @@ void _showPopupMenu(BuildContext context, int numberOfCards) async {
               for (int i = 0; i < Utils.secondList.length; i++)
                 ListTile(
                   contentPadding: EdgeInsets.zero,
-                  title: CardUserChat(user:Utils.secondList[i]),
+                  title: CardUserChat(user: Utils.secondList[i]),
                 ),
               ListTile(
                 title: TextButton(
