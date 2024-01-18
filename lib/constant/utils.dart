@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
+import 'dart:math' as Math;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -339,9 +340,11 @@ class Utils {
   }
 
   static Future<void> storeCenterNotification(CenterNotification cn) async {
+    int max = Math.max(int.parse(cn.fromID!), int.parse(cn.toID));
+    int min = Math.min(int.parse(cn.fromID!), int.parse(cn.toID));
     await firestore
         .collection('center_notifications')
-        .doc('${cn.fromID}_${cn.toID}')
+        .doc('${min}_${max}')
         .set(cn.toJson());
   }
 
@@ -376,8 +379,7 @@ class Utils {
 
     List<ChatUser> secondList =
         documents2.map((e) => ChatUser.fromJson(e.data())).toList();
-    if(b)
-      popUpMenuList = secondList;
+    if (b) popUpMenuList = secondList;
     for (int i = 0; i < secondList.length; i++) {
       QuerySnapshot<Map<String, dynamic>> snapshot3 = await firestore
           .collection(
@@ -389,7 +391,8 @@ class Utils {
           snapshot3.docs;
       List<Message> msgs =
           documents3.map((e) => Message.fromJson(e.data())).toList();
-      if (msgs[msgs.length - 1].read.isEmpty) count++;
+      if (msgs[msgs.length - 1].read.isEmpty&&
+          msgs[msgs.length-1].toID==u.UserID) count++;
     }
     return count;
   }
