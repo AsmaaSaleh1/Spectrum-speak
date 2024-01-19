@@ -136,7 +136,7 @@ class StackContainerSpecialist extends StatelessWidget {
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) =>
-                                          const EditSpecialistProfile(),
+                                           EditSpecialistProfile(),
                                     ),
                                   );
                                 },

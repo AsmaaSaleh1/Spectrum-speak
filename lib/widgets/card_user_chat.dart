@@ -23,7 +23,6 @@ class _CardUserChatState extends State<CardUserChat> {
   String? url;
   Message? _message;
 
-
   @override
   initState() {
     // TODO: implement initState
@@ -51,9 +50,8 @@ class _CardUserChatState extends State<CardUserChat> {
               builder: (context, snapshot) {
                 final data = snapshot.data?.docs;
                 final list =
-                  data?.map((e) => Message.fromJson(e.data())).toList() ?? [];
-                if (list.isNotEmpty) 
-                  _message = list[0];
+                    data?.map((e) => Message.fromJson(e.data())).toList() ?? [];
+                if (list.isNotEmpty) _message = list[0];
                 return ListTile(
                     leading: CircularProfileAvatar(
                       '',
@@ -64,34 +62,52 @@ class _CardUserChatState extends State<CardUserChat> {
                       child: CachedNetworkImage(
                         width: mq.size.height * .05,
                         height: mq.size.height * .05,
-                        imageUrl:widget.user!.image,
-                        errorWidget: (context, url, error) => const CircleAvatar(
-                                  child: Icon(CupertinoIcons.person)),
+                        imageUrl: widget.user!.image,
+                        imageBuilder: (context, imageProvider) => Container(
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            image: DecorationImage(
+                              image: imageProvider,
+                              fit: BoxFit.cover, // Set the fit property to cover
+                            ),
+                          ),
                         ),
+                        errorWidget: (context, url, error) =>
+                            const CircleAvatar(
+                                child: Icon(CupertinoIcons.person)),
+                      ),
                     ),
                     title: Text(
-                      widget.user!.Name,
+                      '${widget.user!.Name}',
                       style: TextStyle(color: kDarkerColor),
                     ),
-                    subtitle: Text(_message!=null?
-                    _message?.type==Type.text.toString()?
-                      _message!.message:'Sent a photo'
-                    :'',
-                      maxLines: 1,style:TextStyle(color:Colors.black54,fontWeight: FontWeight.bold)
-                    ),
-                    trailing: _message==null?null:
-                    _message!.read.isEmpty&&_message?.fromID!=AuthManager.u.UserID?
-                    //unread message
-                    Container(
-                      width: 15,
-                      height: 15,
-                      decoration: BoxDecoration(
-                          color: kDarkerBlue,
-                          borderRadius: BorderRadius.circular(10)),
-                    )
-                    :Text(MyDateUtil.getLastMessageTime(context:context,time: _message!.sent),
-                        style:TextStyle(color: Colors.black54))
-                    );
+                    subtitle: Text(
+                        _message != null
+                            ? _message?.type == Type.text.toString()
+                                ? _message!.message
+                                : 'Sent a photo'
+                            : '',
+                        maxLines: 1,
+                        style: TextStyle(
+                            color: Colors.black54,
+                            fontWeight: FontWeight.bold)),
+                    trailing: _message == null
+                        ? null
+                        : _message!.read.isEmpty &&
+                                _message?.fromID != AuthManager.u.UserID
+                            ?
+                            //unread message
+                            Container(
+                                width: 15,
+                                height: 15,
+                                decoration: BoxDecoration(
+                                    color: kDarkerBlue,
+                                    borderRadius: BorderRadius.circular(10)),
+                              )
+                            : Text(
+                                MyDateUtil.getLastMessageTime(
+                                    context: context, time: _message!.sent),
+                                style: TextStyle(color: Colors.black54)));
               })),
     );
   }

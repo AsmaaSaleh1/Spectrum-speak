@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:badges/badges.dart' as badges;
 import 'package:badges/badges.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:circular_profile_avatar/circular_profile_avatar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -22,11 +23,19 @@ import 'package:spectrum_speak/screen/search_page.dart';
 import 'package:spectrum_speak/screen/shadow_teacher_profile.dart';
 import 'package:spectrum_speak/screen/specialist_profile.dart';
 import 'package:spectrum_speak/screen/splash_screen_chat.dart';
+import 'package:spectrum_speak/widgets/notification_card.dart';
 import 'package:tuple/tuple.dart';
 
 import 'card_user_chat.dart';
 
 List<ChatUser> popUpMenuList = [];
+CenterNotification cn = CenterNotification(
+    fromID: "1",
+    time: "2024/01/19 3:00 PM",
+    toID: "3",
+    read: false,
+    type: "request",
+    value: false);
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final GlobalKey<ScaffoldState> scaffoldKey;
@@ -36,6 +45,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   });
   @override
   Widget build(BuildContext context) {
+    MediaQueryData mq = MediaQuery.of(context);
     return FutureBuilder<int>(
         future: Utils.getUnreadConversations(false),
         builder: (context, snapshot) {
@@ -67,7 +77,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                 child: IconButton(
                   onPressed: () {
                     Utils.getUnreadConversations(true);
-                    _showPopupMenu(context, popUpMenuList);
+                    _showMessagesPopUpMenu(context, popUpMenuList);
                   },
                   icon: const Icon(
                     CupertinoIcons.envelope_open,
@@ -89,13 +99,6 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
               IconButton(
                 onPressed: () async {
                   print('Notification button pressed');
-                  CenterNotification cn = CenterNotification(
-                      fromID: "1",
-                      time: "time",
-                      toID: "4",
-                      read: false,
-                      type: "request",
-                      value: false);
                   Utils.storeCenterNotification(cn);
                 },
                 icon: const Icon(
@@ -104,6 +107,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                   size: 30,
                 ),
               ),
+              NotificationCard(cn: cn),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: CircularProfileAvatar(
@@ -112,6 +116,23 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                   borderColor: kPrimary.withOpacity(0.5),
                   radius: 20.0,
                   backgroundColor: kPrimary,
+                  child: CachedNetworkImage(
+                    width: mq.size.height * .1,
+                    height: mq.size.height * .1,
+                    imageUrl: AuthManager.u.image,
+                    imageBuilder: (context, imageProvider) => Container(
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        image: DecorationImage(
+                          image: imageProvider,
+                          fit: BoxFit.cover, // Set the fit property to cover
+                        ),
+                      ),
+                    ),
+                    errorWidget: (context, url, error) =>
+                        const CircleAvatar(child: Icon(CupertinoIcons.person)),
+                  ),
+
                   onTap: () async {
                     String? userId = await AuthManager.getUserId();
                     String category = await getUserCategory(userId!);
@@ -174,6 +195,7 @@ class TopBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    MediaQueryData mq = MediaQuery.of(context);
     return FutureBuilder<Tuple5<String?, String?, String?, bool?, String?>>(
         future: _getEmailNameAndCategory(),
         builder: (context, snapshot) {
@@ -224,53 +246,68 @@ class TopBar extends StatelessWidget {
                           color: kPrimary,
                         ),
                       ),
-                      currentAccountPicture: CircleAvatar(
+                      currentAccountPicture: CircularProfileAvatar(
+                        '',
+                        borderWidth: 1.0,
+                        borderColor: kDarkerBlue,
                         backgroundColor: kPrimary,
-                        child: CircularProfileAvatar(
-                          '',
-                          borderWidth: 1.0,
-                          borderColor: kPrimary.withOpacity(0.5),
-                          radius: 90.0,
-                          backgroundColor: kPrimary,
-                          onTap: () async {
-                            switch (category) {
-                              case "Parent":
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => ParentProfile(
-                                      userID: userId!,
-                                    ),
-                                  ),
-                                );
-                                break;
-                              case "Specialist":
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => SpecialistProfile(
-                                      userId: userId!,
-                                    ),
-                                  ),
-                                );
-                                break;
-                              case "ShadowTeacher":
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => ShadowTeacherProfile(
-                                      userId: userId!,
-                                    ),
-                                  ),
-                                );
-                                break;
-                              default:
-                                print("error in category");
-                                break;
-                            }
-                          },
-                          //child: ProfileImageDisplay(updateStreamController: updateStreamController,),
+                        radius: 50.0,
+                        child: CachedNetworkImage(
+                          width: mq.size.height * .05,
+                          height: mq.size.height * .05,
+                          imageUrl: AuthManager.u.image,
+                          imageBuilder: (context, imageProvider) => Container(
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              image: DecorationImage(
+                                image: imageProvider,
+                                fit: BoxFit
+                                    .cover, // Set the fit property to cover
+                              ),
+                            ),
+                          ),
+                          errorWidget: (context, url, error) =>
+                              const CircleAvatar(
+                                  child: Icon(CupertinoIcons.person)),
                         ),
+                        onTap: () async {
+                          switch (category) {
+                            case "Parent":
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => ParentProfile(
+                                    userID: userId!,
+                                  ),
+                                ),
+                              );
+                              break;
+                            case "Specialist":
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => SpecialistProfile(
+                                    userId: userId!,
+                                  ),
+                                ),
+                              );
+                              break;
+                            case "ShadowTeacher":
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => ShadowTeacherProfile(
+                                    userId: userId!,
+                                  ),
+                                ),
+                              );
+                              break;
+                            default:
+                              print("error in category");
+                              break;
+                          }
+                        },
+                        //child: ProfileImageDisplay(updateStreamController: updateStreamController,),
                       ),
                       currentAccountPictureSize: const Size.square(75),
                       decoration: const BoxDecoration(
@@ -619,7 +656,7 @@ class TopBar extends StatelessWidget {
   }
 }
 
-void _showPopupMenu(BuildContext context, List<ChatUser> list) async {
+void _showMessagesPopUpMenu(BuildContext context, List<ChatUser> list) async {
   final RenderBox overlay =
       Overlay.of(context).context.findRenderObject() as RenderBox;
   await showMenu(
@@ -653,7 +690,7 @@ void _showPopupMenu(BuildContext context, List<ChatUser> list) async {
                     );
                   },
                   child: Text(
-                    'Show All Messages',
+                    list.isEmpty ? 'Start Chatting Now' : 'Show All Messages',
                     style: TextStyle(
                         color: kDarkerColor, fontWeight: FontWeight.bold),
                   ),
@@ -666,3 +703,5 @@ void _showPopupMenu(BuildContext context, List<ChatUser> list) async {
     ],
   );
 }
+
+void _showNotificationsPopUpMenu() {}

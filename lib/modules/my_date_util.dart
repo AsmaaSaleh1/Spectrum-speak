@@ -13,7 +13,7 @@ class MyDateUtil {
   DateTime now = DateTime.now();
 
   // Format the time in 12-hour format with AM/PM indicator
-  String formattedTime = DateFormat('MM/dd hh:mm a').format(now);
+  String formattedTime = DateFormat('yyyy/MM/dd hh:mm a').format(now);
 
   return formattedTime;
   }
@@ -113,4 +113,37 @@ class MyDateUtil {
     }
     return 'NA';
   }
+  static String timeAgo(String dateString) {
+  // Parse the input date string with a custom format
+  DateTime dateTime = DateFormat('yyyy/MM/dd hh:mm a').parse(dateString);
+
+  // Set the year of the parsed date to the current year
+  dateTime = DateTime(dateTime.year, dateTime.month, dateTime.day,
+      dateTime.hour, dateTime.minute);
+
+  // Calculate the time difference
+  Duration difference = DateTime.now().difference(dateTime);
+
+    if (difference.inHours < 24) {
+    // Less than a day ago
+    return '${difference.inHours} hour${difference.inHours > 1 ? 's' : ''} ago';
+  } else if (difference.inDays < 7) {
+    // Less than a week ago
+    return '${difference.inDays} day${difference.inDays > 1 ? 's' : ''} ago';
+  }if (difference.inMinutes < 60) {
+    // Less than an hour ago
+    return '${difference.inMinutes} minute${difference.inMinutes > 1 ? 's' : ''} ago';
+    }
+  else if (difference.inDays < 30) {
+    // Less than a month ago
+    return '${(difference.inDays / 7).floor()} week${(difference.inDays / 7).floor() > 1 ? 's' : ''} ago';
+  } else if (difference.inDays < 365) {
+    // Less than a year ago
+    return '${(difference.inDays / 30).floor()} month${(difference.inDays / 30).floor() > 1 ? 's' : ''} ago';
+  } else {
+    // A year ago or more
+    int years = (difference.inDays / 365).floor();
+    return '${years == 1 ? 'a year' : '$years years'} ago';
+  }
+}
 }

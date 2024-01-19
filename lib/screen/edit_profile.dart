@@ -1,4 +1,7 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:circular_profile_avatar/circular_profile_avatar.dart';
 import 'package:email_otp/email_otp.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:spectrum_speak/constant/const_color.dart';
 import 'package:spectrum_speak/modules/parent.dart';
@@ -66,6 +69,7 @@ class _EditProfileState extends State<EditProfile> {
 
   @override
   Widget build(BuildContext context) {
+    MediaQueryData mq = MediaQuery.of(context);
     return Scaffold(
       body: GestureDetector(
         onTap: () {
@@ -93,9 +97,31 @@ class _EditProfileState extends State<EditProfile> {
                         ],
                         shape: BoxShape.circle,
                       ),
-                      child: ClipOval(
-                          //child: ProfileImageDisplay(),
+                      child: CircularProfileAvatar(
+                        '',
+                        borderWidth: 1.0,
+                        borderColor: kDarkerColor,
+                        backgroundColor: kPrimary,
+                        radius: 100.0,
+                        child: CachedNetworkImage(
+                          width: mq.size.height * .1,
+                          height: mq.size.height * .1,
+                          imageUrl: AuthManager.u.image,
+                          imageBuilder: (context, imageProvider) => Container(
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              image: DecorationImage(
+                                image: imageProvider,
+                                fit: BoxFit
+                                    .cover, // Set the fit property to cover
+                              ),
+                            ),
                           ),
+                          errorWidget: (context, url, error) =>
+                              const CircleAvatar(
+                                  child: Icon(CupertinoIcons.person)),
+                        ),
+                      ),
                     ),
                   ),
                   Positioned(
@@ -106,8 +132,8 @@ class _EditProfileState extends State<EditProfile> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) =>
-                                AddProfilePhoto(comeFromSignUp: false),
+                            builder: (context) => AddProfilePhoto(
+                                comeFromSignUp: false, fromWhere: 'Parent'),
                           ),
                         );
                       },

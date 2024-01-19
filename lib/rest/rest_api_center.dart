@@ -5,12 +5,16 @@ import 'package:spectrum_speak/modules/center.dart';
 
 Future<bool> isEmailAlreadyExistsCenter(String email) async {
   final response = await http.post(
-    Uri.parse('${Utils.baseUrl}/center/checkEmail'),
-    headers: {"Accept": "application/json","Content-Type":"application/json"},
-    body: jsonEncode({
-      'Email': email,
-    },
-  ));
+      Uri.parse('${Utils.baseUrl}/center/checkEmail'),
+      headers: {
+        "Accept": "application/json",
+        "Content-Type": "application/json"
+      },
+      body: jsonEncode(
+        {
+          'Email': email,
+        },
+      ));
   var decodedData = jsonDecode(response.body);
 
   if (response.statusCode == 200) {
@@ -25,7 +29,8 @@ Future centerSignUp(String specialistID, String centerName, String email,
   final response = await http.post(
       Uri.parse('${Utils.baseUrl}/center/register/$specialistID'),
       headers: {
-        "Accept": "application/json","Content-Type":"application/json"
+        "Accept": "application/json",
+        "Content-Type": "application/json"
       },
       body: jsonEncode({
         "CenterName": centerName,
@@ -43,7 +48,10 @@ Future<String?> getCenterIdForSpecialist(String specialistId) async {
   try {
     final response = await http.get(
       Uri.parse('${Utils.baseUrl}/center/getID/$specialistId'),
-      headers: {"Accept": "application/json","Content-Type":"application/json"},
+      headers: {
+        "Accept": "application/json",
+        "Content-Type": "application/json"
+      },
     );
 
     if (response.statusCode == 200) {
@@ -63,7 +71,10 @@ Future<CenterAutism?> profileCenter(String userId) async {
   try {
     final response = await http.get(
       Uri.parse('${Utils.baseUrl}/center/getCenter/$userId'),
-      headers: {"Accept": "application/json","Content-Type":"application/json"},
+      headers: {
+        "Accept": "application/json",
+        "Content-Type": "application/json"
+      },
     );
     if (response.statusCode == 200) {
       var decodedData = jsonDecode(response.body)["centerInfo"];
@@ -96,28 +107,28 @@ Future editProfileCenter(
   String city,
 ) async {
   final response = await http.patch(
-    Uri.parse('${Utils.baseUrl}/center/edit/$userId'),
-    headers: {
-      "Accept": "application/json","Content-Type":"application/json"
-    },
-    body: jsonEncode({
-      'CenterName': centerName,
-      'Email': email,
-      'Phone': phone,
-      'Description': description,
-      'City': city,
-    },
-  ));
+      Uri.parse('${Utils.baseUrl}/center/edit/$userId'),
+      headers: {
+        "Accept": "application/json",
+        "Content-Type": "application/json"
+      },
+      body: jsonEncode(
+        {
+          'CenterName': centerName,
+          'Email': email,
+          'Phone': phone,
+          'Description': description,
+          'City': city,
+        },
+      ));
   var decodedData = jsonDecode(response.body);
   return decodedData;
 }
 
-Future deleteCenter(String userId)async{
+Future deleteCenter(String userId) async {
   final response = await http.delete(
     Uri.parse('${Utils.baseUrl}/center/delete/$userId'),
-    headers: {
-      "Accept": "application/json","Content-Type":"application/json"
-    },
+    headers: {"Accept": "application/json", "Content-Type": "application/json"},
   );
   if (response.statusCode == 200) {
     var decodedData = jsonDecode(response.body);
@@ -132,7 +143,8 @@ Future<bool> checkAdmin(String userId) async {
     final response = await http.get(
       Uri.parse('${Utils.baseUrl}/center/admin/$userId'),
       headers: {
-        'Accept': 'application/json',"Content-Type":"application/json"
+        'Accept': 'application/json',
+        "Content-Type": "application/json"
       },
     );
     if (response.statusCode == 200) {
@@ -150,9 +162,11 @@ Future<bool> checkAdmin(String userId) async {
 Future<List<dynamic>> searchToAddSpecialist(String namePrefix) async {
   try {
     final response = await http.get(
-      Uri.parse('${Utils.baseUrl}/search/center/specialist?namePrefix=$namePrefix'),
+      Uri.parse(
+          '${Utils.baseUrl}/search/center/specialist?namePrefix=$namePrefix'),
       headers: {
-        'Accept': 'application/json',"Content-Type":"application/json"
+        'Accept': 'application/json',
+        "Content-Type": "application/json"
       },
     );
 
@@ -166,7 +180,8 @@ Future<List<dynamic>> searchToAddSpecialist(String namePrefix) async {
         throw Exception('Empty response body');
       }
     } else {
-      throw Exception('Failed to get data. Status code: ${response.statusCode}');
+      throw Exception(
+          'Failed to get data. Status code: ${response.statusCode}');
     }
   } catch (error) {
     print(error);
@@ -174,12 +189,13 @@ Future<List<dynamic>> searchToAddSpecialist(String namePrefix) async {
   }
 }
 
-Future <dynamic> getSpecialistAdminForCenter(String centerID) async {
+Future<dynamic> getSpecialistAdminForCenter(String centerID) async {
   try {
     final response = await http.get(
       Uri.parse('${Utils.baseUrl}/center/admin/Specialist/$centerID'),
       headers: {
-        'Accept': 'application/json',"Content-Type":"application/json"
+        'Accept': 'application/json',
+        "Content-Type": "application/json"
       },
     );
 
@@ -188,12 +204,14 @@ Future <dynamic> getSpecialistAdminForCenter(String centerID) async {
       if (response.body.isNotEmpty) {
         var decodedData = jsonDecode(response.body);
         print(decodedData['specialists'][0]["Username"]);
-        return decodedData['specialists'][0]["Username"]; // Return the array directly
+        return decodedData['specialists'][0]
+            ["Username"]; // Return the array directly
       } else {
         throw Exception('Empty response body');
       }
     } else {
-      throw Exception('Failed to get data. Status code: ${response.statusCode}');
+      throw Exception(
+          'Failed to get data. Status code: ${response.statusCode}');
     }
   } catch (error) {
     print(error);
@@ -206,7 +224,8 @@ Future<String> getCenterName(String centerID) async {
     final response = await http.get(
       Uri.parse('${Utils.baseUrl}/center/name/$centerID'),
       headers: {
-        'Accept': 'application/json',"Content-Type":"application/json"
+        'Accept': 'application/json',
+        "Content-Type": "application/json"
       },
     );
 
@@ -218,7 +237,6 @@ Future<String> getCenterName(String centerID) async {
         if (decodedData['success']) {
           // Extract the center name from the response
           var centerName = decodedData['center']['CenterName'];
-          print(centerName);
           return centerName;
         } else {
           // The server response indicates failure
@@ -229,7 +247,8 @@ Future<String> getCenterName(String centerID) async {
         throw Exception('Empty response body');
       }
     } else {
-      throw Exception('Failed to get data. Status code: ${response.statusCode}');
+      throw Exception(
+          'Failed to get data. Status code: ${response.statusCode}');
     }
   } catch (error) {
     print(error);

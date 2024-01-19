@@ -1,10 +1,15 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:circular_profile_avatar/circular_profile_avatar.dart';
 import 'package:email_otp/email_otp.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:spectrum_speak/constant/const_color.dart';
+import 'package:spectrum_speak/main.dart';
 import 'package:spectrum_speak/modules/specialist.dart';
 import 'package:spectrum_speak/rest/auth_manager.dart';
 import 'package:spectrum_speak/rest/rest_api_profile.dart';
 import 'package:spectrum_speak/rest/rest_api_profile_edit.dart';
+import 'package:spectrum_speak/screen/add_profile_photo.dart';
 import 'package:spectrum_speak/screen/specialist_profile.dart';
 import 'package:spectrum_speak/units/build_date_text_field.dart';
 import 'package:spectrum_speak/units/build_text_field.dart';
@@ -70,6 +75,7 @@ class _EditSpecialistProfileState extends State<EditSpecialistProfile> {
 
   @override
   Widget build(BuildContext context) {
+    late MediaQueryData mq = MediaQuery.of(context);
     return Scaffold(
       body: GestureDetector(
         onTap: () {
@@ -81,27 +87,48 @@ class _EditSpecialistProfileState extends State<EditSpecialistProfile> {
               child: Stack(
                 children: [
                   Padding(
-                    padding: const EdgeInsets.only(top: 50.0),
-                    child: Container(
-                      width: 130,
-                      height: 130,
-                      decoration: BoxDecoration(
-                        border: Border.all(width: 4, color: kPrimary),
-                        boxShadow: [
-                          BoxShadow(
-                            color: kDarkBlue.withOpacity(0.5),
-                            blurRadius: 8.0, // Blur radius
-                            spreadRadius: 2.0, // Spread radius
-                            offset: const Offset(-5, 5),
+                      padding: const EdgeInsets.only(top: 50.0),
+                      child: Container(
+                        width: 130,
+                        height: 130,
+                        decoration: BoxDecoration(
+                          border: Border.all(width: 4, color: kPrimary),
+                          boxShadow: [
+                            BoxShadow(
+                              color: kDarkBlue.withOpacity(0.5),
+                              blurRadius: 8.0, // Blur radius
+                              spreadRadius: 2.0, // Spread radius
+                              offset: const Offset(-5, 5),
+                            ),
+                          ],
+                          shape: BoxShape.circle,
+                        ),
+                        child: CircularProfileAvatar(
+                          '',
+                          borderWidth: 1.0,
+                          borderColor: kDarkerColor,
+                          backgroundColor: kPrimary,
+                          radius: 100.0,
+                          child: CachedNetworkImage(
+                            width: mq.size.height * .1,
+                            height: mq.size.height * .1,
+                            imageUrl: AuthManager.u.image,
+                            imageBuilder: (context, imageProvider) => Container(
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                image: DecorationImage(
+                                  image: imageProvider,
+                                  fit: BoxFit
+                                      .cover, // Set the fit property to cover
+                                ),
+                              ),
+                            ),
+                            errorWidget: (context, url, error) =>
+                                const CircleAvatar(
+                                    child: Icon(CupertinoIcons.person)),
                           ),
-                        ],
-                        shape: BoxShape.circle,
-                      ),
-                      child: ClipOval(
-                          //child: ProfileImageDisplay(),
-                          ),
-                    ),
-                  ),
+                        ),
+                      )),
                   Positioned(
                     bottom: 0,
                     right: 0,
@@ -113,9 +140,18 @@ class _EditSpecialistProfileState extends State<EditSpecialistProfile> {
                         border: Border.all(width: 3, color: kPrimary),
                         color: kDarkBlue,
                       ),
-                      child: const Icon(
-                        Icons.edit,
-                        color: kPrimary,
+                      child: IconButton(
+                        icon: Icon(
+                          Icons.edit,
+                          color: kPrimary,
+                        ),
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: ((context) =>
+                                      AddProfilePhoto(comeFromSignUp: false,fromWhere:'Specialist'))));
+                        },
                       ),
                     ),
                   ),

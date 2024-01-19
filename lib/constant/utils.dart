@@ -118,17 +118,21 @@ class Utils {
     //upload image to fire storage
     final ext = file.path.split('.').last;
     final ref = firestorage.ref().child('profile_pictures/${u.UserID}.$ext');
-    await ref.putFile(file, SettableMetadata(contentType: 'image/$ext')).then(
-        (p0) => print('Data transferred ${p0.bytesTransferred / 1000} kb'));
+    try {
+      await ref.putFile(file, SettableMetadata(contentType: 'image/$ext')).then(
+          (p0) => print('Data transferred ${p0.bytesTransferred / 1000} kb'));
 
-    // get image url
-    u.image = await ref.getDownloadURL();
-
-    // update image url in firestore
-    await firestore
-        .collection('users')
-        .doc('${u.UserID}')
-        .update({'image': u.image});
+      // get image url
+      u.image = await ref.getDownloadURL();
+      AuthManager.u.image = u.image;
+      // update image url in firestore
+      await firestore
+          .collection('users')
+          .doc('${u.UserID}')
+          .update({'image': u.image});
+    } catch (e) {
+      print('errorrrrr $e');
+    }
   }
 
   static String getConversationID(int id) => u.UserID.hashCode <= id.hashCode
@@ -379,7 +383,10 @@ class Utils {
 
     List<ChatUser> secondList =
         documents2.map((e) => ChatUser.fromJson(e.data())).toList();
-    if (b) popUpMenuList = secondList;
+    if (b) {
+      popUpMenuList.clear();
+      popUpMenuList.addAll(secondList);
+    }
     for (int i = 0; i < secondList.length; i++) {
       QuerySnapshot<Map<String, dynamic>> snapshot3 = await firestore
           .collection(
@@ -391,9 +398,30 @@ class Utils {
           snapshot3.docs;
       List<Message> msgs =
           documents3.map((e) => Message.fromJson(e.data())).toList();
-      if (msgs[msgs.length - 1].read.isEmpty&&
-          msgs[msgs.length-1].toID==u.UserID) count++;
+      if (msgs[msgs.length - 1].read.isEmpty &&
+          msgs[msgs.length - 1].toID == u.UserID) count++;
     }
     return count;
+  }
+
+  static Future<ChatUser> fetchUser(String id) async {
+    QuerySnapshot<Map<String, dynamic>> snapshot = await firestore
+        .collection('users')
+        .where('UserID', isEqualTo: int.parse(id))
+        .get();
+    final List<QueryDocumentSnapshot<Map<String, dynamic>>> document =
+        snapshot.docs;
+
+    return document.map((e) => ChatUser.fromJson(e.data())).toList()[0];
+  }
+
+  static Future<void> getNotifications(String userType, String id) async {
+    QuerySnapshot<Map<String, dynamic>> snapshot =
+        await firestore.collection('center_notifications').get();
+    final List<QueryDocumentSnapshot<Map<String, dynamic>>> document =
+        snapshot.docs;
+    List<String> list = document.map((e) => e.id).toList();
+    for (var i in list) print(i);
+    print('done printing');
   }
 }

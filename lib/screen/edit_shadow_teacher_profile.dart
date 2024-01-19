@@ -1,4 +1,7 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:circular_profile_avatar/circular_profile_avatar.dart';
 import 'package:email_otp/email_otp.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:spectrum_speak/constant/const_color.dart';
 import 'package:spectrum_speak/modules/shadow_teacher.dart';
@@ -6,6 +9,7 @@ import 'package:spectrum_speak/modules/shadow_teacher.dart';
 import 'package:spectrum_speak/rest/auth_manager.dart';
 import 'package:spectrum_speak/rest/rest_api_profile.dart';
 import 'package:spectrum_speak/rest/rest_api_profile_edit.dart';
+import 'package:spectrum_speak/screen/add_profile_photo.dart';
 
 import 'package:spectrum_speak/screen/shadow_teacher_profile.dart';
 import 'package:spectrum_speak/units/build_date_text_field.dart';
@@ -79,6 +83,7 @@ class _EditShadowTeacherProfileState extends State<EditShadowTeacherProfile> {
 
   @override
   Widget build(BuildContext context) {
+    MediaQueryData mq = MediaQuery.of(context);
     return Scaffold(
       body: GestureDetector(
         onTap: () {
@@ -106,9 +111,31 @@ class _EditShadowTeacherProfileState extends State<EditShadowTeacherProfile> {
                         ],
                         shape: BoxShape.circle,
                       ),
-                      child: ClipOval(
-                          //child: ProfileImageDisplay(),
+                      child: CircularProfileAvatar(
+                        '',
+                        borderWidth: 1.0,
+                        borderColor: kDarkerColor,
+                        backgroundColor: kPrimary,
+                        radius: 100.0,
+                        child: CachedNetworkImage(
+                          width: mq.size.height * .1,
+                          height: mq.size.height * .1,
+                          imageUrl: AuthManager.u.image,
+                          imageBuilder: (context, imageProvider) => Container(
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              image: DecorationImage(
+                                image: imageProvider,
+                                fit: BoxFit
+                                    .cover, // Set the fit property to cover
+                              ),
+                            ),
                           ),
+                          errorWidget: (context, url, error) =>
+                              const CircleAvatar(
+                                  child: Icon(CupertinoIcons.person)),
+                        ),
+                      ),
                     ),
                   ),
                   Positioned(
@@ -122,9 +149,17 @@ class _EditShadowTeacherProfileState extends State<EditShadowTeacherProfile> {
                         border: Border.all(width: 3, color: kPrimary),
                         color: kDarkBlue,
                       ),
-                      child: const Icon(
-                        Icons.edit,
-                        color: kPrimary,
+                      child: IconButton(
+                        icon: Icon(Icons.edit, color: kPrimary),
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: ((context) => AddProfilePhoto(
+                                        comeFromSignUp: false,
+                                        fromWhere: 'Shadow Teacher',
+                                      ))));
+                        },
                       ),
                     ),
                   ),
@@ -353,7 +388,7 @@ class _EditShadowTeacherProfileState extends State<EditShadowTeacherProfile> {
                   icon: Icon(Icons.key_sharp),
                   iconColor: kPrimary,
                   onPressed: () async {
-                      myAuth.setConfig(
+                    myAuth.setConfig(
                       appEmail: "asmaatareq1999@gmail.com",
                       appName: "Spectrum Speak",
                       userEmail: _emailController.text,
@@ -378,7 +413,7 @@ class _EditShadowTeacherProfileState extends State<EditShadowTeacherProfile> {
                           ),
                         ),
                       );
-                    } else{
+                    } else {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
                           content: Text('Oops, OTP send failed'),
