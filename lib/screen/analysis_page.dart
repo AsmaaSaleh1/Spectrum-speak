@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:spectrum_speak/constant/const_color.dart';
-import 'package:spectrum_speak/widgets/data_by_city_for_analysis.dart';
-import 'package:spectrum_speak/widgets/pie_chart_gender.dart';
+import 'package:spectrum_speak/widgets/bar_chart_children_by_old_gender.dart';
+import 'package:spectrum_speak/widgets/bar_chart_data_by_city_for_analysis.dart';
+import 'package:spectrum_speak/widgets/pie_chart_degree_of_autism.dart';
 import 'package:spectrum_speak/widgets/top_bar.dart';
 
 class Analysis extends StatefulWidget {
@@ -48,14 +49,21 @@ class _AnalysisState extends State<Analysis> {
                   ),
                 ),
               ),
-              DataByCity(),
+              BarChartDataByCity(),
               Divider(
-                color: kDarkerColor, // You can customize the color
-                thickness: 2.0, // You can customize the thickness
+                color: kDarkerColor,
+                thickness: 2.0,
                 indent: 20,
                 endIndent: 20,
               ),
-              PieChartSample1(),
+              PieChartDegreeOfAutism(),
+              Divider(
+                color: kDarkerColor,
+                thickness: 2.0,
+                indent: 20,
+                endIndent: 20,
+              ),
+              BarChartChildrenGroupedByOldAndGender(),
             ],
           ),
         ),

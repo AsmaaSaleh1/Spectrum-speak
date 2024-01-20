@@ -42,3 +42,26 @@ Future<Map<String, dynamic>?> getChildrenCountByDegreeOfAutism() async {
     return null;
   }
 }
+Future<Map<String, dynamic>?> getChildrenCountGroupedByOldAndGender() async {
+  try {
+    final response = await http.get(
+      Uri.parse('${Utils.baseUrl}/analysis/count/children/old'),
+      headers: {"Accept": "application/json"},
+    );
+
+    if (response.statusCode == 200) {
+      var decodedData = jsonDecode(response.body);
+      Map<String, dynamic> data = {
+        "Male": decodedData["Male"],
+        "Female": decodedData["Female"],
+      };
+      return data;
+    } else {
+      print('Failed to get Children Count Grouped By Old and Gender: ${response.statusCode}');
+      return null;
+    }
+  } catch (error) {
+    print('Error during network request: $error');
+    return null;
+  }
+}
