@@ -218,10 +218,16 @@ class _EditChildCardState extends State<EditChildCard> {
                     CustomButton(
                       foregroundColor: kDarkerColor,
                       backgroundColor: kPrimary,
-                      onPressed: () async{
+                      onPressed: () async {
                         String? userId = await AuthManager.getUserId();
-                        Navigator.pushReplacement(context,
-                            MaterialPageRoute(builder: (_) => ParentProfile(userID: userId!,),),);
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => ParentProfile(
+                              userID: userId!,
+                            ),
+                          ),
+                        );
                       },
                       buttonText: 'Cancel',
                       icon: const Icon(

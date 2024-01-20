@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_notification_channel/flutter_notification_channel.dart';
 import 'package:flutter_notification_channel/notification_importance.dart'
@@ -151,14 +154,16 @@ _initializeFirebase() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  var result = await FlutterNotificationChannel.registerNotificationChannel(
-    description: 'For Showing Messaging ',
-    id: 'chats',
-    importance: fni.NotificationImportance.IMPORTANCE_HIGH,
-    name: 'Chats',
-    visibility: NotificationVisibility.VISIBILITY_PUBLIC,
-  );
-  print(result);
+  if (!kIsWeb||kIsWeb) {
+    var result = await FlutterNotificationChannel.registerNotificationChannel(
+      description: 'For Showing Messaging ',
+      id: 'chats',
+      importance: fni.NotificationImportance.IMPORTANCE_HIGH,
+      name: 'Chats',
+      visibility: NotificationVisibility.VISIBILITY_PUBLIC,
+    );
+    print('res $result');
+  }
 }
 
 Future<void> backgroundHandler(RemoteMessage message) async {

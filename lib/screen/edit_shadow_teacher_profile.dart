@@ -436,7 +436,7 @@ class _EditShadowTeacherProfileState extends State<EditShadowTeacherProfile> {
                       onPressed: () {
                         Navigator.pop(context);
                       },
-                      buttonText: 'Cansel',
+                      buttonText: 'Cancel',
                       icon: const Icon(
                         Icons.cancel,
                         size: 18.0,

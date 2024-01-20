@@ -168,7 +168,7 @@ class _EditSpecialistProfileState extends State<EditSpecialistProfile> {
                   height: 60,
                   child: CustomTextField(
                       preIcon: null,
-                      labelText: "User Name",
+                      labelText: "Name",
                       placeholder: "Asmaa",
                       isPasswordTextField: false,
                       controller: _userNameController),

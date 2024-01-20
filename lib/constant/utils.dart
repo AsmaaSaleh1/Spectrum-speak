@@ -5,6 +5,8 @@ import 'dart:math' as Math;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:spectrum_speak/modules/CenterNotification.dart';
 import 'package:spectrum_speak/modules/ChatUser.dart';
@@ -27,17 +29,36 @@ class Utils {
   static Future<void> getFirebaseMessagingToken(String id) async {
     await firebasemessaging.requestPermission();
 
-    await firebasemessaging.getToken().then((t) {
-      if (t != null) {
-        pushT = t;
-        AuthManager.u.pushToken = t;
-        u.pushToken = t;
-        print('Push Token: $t');
-        print('Utils u token ${u.pushToken}');
-      } else {
-        print('Nopushtoken');
-      }
-    });
+    if (kIsWeb) {
+      print('web here');
+      await firebasemessaging
+          .getToken(
+              vapidKey:
+                  'BOhV_fy01zm74yzFFz_Kq-GVCIIs1C-P-ViiU2D2jwbVEuxRg-aYZqOgzPc12YtKvnNmaPcfrgyYSFl-dM82pFA')
+          .then((t) {
+        if (t != null) {
+          pushT = t;
+          AuthManager.u.pushToken = t;
+          u.pushToken = t;
+          print('Push Token: $t');
+          print('Utils u token ${u.pushToken}');
+        } else {
+          print('Nopushtoken');
+        }
+      });
+    } else {
+      await firebasemessaging.getToken().then((t) {
+        if (t != null) {
+          pushT = t;
+          AuthManager.u.pushToken = t;
+          u.pushToken = t;
+          print('Push Token: $t');
+          print('Utils u token ${u.pushToken}');
+        } else {
+          print('Nopushtoken');
+        }
+      });
+    }
     await firestore.collection('users').doc(id).update({
       'pushToken': pushT,
     });
@@ -89,11 +110,14 @@ class Utils {
         .snapshots();
   }
 
-  static Future<String?> getProfilePictureUrl(String ID) async {
+  static Future<String?> getProfilePictureUrl(String ID, String? type) async {
     try {
-      final ListResult result =
-          await firestorage.ref().child('profile_pictures').listAll();
-
+      final ListResult result;
+      if (type == 'Center')
+        result =
+            await firestorage.ref().child('profile_pictures_centers').listAll();
+      else
+        result = await firestorage.ref().child('profile_pictures').listAll();
       final List<Reference> files = result.items
           .where(
             (element) => element.name.startsWith('${ID}'),
@@ -344,11 +368,11 @@ class Utils {
   }
 
   static Future<void> storeCenterNotification(CenterNotification cn) async {
-    int max = Math.max(int.parse(cn.fromID!), int.parse(cn.toID));
-    int min = Math.min(int.parse(cn.fromID!), int.parse(cn.toID));
+    print('here n');
+    print('${cn.time}');
     await firestore
         .collection('center_notifications')
-        .doc('${min}_${max}')
+        .doc('${cn.fromID}_${cn.toID}')
         .set(cn.toJson());
   }
 
@@ -415,13 +439,14 @@ class Utils {
     return document.map((e) => ChatUser.fromJson(e.data())).toList()[0];
   }
 
-  static Future<void> getNotifications(String userType, String id) async {
+  static Future<List<CenterNotification>> getNotifications(
+      String userType, String id) async {
     QuerySnapshot<Map<String, dynamic>> snapshot =
         await firestore.collection('center_notifications').get();
     final List<QueryDocumentSnapshot<Map<String, dynamic>>> document =
         snapshot.docs;
-    List<String> list = document.map((e) => e.id).toList();
-    for (var i in list) print(i);
-    print('done printing');
+    List<CenterNotification> list =
+        document.map((e) => CenterNotification.fromJson(e.data())).toList();
+    return list;
   }
 }

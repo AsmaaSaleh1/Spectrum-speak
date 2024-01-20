@@ -2,21 +2,21 @@ class ChatUser {
   ChatUser({
     this.image = '',
     this.createdAt = '',
-    required this.Email,
+    this.Email='',
     this.lastActive = '',
-    required this.UserID,
+    this.UserID=0,
     this.isOnline = false,
     this.pushToken = '',
-    required this.Name,
+    this.Name='',
   });
   late String image;
   late String createdAt;
-  late final String Email;
+  late String Email;
   late String lastActive;
-  late final int UserID;
+  late int UserID;
   late bool isOnline;
   late String pushToken;
-  late final String Name;
+  late String Name;
 
   ChatUser.fromJson(Map<String, dynamic>? json)
     : createdAt = json?['createdAt'] ?? '',

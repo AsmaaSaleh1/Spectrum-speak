@@ -165,7 +165,7 @@ class _EditProfileState extends State<EditProfile> {
                   height: 60,
                   child: CustomTextField(
                     preIcon: null,
-                    labelText: "User Name",
+                    labelText: "Name",
                     placeholder: "Asmaa",
                     isPasswordTextField: false,
                     controller: _userNameController,
@@ -342,7 +342,7 @@ class _EditProfileState extends State<EditProfile> {
                       onPressed: () {
                         Navigator.pop(context);
                       },
-                      buttonText: 'Cansel',
+                      buttonText: 'Cancel',
                       icon: const Icon(
                         Icons.cancel,
                         size: 18.0,

@@ -4,6 +4,7 @@ import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'dart:convert';
 import 'dart:developer';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart' as foundation;
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:spectrum_speak/constant/const_color.dart';
@@ -221,7 +222,7 @@ class _ChatScreenState extends State<ChatScreen> {
                     ],
                   ),
                   SizedBox(width: mq.size.width * 0.05),
-                  if (Platform.isAndroid || Platform.isIOS)
+                  // if (!foundation.kIsWeb)
                     IconButton(
                       onPressed: () {
                         int max = AuthManager.u.UserID > widget.user.UserID

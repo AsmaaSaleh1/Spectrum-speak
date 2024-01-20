@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:spectrum_speak/constant/const_color.dart';
@@ -47,7 +48,7 @@ class _MessageCardState extends State<MessageCard> {
           child: Container(
             padding: EdgeInsets.all(widget.message.type == Type.image.toString()
                 ? mq.size.width * .03
-                : mq.size.width * .04),
+                : kIsWeb?mq.size.width*0.01:mq.size.width * .04),
             margin: EdgeInsets.symmetric(
                 horizontal: mq.size.width * .04,
                 vertical: mq.size.height * .01),
@@ -108,7 +109,7 @@ class _MessageCardState extends State<MessageCard> {
             child: Container(
           padding: EdgeInsets.all(widget.message.type == Type.image
               ? mq.size.width * .03
-              : mq.size.width * .04),
+              : kIsWeb?mq.size.width*0.01:mq.size.width * .04),
           margin: EdgeInsets.symmetric(
               horizontal: mq.size.width * .04, vertical: mq.size.height * .01),
           decoration: BoxDecoration(
@@ -120,7 +121,7 @@ class _MessageCardState extends State<MessageCard> {
               border: Border.all(color: ksenderMessageBorder)),
           child: widget.message.type == Type.text.toString()
               ? Text(widget.message.message,
-                  style: TextStyle(fontSize: 18, color: Colors.black87))
+                  style: TextStyle(fontSize: 18, color: kPrimary))
               : ClipRRect(
                   borderRadius: BorderRadius.circular(mq.size.height * .03),
                   child: CachedNetworkImage(

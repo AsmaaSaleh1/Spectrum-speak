@@ -8,16 +8,16 @@ class MyDateUtil {
     final date = DateTime.fromMillisecondsSinceEpoch(int.parse(time));
     return TimeOfDay.fromDateTime(date).format(context);
   }
+
   static String getCurrentDateTime() {
-  // Get the current time
-  DateTime now = DateTime.now();
+    // Get the current time
+    DateTime now = DateTime.now();
 
-  // Format the time in 12-hour format with AM/PM indicator
-  String formattedTime = DateFormat('yyyy/MM/dd hh:mm a').format(now);
+    // Format the time in 12-hour format with AM/PM indicator
+    String formattedTime = DateFormat('yyyy/MM/dd hh:mm a').format(now);
 
-  return formattedTime;
+    return formattedTime;
   }
-
 
   // for getting formatted time for sent & read
   static String getMessageTime(
@@ -113,37 +113,38 @@ class MyDateUtil {
     }
     return 'NA';
   }
+
   static String timeAgo(String dateString) {
-  // Parse the input date string with a custom format
-  DateTime dateTime = DateFormat('yyyy/MM/dd hh:mm a').parse(dateString);
+    // Parse the input date string with a custom format
+    DateTime dateTime = DateFormat('yyyy/MM/dd hh:mm a').parse(dateString);
 
-  // Set the year of the parsed date to the current year
-  dateTime = DateTime(dateTime.year, dateTime.month, dateTime.day,
-      dateTime.hour, dateTime.minute);
+    // Set the year of the parsed date to the current year
+    dateTime = DateTime(dateTime.year, dateTime.month, dateTime.day,
+        dateTime.hour, dateTime.minute);
 
-  // Calculate the time difference
-  Duration difference = DateTime.now().difference(dateTime);
+    // Calculate the time difference
+    Duration difference = DateTime.now().difference(dateTime);
 
-    if (difference.inHours < 24) {
-    // Less than a day ago
-    return '${difference.inHours} hour${difference.inHours > 1 ? 's' : ''} ago';
-  } else if (difference.inDays < 7) {
-    // Less than a week ago
-    return '${difference.inDays} day${difference.inDays > 1 ? 's' : ''} ago';
-  }if (difference.inMinutes < 60) {
-    // Less than an hour ago
-    return '${difference.inMinutes} minute${difference.inMinutes > 1 ? 's' : ''} ago';
+    if (difference.inDays >= 365) {
+      // A year ago or more
+      int years = (difference.inDays / 365).floor();
+      return '${years == 1 ? 'a year' : '$years years'} ago';
+    } else if (difference.inDays >= 30) {
+      // At least a month ago
+      return '${(difference.inDays / 30).floor()} month${(difference.inDays / 30).floor() > 1 ? 's' : ''} ago';
+    } else if (difference.inDays >= 7) {
+      // At least a week ago
+      return '${difference.inDays ~/ 7} week${difference.inDays ~/ 7 > 1 ? 's' : ''} ago';
+    } else if (difference.inDays > 0) {
+      // At least a day ago
+      return '${difference.inDays} day${difference.inDays > 1 ? 's' : ''} ago';
+    } else if (difference.inHours > 0) {
+      // At least an hour ago
+      return '${difference.inHours} hour${difference.inHours > 1 ? 's' : ''} ago';
+    } else {
+      // Less than an hour ago
+      return '${difference.inMinutes} minute${difference.inMinutes > 1 ? 's' : ''} ago';
     }
-  else if (difference.inDays < 30) {
-    // Less than a month ago
-    return '${(difference.inDays / 7).floor()} week${(difference.inDays / 7).floor() > 1 ? 's' : ''} ago';
-  } else if (difference.inDays < 365) {
-    // Less than a year ago
-    return '${(difference.inDays / 30).floor()} month${(difference.inDays / 30).floor() > 1 ? 's' : ''} ago';
-  } else {
-    // A year ago or more
-    int years = (difference.inDays / 365).floor();
-    return '${years == 1 ? 'a year' : '$years years'} ago';
+
   }
-}
 }

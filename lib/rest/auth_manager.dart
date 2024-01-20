@@ -18,12 +18,14 @@ class AuthManager {
 
     if (cameFromSignUp == true) {
       await Utils.createFireBaseUser(userEmail, userName, int.parse(userId));
-      await Utils.getFirebaseMessagingToken(userId);
     }
+    u = await Utils.fetchUser(userId);
+    await Utils.getFirebaseMessagingToken(userId);
     u = await Utils.fetchUser(userId);
     Utils.updateActiveStatus(userId, true);
     u.lastActive = DateTime.now().millisecondsSinceEpoch.toString();
-    u.image=(await Utils.getProfilePictureUrl(userId))!;
+    u.image = (await Utils.getProfilePictureUrl(userId, ''))!;
+    print(u.image);
     /*If the timestamp is within the valid session duration,
      the user is considered logged in;
      otherwise,

@@ -6,6 +6,7 @@ import 'package:circular_profile_avatar/circular_profile_avatar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:intl/intl.dart';
 import 'package:spectrum_speak/constant/const_color.dart';
 import 'package:spectrum_speak/constant/utils.dart';
 import 'package:spectrum_speak/modules/CenterNotification.dart';
@@ -30,12 +31,12 @@ import 'card_user_chat.dart';
 
 List<ChatUser> popUpMenuList = [];
 CenterNotification cn = CenterNotification(
-    fromID: "1",
-    time: "2024/01/19 3:00 PM",
-    toID: "3",
+    fromID: "3",
+    time: "2024/01/19 11:00 PM",
+    toID: "1",
     read: false,
-    type: "request",
-    value: false);
+    type: "response",
+    value: true);
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final GlobalKey<ScaffoldState> scaffoldKey;
@@ -99,7 +100,12 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
               IconButton(
                 onPressed: () async {
                   print('Notification button pressed');
-                  Utils.storeCenterNotification(cn);
+                  // Utils.storeCenterNotification(cn);
+
+                  _showNotificationsPopUpMenu(
+                      context,
+                      await Utils.getNotifications(
+                          '', AuthManager.u.UserID.toString()));
                 },
                 icon: const Icon(
                   CupertinoIcons.bell,
@@ -107,7 +113,6 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                   size: 30,
                 ),
               ),
-              NotificationCard(cn: cn),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: CircularProfileAvatar(
@@ -704,4 +709,71 @@ void _showMessagesPopUpMenu(BuildContext context, List<ChatUser> list) async {
   );
 }
 
-void _showNotificationsPopUpMenu() {}
+void _showNotificationsPopUpMenu(
+    BuildContext context, List<CenterNotification> list) async {
+  final RenderBox overlay =
+      Overlay.of(context).context.findRenderObject() as RenderBox;
+  List<CenterNotification> filteredList = [];
+  List<ChatUser> u = [];
+
+  for (int i = 0; i < list.length; i++) {
+    if (list[i].fromID == AuthManager.u.UserID.toString()) {
+      filteredList.add(list[i]);
+      ChatUser user = await Utils.fetchUser(list[i].toID);
+      u.add(user);
+    }
+  }
+
+  // Now use filteredList in your logic
+  filteredList.sort((a, b) {
+    DateTime timeA = DateFormat('yyyy/MM/dd hh:mm a').parse(a.time);
+    DateTime timeB = DateFormat('yyyy/MM/dd hh:mm a').parse(b.time);
+    return timeB.compareTo(timeA); // Descending order
+  });
+
+  await showMenu(
+    color: kPrimary,
+    context: context,
+    position: RelativeRect.fromLTRB(
+      overlay.size.width - 50, // Adjust the value as needed
+      53, // Y position, set to 0 for top
+      overlay.size.width, // Right edge of the screen
+      MediaQuery.of(context).size.height, // Bottom edge of the screen
+    ),
+    items: [
+      PopupMenuItem(
+        padding: const EdgeInsets.all(0),
+        child: SizedBox(
+          width: 300,
+          child: Column(
+            children: [
+              if(list.length!=0)
+              for (int i = 0; i < filteredList.length; i++)
+                ListTile(
+                  contentPadding: EdgeInsets.zero,
+                  title: NotificationCard(cn: filteredList[i], u: u[i]),
+                )
+              ,
+              ListTile(
+                title: TextButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const SplashChatScreen()),
+                    );
+                  },
+                  child: Text(
+                    list.isNotEmpty?'That\'s it😁':'You have not received any notifications yet!',
+                    style: TextStyle(
+                        color: kDarkerColor, fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    ],
+  );
+}

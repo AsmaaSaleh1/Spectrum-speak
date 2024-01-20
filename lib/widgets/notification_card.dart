@@ -14,8 +14,9 @@ import 'package:spectrum_speak/screen/chat_screen.dart';
 
 class NotificationCard extends StatefulWidget {
   final CenterNotification cn;
-
-  NotificationCard({Key? key, required this.cn}) : super(key: key);
+  final ChatUser u;
+  NotificationCard({Key? key, required this.cn, required this.u})
+      : super(key: key);
 
   @override
   _NotificationCardState createState() => _NotificationCardState();
@@ -23,9 +24,8 @@ class NotificationCard extends StatefulWidget {
 
 class _NotificationCardState extends State<NotificationCard> {
   late MediaQueryData mq; // Declare MediaQueryData variable
-  late String title;
-  late String subtitle;
-  late ChatUser u;
+  String title = '';
+  String subtitle = '';
   @override
   void initState() {
     super.initState();
@@ -36,6 +36,7 @@ class _NotificationCardState extends State<NotificationCard> {
     if (widget.cn.type == 'request') {
       String centerName = await getCenterName(widget.cn.fromID!);
       title = '$centerName has offered you a spot!';
+      widget.u.image = (await Utils.getProfilePictureUrl(widget.cn.fromID!,'Center'))!;
     } else if (widget.cn.type == 'response' && widget.cn.value) {
       String specialistName =
           await getSpecialistAdminForCenter(widget.cn.toID!);
@@ -43,7 +44,6 @@ class _NotificationCardState extends State<NotificationCard> {
     }
 
     subtitle = '${MyDateUtil.timeAgo(widget.cn.time)}';
-    u = await Utils.fetchUser('${widget.cn.toID}');
     print(title);
     print(widget.cn.toID);
     print(subtitle);
@@ -82,7 +82,7 @@ class _NotificationCardState extends State<NotificationCard> {
                 child: CachedNetworkImage(
                   width: mq.size.height * .05,
                   height: mq.size.height * .05,
-                  imageUrl: u.image,
+                  imageUrl: widget.u.image,
                   errorWidget: (context, url, error) =>
                       const CircleAvatar(child: Icon(CupertinoIcons.person)),
                 ),
@@ -96,15 +96,14 @@ class _NotificationCardState extends State<NotificationCard> {
                   style: TextStyle(
                       color: Colors.black54, fontWeight: FontWeight.bold)),
               trailing:
-                      //unread notification
-                      Container(
-                          width: 15,
-                          height: 15,
-                          decoration: BoxDecoration(
-                              color: !widget.cn.read?kDarkerBlue:kPrimary,
-                              borderRadius: BorderRadius.circular(10)),
-                        )
-                    )),
+                  //unread notification
+                  Container(
+                width: 15,
+                height: 15,
+                decoration: BoxDecoration(
+                    color: !widget.cn.read ? kDarkerBlue : kPrimary,
+                    borderRadius: BorderRadius.circular(10)),
+              ))),
     );
   }
 }

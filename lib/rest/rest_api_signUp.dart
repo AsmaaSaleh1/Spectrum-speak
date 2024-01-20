@@ -97,7 +97,7 @@ Future<void> uploadImage(File image, String userID) async {
       'POST',
       Uri.parse('${Utils.baseUrl}/signUp/uploadPhoto/$userID'),
     );
-    request.headers['Accept'] = 'application/json';
+    request.headers['Content-Type'] = 'application/json';
     var multipartFile = await http.MultipartFile.fromPath(
       'image',
       image.path,
