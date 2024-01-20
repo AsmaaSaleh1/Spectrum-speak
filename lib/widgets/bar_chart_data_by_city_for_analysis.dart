@@ -5,20 +5,20 @@ import 'package:spectrum_speak/rest/rest_api_analysis.dart';
 import 'package:spectrum_speak/units/build_drop_down_menu.dart';
 import 'package:fl_chart/fl_chart.dart';
 
-class DataByCity extends StatefulWidget {
-  const DataByCity({Key? key}) : super(key: key);
+class BarChartDataByCity extends StatefulWidget {
+  const BarChartDataByCity({Key? key}) : super(key: key);
 
   @override
-  State<DataByCity> createState() => _DataByCityState();
+  State<BarChartDataByCity> createState() => _BarChartDataByCityState();
 }
 
-class _DataByCityState extends State<DataByCity> {
+class _BarChartDataByCityState extends State<BarChartDataByCity> {
   Map<String, dynamic> usersData = {};
   String? selectedCity;
   List<BarChartGroupData> barGroups = [];
   var xAxis = ["Parent", "Specialist  ", " Shadow Teacher", "Center"];
   int touchedGroupIndex = -1;
-  double y=0;
+  double y = 0;
   Future<void> getUsersCount(String city) async {
     try {
       var data = await getUsersCountByCity(city);
@@ -37,7 +37,8 @@ class _DataByCityState extends State<DataByCity> {
               return 0.0; // or handle other types as needed
             }
           }).toList();
-          double maxCount = counts.isNotEmpty ? counts.reduce((a, b) => a > b ? a : b) : 0.0;
+          double maxCount =
+              counts.isNotEmpty ? counts.reduce((a, b) => a > b ? a : b) : 0.0;
           y = maxCount + (maxCount % 2 == 0 ? 4 : 3);
           barGroups = List.generate(categories.length, (index) {
             String category = categories[index];
@@ -87,7 +88,7 @@ class _DataByCityState extends State<DataByCity> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(top:20,left: 10),
+                  padding: const EdgeInsets.only(top: 20, left: 10),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -111,7 +112,7 @@ class _DataByCityState extends State<DataByCity> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(top:30,right: 40),
+                  padding: const EdgeInsets.only(top: 30, right: 40),
                   child: CustomDropDown(
                     items: const [
                       'All',
@@ -132,7 +133,7 @@ class _DataByCityState extends State<DataByCity> {
               ],
             ),
             Container(
-              margin: EdgeInsets.only(right: 30,left: 5),
+              margin: EdgeInsets.only(right: 30, left: 5),
               width: 400,
               height: 300,
               child: BarChart(
