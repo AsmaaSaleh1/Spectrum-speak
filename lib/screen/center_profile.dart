@@ -154,7 +154,7 @@ class _CenterProfileState extends State<CenterProfile> {
                                 userId: widget.userId,
                               ),
                               CenterInformation(
-                                userId: widget.userId,
+                                userId: centerID,
                               ),
                               Visibility(
                                 visible: !checkCenter,

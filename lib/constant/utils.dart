@@ -1,21 +1,22 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
-import 'dart:math' as Math;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:spectrum_speak/modules/CenterNotification.dart';
+import 'package:spectrum_speak/modules/CenterUser.dart';
 import 'package:spectrum_speak/modules/ChatUser.dart';
 import 'package:spectrum_speak/modules/Message.dart';
 import 'package:spectrum_speak/rest/auth_manager.dart';
 import 'package:spectrum_speak/widgets/top_bar.dart';
 
+import '../screen/offers_and_requests.dart';
+
 class Utils {
-  static String baseUrl = "http://192.168.1.12:3000";
+  static String baseUrl = "http://192.168.1.3:3000";
   // static String baseUrl="http://localhost:3000";
   static List<RemoteMessage> messageNotifications = [];
   static FirebaseFirestore firestore = FirebaseFirestore.instance;
@@ -368,12 +369,19 @@ class Utils {
   }
 
   static Future<void> storeCenterNotification(CenterNotification cn) async {
-    print('here n');
-    print('${cn.time}');
+    print('here store');
     await firestore
         .collection('center_notifications')
         .doc('${cn.fromID}_${cn.toID}')
         .set(cn.toJson());
+  }
+
+  static Future<void> deleteCenterNotification(CenterNotification cn) async {
+    print('here delete');
+    await firestore
+        .collection('center_notifications')
+        .doc('${cn.fromID}_${cn.toID}')
+        .delete();
   }
 
   static Future<bool> checkIfRequestHasBeenMade(
@@ -441,12 +449,81 @@ class Utils {
 
   static Future<List<CenterNotification>> getNotifications(
       String userType, String id) async {
-    QuerySnapshot<Map<String, dynamic>> snapshot =
-        await firestore.collection('center_notifications').get();
+    QuerySnapshot<Map<String, dynamic>> snapshot = await firestore
+        .collection('center_notifications')
+        .where('toID', isEqualTo: id)
+        .where('type', isEqualTo: userType == 'Center' ? 'response' : 'request')
+        .get();
     final List<QueryDocumentSnapshot<Map<String, dynamic>>> document =
         snapshot.docs;
+    final List<Map<String, dynamic>> documents =
+        snapshot.docs.map((doc) => doc.data() as Map<String, dynamic>).toList();
+    print('Ns\n$documents\n\n');
     List<CenterNotification> list =
         document.map((e) => CenterNotification.fromJson(e.data())).toList();
+    for (var i in list) print('from:${i.fromID} type:${i.type}');
     return list;
+  }
+
+  static Future<int> getUnreadNotifications(String userId) async {
+    int count = 0;
+    QuerySnapshot<Map<String, dynamic>> snapshot1 =
+        await firestore.collection('center_notifications').get();
+
+    final List<QueryDocumentSnapshot<Map<String, dynamic>>> documents1 =
+        snapshot1.docs;
+    List<CenterNotification> list =
+        documents1.map((e) => CenterNotification.fromJson(e.data())).toList();
+    for (int i = 0; i < list.length; i++) {
+      if (list[i].toID == userId && !list[i].read!) {
+        count++;
+      }
+    }
+    return count;
+  }
+
+  static Future<CenterUser> fetchCenter(String id) async {
+    final QuerySnapshot<Map<String, dynamic>> snapshot = await firestore
+        .collection('centers')
+        .where('centerID', isEqualTo: id)
+        .get();
+    final List<QueryDocumentSnapshot<Map<String, dynamic>>> document =
+        snapshot.docs;
+    final List<Map<String, dynamic>> documents =
+        snapshot.docs.map((doc) => doc.data() as Map<String, dynamic>).toList();
+    print('center info $documents');
+    return document.map((e) => CenterUser.fromJson(e.data())).toList()[0];
+  }
+
+  static Future<void> updateNotificationReadStatus(
+      CenterNotification cn, bool value) async {
+    await firestore
+        .collection('center_notifications')
+        .doc('${cn.fromID}_${cn.toID}')
+        .update({'read': value});
+  }
+
+  static Future<void> retrieveOfferResponseValue(CenterNotification cn) async {
+    QuerySnapshot<Map<String, dynamic>> snapshot =
+        await firestore.collection('center_notifications').get();
+    List<String> list = snapshot.docs.map((doc) => doc.id).toList() ?? [];
+    decisionMade = 'none';
+    for (var i in list) {
+      if (i == '${cn.toID}_${cn.fromID}') {
+        DocumentSnapshot<Map<String, dynamic>> snapshot2 = await firestore
+            .collection('center_notifications')
+            .doc('${cn.toID}_${cn.fromID}')
+            .get();
+        Map<String, dynamic> data = snapshot2.data()!;
+        CenterNotification temp = CenterNotification.fromJson(data);
+        if (temp.value!)
+          decisionMade = 'accept';
+        else
+          decisionMade = 'decline';
+        break;
+      }
+      
+    }
+    print('inside function $decisionMade');
   }
 }

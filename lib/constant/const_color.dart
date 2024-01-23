@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 const Color kBlue= Color(0xff04b5e4);
 const Color kPrimary= Color(0xffE8E5E0);
 const Color kRed= Color(0xffE61B23);

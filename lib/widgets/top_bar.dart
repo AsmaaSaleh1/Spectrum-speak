@@ -10,10 +10,13 @@ import 'package:intl/intl.dart';
 import 'package:spectrum_speak/constant/const_color.dart';
 import 'package:spectrum_speak/constant/utils.dart';
 import 'package:spectrum_speak/modules/CenterNotification.dart';
+import 'package:spectrum_speak/modules/CenterUser.dart';
 import 'package:spectrum_speak/modules/ChatUser.dart';
+import 'package:spectrum_speak/modules/specialist.dart';
 import 'package:spectrum_speak/rest/auth_manager.dart';
 import 'package:spectrum_speak/rest/rest_api_center.dart';
 import 'package:spectrum_speak/rest/rest_api_menu.dart';
+import 'package:spectrum_speak/rest/rest_api_profile.dart';
 import 'package:spectrum_speak/rest/rest_api_profile_delete.dart';
 import 'package:spectrum_speak/screen/center_profile.dart';
 import 'package:spectrum_speak/screen/contact_us.dart';
@@ -29,30 +32,80 @@ import 'package:tuple/tuple.dart';
 
 import 'card_user_chat.dart';
 
+int unreadMessagesCount = 0;
+int unreadNotificationsCount = 0;
 List<ChatUser> popUpMenuList = [];
 CenterNotification cn = CenterNotification(
-    fromID: "3",
+    fromID: "2",
     time: "2024/01/19 11:00 PM",
-    toID: "1",
+    toID: "3",
     read: false,
-    type: "response",
-    value: true);
+    type: "request",
+    value: false);
 
-class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
+class CustomAppBar extends StatefulWidget implements PreferredSizeWidget {
   final GlobalKey<ScaffoldState> scaffoldKey;
-  const CustomAppBar({
+  CustomAppBar({
     super.key,
     required this.scaffoldKey,
   });
   @override
+  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
+  @override
+  State<CustomAppBar> createState() => _CustomAppBarState();
+}
+
+class _CustomAppBarState extends State<CustomAppBar> {
+  late bool? showNotif = false;
+  @override
+  initState() {
+    super.initState();
+    setState(() {
+      Future.delayed(Duration.zero, () async {
+        await updateShowNotif();
+        setState(() {});
+      });
+    });
+  }
+
+  Future<void> updateShowNotif() async {
+    if (await getUserCategory(AuthManager.u.UserID.toString()) ==
+        'Specialist') {
+      showNotif = true;
+      print('checkkkk sp');
+    }
+    print(showNotif);
+  }
+
+  void _updateData(int unreadM, int unreadN) {
+    setState(() {
+      unreadMessagesCount = unreadM;
+      unreadNotificationsCount = unreadN;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
+    print('after $showNotif');
     MediaQueryData mq = MediaQuery.of(context);
-    return FutureBuilder<int>(
-        future: Utils.getUnreadConversations(false),
+    return FutureBuilder<List<int>>(
+        future: Future.wait([
+          Utils.getUnreadConversations(false),
+          if (showNotif!)
+            Utils.getUnreadNotifications(AuthManager.u.UserID.toString()),
+          if (showNotif == false) Future(() => 9)
+        ]),
         builder: (context, snapshot) {
-          int unreadCount = 0;
           if (snapshot.connectionState == ConnectionState.done) {
-            unreadCount = snapshot.data ?? 0;
+            unreadMessagesCount = snapshot.data![0] ?? 0;
+            if (showNotif!)
+              unreadNotificationsCount = snapshot.data![1];
+            else {
+              print('yo');
+              unreadNotificationsCount = 0;
+            }
+            print('unread M $unreadMessagesCount');
+            print('unread N $unreadNotificationsCount');
           }
           return AppBar(
             leading: IconButton(
@@ -62,13 +115,13 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                 size: 30,
               ),
               onPressed: () {
-                scaffoldKey.currentState?.openDrawer();
+                widget.scaffoldKey.currentState?.openDrawer();
               },
             ),
             actions: [
               badges.Badge(
                 badgeContent: Text(
-                  '$unreadCount',
+                  '$unreadMessagesCount',
                   style: TextStyle(color: kPrimary),
                 ),
                 animationType: BadgeAnimationType.slide,
@@ -97,20 +150,44 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                   size: 30,
                 ),
               ),
-              IconButton(
-                onPressed: () async {
-                  print('Notification button pressed');
-                  // Utils.storeCenterNotification(cn);
-
-                  _showNotificationsPopUpMenu(
-                      context,
-                      await Utils.getNotifications(
-                          '', AuthManager.u.UserID.toString()));
-                },
-                icon: const Icon(
-                  CupertinoIcons.bell,
-                  color: kPrimary,
-                  size: 30,
+              badges.Badge(
+                badgeContent: Text(
+                  '$unreadNotificationsCount',
+                  style: TextStyle(color: kPrimary),
+                ),
+                animationType: BadgeAnimationType.slide,
+                animationDuration: Duration(milliseconds: 1200),
+                badgeColor: kRed,
+                position: badges.BadgePosition.topEnd(top: 0, end: 3),
+                child: IconButton(
+                  onPressed: () async {
+                    print('Notification button pressed');
+                    print(await AuthManager.u.UserID);
+                    String category =
+                        await getUserCategory(AuthManager.u.UserID.toString());
+                    Specialist? s;
+                    if (category == 'Specialist') {
+                      s = await profileSpecialist(
+                          await '${AuthManager.u.UserID}');
+                      print('now fr ${s!.centerID}');
+                      print('is admin? ${s!.admin}');
+                      if (s!.admin)
+                        _showNotificationsPopUpMenu(
+                            context,
+                            await Utils.getNotifications(
+                                'Center', s!.centerID));
+                      else
+                        _showNotificationsPopUpMenu(
+                            context,
+                            await Utils.getNotifications(
+                                'Specialist', s!.userID));
+                    }
+                  },
+                  icon: const Icon(
+                    CupertinoIcons.bell,
+                    color: kPrimary,
+                    size: 30,
+                  ),
                 ),
               ),
               Padding(
@@ -185,8 +262,128 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         });
   }
 
-  @override
-  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
+  void _showMessagesPopUpMenu(BuildContext context, List<ChatUser> list) async {
+    final RenderBox overlay =
+        Overlay.of(context).context.findRenderObject() as RenderBox;
+    await showMenu(
+      color: kPrimary,
+      context: context,
+      position: RelativeRect.fromLTRB(
+        overlay.size.width - 50, // Adjust the value as needed
+        53, // Y position, set to 0 for top
+        overlay.size.width, // Right edge of the screen
+        MediaQuery.of(context).size.height, // Bottom edge of the screen
+      ),
+      items: [
+        PopupMenuItem(
+          padding: const EdgeInsets.all(0),
+          child: SizedBox(
+            width: 300,
+            child: Column(
+              children: [
+                for (int i = 0; i < list.length; i++)
+                  ListTile(
+                    contentPadding: EdgeInsets.zero,
+                    title: CardUserChat(user: list[i]),
+                  ),
+                ListTile(
+                  title: TextButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const SplashChatScreen()),
+                      );
+                    },
+                    child: Text(
+                      list.isEmpty ? 'Start Chatting Now' : 'Show All Messages',
+                      style: TextStyle(
+                          color: kDarkerColor, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  void _showNotificationsPopUpMenu(
+      BuildContext context, List<CenterNotification> list) async {
+    final RenderBox overlay =
+        Overlay.of(context).context.findRenderObject() as RenderBox;
+    List<dynamic> u = [];
+
+    for (int i = 0; i < list.length; i++) {
+      if (list[i].type == 'response') {
+        ChatUser user = await Utils.fetchUser(list[i].fromID);
+        u.add(user);
+      } else {
+        print('centerhere');
+        CenterUser user = await Utils.fetchCenter(list[i].fromID);
+        u.add(user);
+      }
+    }
+
+    // Now use list in your logic
+    list.sort((a, b) {
+      DateTime timeA = DateFormat('yyyy/MM/dd hh:mm a').parse(a.time!);
+      DateTime timeB = DateFormat('yyyy/MM/dd hh:mm a').parse(b.time!);
+      return timeB.compareTo(timeA); // Descending order
+    });
+
+    await showMenu(
+      color: kPrimary,
+      context: context,
+      position: RelativeRect.fromLTRB(
+        overlay.size.width - 50, // Adjust the value as needed
+        53, // Y position, set to 0 for top
+        overlay.size.width, // Right edge of the screen
+        MediaQuery.of(context).size.height, // Bottom edge of the screen
+      ),
+      items: [
+        PopupMenuItem(
+          padding: const EdgeInsets.all(0),
+          child: SizedBox(
+            width: 300,
+            child: Column(
+              children: [
+                for (int i = 0; i < list.length; i++)
+                  ListTile(
+                    contentPadding: EdgeInsets.zero,
+                    title: list[i].type == 'request'
+                        ? NotificationCard(
+                            cn: list[i],
+                            c: u[i],
+                            callBack: _updateData,
+                          ) //Center notification card
+                        : NotificationCard(
+                            cn: list[i],
+                            u: u[i],
+                            callBack: _updateData,
+                          ), //Specialist notificatiod card
+                  ),
+                ListTile(
+                  title: TextButton(
+                    onPressed: () {},
+                    child: Text(
+                      list.isNotEmpty
+                          ? 'That\'s it😁'
+                          : 'You have not received any notifications yet!',
+                      style: TextStyle(
+                          color: kDarkerColor, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
 }
 
 class TopBar extends StatelessWidget {
@@ -627,153 +824,61 @@ class TopBar extends StatelessWidget {
 
   Future<bool> _showDestroyAccountConfirmation(BuildContext context) async {
     return await showDialog<bool>(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: Text("Warning"),
-              content: Text("Are you sure you want to destroy your account?"
-                  "This action cannot be undone."),
-              icon: Icon(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            backgroundColor: kDarkerBlue,
+            title: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+              Icon(
                 Icons.warning_amber,
-                size: 45,
                 color: kYellow,
+                size: 40,
               ),
-              actions: <Widget>[
-                TextButton(
-                  child: Text("Cancel"),
+              Text('Warning',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: kPrimary,
+                      fontSize: 30)),
+            ]),
+            content: Text(
+                'Are you sure you want to destroy your account?\nThis action cannot be undone.',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    fontWeight: FontWeight.w300,
+                    fontSize: 21,
+                    color: kPrimary)),
+            actions: [
+              TextButton(
                   onPressed: () {
-                    Navigator.of(context)
-                        .pop(false); // Close the dialog and return false
+                    Navigator.of(context).pop(true);
                   },
-                ),
-                TextButton(
-                  child: Text("Yes"),
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: kPrimary,
+                      side: BorderSide(width: 1.0),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10))),
+                  child: Text('Yes',
+                      style: TextStyle(
+                          color: kDarkerColor,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 17))),
+              TextButton(
                   onPressed: () {
-                    Navigator.of(context)
-                        .pop(true); // Close the dialog and return true
+                    Navigator.of(context).pop(false);
                   },
-                ),
-              ],
-            );
-          },
-        ) ??
-        false; // Return false if the user dismisses the dialog without making a choice
-  }
-}
-
-void _showMessagesPopUpMenu(BuildContext context, List<ChatUser> list) async {
-  final RenderBox overlay =
-      Overlay.of(context).context.findRenderObject() as RenderBox;
-  await showMenu(
-    color: kPrimary,
-    context: context,
-    position: RelativeRect.fromLTRB(
-      overlay.size.width - 50, // Adjust the value as needed
-      53, // Y position, set to 0 for top
-      overlay.size.width, // Right edge of the screen
-      MediaQuery.of(context).size.height, // Bottom edge of the screen
-    ),
-    items: [
-      PopupMenuItem(
-        padding: const EdgeInsets.all(0),
-        child: SizedBox(
-          width: 300,
-          child: Column(
-            children: [
-              for (int i = 0; i < list.length; i++)
-                ListTile(
-                  contentPadding: EdgeInsets.zero,
-                  title: CardUserChat(user: list[i]),
-                ),
-              ListTile(
-                title: TextButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const SplashChatScreen()),
-                    );
-                  },
-                  child: Text(
-                    list.isEmpty ? 'Start Chatting Now' : 'Show All Messages',
-                    style: TextStyle(
-                        color: kDarkerColor, fontWeight: FontWeight.bold),
-                  ),
-                ),
-              ),
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: kPrimary,
+                      side: BorderSide(width: 1.0),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10))),
+                  child: Text('Cancel',
+                      style: TextStyle(
+                          color: kDarkerColor,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 17))),
             ],
-          ),
-        ),
-      ),
-    ],
-  );
-}
-
-void _showNotificationsPopUpMenu(
-    BuildContext context, List<CenterNotification> list) async {
-  final RenderBox overlay =
-      Overlay.of(context).context.findRenderObject() as RenderBox;
-  List<CenterNotification> filteredList = [];
-  List<ChatUser> u = [];
-
-  for (int i = 0; i < list.length; i++) {
-    if (list[i].fromID == AuthManager.u.UserID.toString()) {
-      filteredList.add(list[i]);
-      ChatUser user = await Utils.fetchUser(list[i].toID);
-      u.add(user);
-    }
+          );
+        })?? false;
   }
-
-  // Now use filteredList in your logic
-  filteredList.sort((a, b) {
-    DateTime timeA = DateFormat('yyyy/MM/dd hh:mm a').parse(a.time);
-    DateTime timeB = DateFormat('yyyy/MM/dd hh:mm a').parse(b.time);
-    return timeB.compareTo(timeA); // Descending order
-  });
-
-  await showMenu(
-    color: kPrimary,
-    context: context,
-    position: RelativeRect.fromLTRB(
-      overlay.size.width - 50, // Adjust the value as needed
-      53, // Y position, set to 0 for top
-      overlay.size.width, // Right edge of the screen
-      MediaQuery.of(context).size.height, // Bottom edge of the screen
-    ),
-    items: [
-      PopupMenuItem(
-        padding: const EdgeInsets.all(0),
-        child: SizedBox(
-          width: 300,
-          child: Column(
-            children: [
-              if(list.length!=0)
-              for (int i = 0; i < filteredList.length; i++)
-                ListTile(
-                  contentPadding: EdgeInsets.zero,
-                  title: NotificationCard(cn: filteredList[i], u: u[i]),
-                )
-              ,
-              ListTile(
-                title: TextButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const SplashChatScreen()),
-                    );
-                  },
-                  child: Text(
-                    list.isNotEmpty?'That\'s it😁':'You have not received any notifications yet!',
-                    style: TextStyle(
-                        color: kDarkerColor, fontWeight: FontWeight.bold),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    ],
-  );
 }

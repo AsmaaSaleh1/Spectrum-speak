@@ -1,18 +1,18 @@
 class CenterNotification {
   CenterNotification({
     required this.fromID,
-    required this.time,
+    this.time,
     required this.toID,
-    required this.read,
-    required this.type,
-    required this.value,
+    this.read,
+    this.type,
+    this.value,
   });
-  late final String? fromID;
-  late final String time;
+  late final String fromID;
+  late String? time;
   late final String toID;
-  late final bool read;
-  late final String type;
-  late final bool value;
+  late bool? read;
+  late String? type;
+  late bool? value;
   
   CenterNotification.fromJson(Map<String, dynamic> json){
     fromID = json['fromID'];

@@ -1,4 +1,5 @@
 import 'package:circular_profile_avatar/circular_profile_avatar.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:spectrum_speak/constant/const_color.dart';
 import 'package:spectrum_speak/constant/utils.dart';
@@ -24,22 +25,23 @@ class CardChooseSpecialist extends StatefulWidget {
 }
 
 class _CardChooseSpecialistState extends State<CardChooseSpecialist> {
-  bool isButtonPressed=false;
+  bool isButtonPressed = false;
   bool _hasRequestBeenMade = false;
-  Future<void> updateVar() async {
+  Future<void> initButton() async {
     bool r =
         await Utils.checkIfRequestHasBeenMade(widget.userID, globalCenterID);
     setState(() {
       _hasRequestBeenMade = r;
       if (_hasRequestBeenMade) isButtonPressed = true;
     });
-    print('bool value is $_hasRequestBeenMade\nButton pressed value is $isButtonPressed');
+    print(
+        'bool value is $_hasRequestBeenMade\nButton pressed value is $isButtonPressed');
   }
 
   @override
   initState() {
     super.initState();
-    updateVar();
+    initButton();
   }
 
   @override
@@ -90,7 +92,7 @@ class _CardChooseSpecialistState extends State<CardChooseSpecialist> {
                   widget.userID, globalCenterID);
               setState(() {
                 // Toggle the button state
-                isButtonPressed = !isButtonPressed;
+                if (!isButtonPressed) isButtonPressed = !isButtonPressed;
               });
               if (isButtonPressed && !_hasRequestBeenMade) {
                 CenterNotification cn = CenterNotification(
@@ -100,7 +102,65 @@ class _CardChooseSpecialistState extends State<CardChooseSpecialist> {
                     read: false,
                     type: "request",
                     value: false);
+                print('center id $globalCenterID');
                 Utils.storeCenterNotification(cn);
+              } else if (isButtonPressed && _hasRequestBeenMade) {
+                showDialog(
+                    barrierDismissible: false,
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                        backgroundColor: kDarkerBlue,
+                        title: Row(mainAxisAlignment:MainAxisAlignment.center,
+                        children:[Icon(Icons.warning_amber,color: kYellow,size: 40,),
+                        Text('Warning',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, color: kPrimary,fontSize:30)),]),
+                        content: Text(
+                            'You\'re going to cancel your offer for ${widget.userName}',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                fontWeight: FontWeight.w300,
+                                fontSize: 21,
+                                color: kPrimary)),
+                        actions: [
+                          TextButton(
+                              onPressed: () {
+                                CenterNotification cn = new CenterNotification(
+                                    fromID: globalCenterID,
+                                    toID: widget.userID);
+                                Utils.deleteCenterNotification(cn);
+                                setState(() {
+                                  isButtonPressed = false;
+                                });
+                                Navigator.pop(context);
+                              },
+                              style: ElevatedButton.styleFrom(
+                                  backgroundColor: kPrimary,
+                                  side: BorderSide(width: 1.0),
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10))),
+                              child: Text('Okay',
+                                  style: TextStyle(
+                                      color: kDarkerColor,
+                                      fontWeight: FontWeight.w600,fontSize:17))),
+                          TextButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              style: ElevatedButton.styleFrom(
+                                  backgroundColor: kPrimary,
+                                  side: BorderSide(width: 1.0),
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10))),
+                              child: Text('Cancel',
+                                  style: TextStyle(
+                                      color: kDarkerColor,
+                                      fontWeight: FontWeight.w600,fontSize:17))),
+                        ],
+                      );
+                    });
               }
             },
             style: ElevatedButton.styleFrom(

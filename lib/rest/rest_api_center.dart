@@ -203,7 +203,8 @@ Future<dynamic> getSpecialistAdminForCenter(String centerID) async {
       // Check if the response body is not empty before decoding
       if (response.body.isNotEmpty) {
         var decodedData = jsonDecode(response.body);
-        print(decodedData['specialists'][0]["Username"]);
+        print('name for sp ${decodedData['specialists'][0]["Username"]}');
+        print('id for sp ${decodedData['specialists'][0]["UserID"]}');
         return decodedData['specialists'][0]
             ["Username"]; // Return the array directly
       } else {
@@ -218,6 +219,38 @@ Future<dynamic> getSpecialistAdminForCenter(String centerID) async {
     throw Exception('Failed to get data error: $error');
   }
 }
+
+Future<dynamic> getSpecialistAdminUserIDForCenter(String centerID) async {
+  try {
+    final response = await http.get(
+      Uri.parse('${Utils.baseUrl}/center/admin/Specialist/$centerID'),
+      headers: {
+        'Accept': 'application/json',
+        "Content-Type": "application/json"
+      },
+    );
+
+    if (response.statusCode == 200) {
+      // Check if the response body is not empty before decoding
+      if (response.body.isNotEmpty) {
+        var decodedData = jsonDecode(response.body);
+        print('name for sp ${decodedData['specialists'][0]["Username"]}');
+        print('id for sp ${decodedData['specialists'][0]["UserID"]}');
+        return decodedData['specialists'][0]
+            ["UserID"]; // Return the array directly
+      } else {
+        throw Exception('Empty response body');
+      }
+    } else {
+      throw Exception(
+          'Failed to get data. Status code: ${response.statusCode}');
+    }
+  } catch (error) {
+    print(error);
+    throw Exception('Failed to get data error: $error');
+  }
+}
+
 
 Future<String> getCenterName(String centerID) async {
   try {
@@ -255,3 +288,29 @@ Future<String> getCenterName(String centerID) async {
     throw Exception('Failed to get data error: $error');
   }
 }
+
+Future<void> addSpecialistToCenter(String userId, String centerId) async {
+
+  try {
+    final response = await http.patch(
+      Uri.parse('${Utils.baseUrl}/center/addSpecialist/$userId'),
+      headers: <String, String>{
+        'Accept':'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode(<String, dynamic>{'centerId': int.parse(centerId)}),
+    );
+
+    if (response.statusCode == 200) {
+      print('Specialist added successfully');
+    } else if (response.statusCode == 404) {
+      print('User not found');
+    } else {
+      print('Failed to add speciliast. Status code: ${response.statusCode}');
+    }
+  } catch (error) {
+    print('Error updating center: $error');
+  }
+}
+
+

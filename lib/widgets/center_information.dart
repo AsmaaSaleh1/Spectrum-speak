@@ -330,8 +330,12 @@ class _CenterInformationState extends State<CenterInformation> {
   Future<Tuple2<CenterAutism?, dynamic>> _getCenter() async {
     try {
       print('UserId: ${widget.userId}');
-      var result = await profileCenter(widget.userId);
-      dynamic admin = await getSpecialistAdminForCenter(result!.centerID);
+      String spID = '${await getSpecialistAdminUserIDForCenter(widget.userId)}';
+      print('spID $spID');
+      var result = await profileCenter(
+          spID); //this has to be Specialist id not center id
+      print('result======$result');
+      dynamic admin = await getSpecialistAdminForCenter(widget.userId);
       print(admin);
       return Tuple2(result, admin);
     } catch (error) {
