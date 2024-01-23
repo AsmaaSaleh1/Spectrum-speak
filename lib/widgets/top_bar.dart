@@ -19,6 +19,7 @@ import 'package:spectrum_speak/rest/rest_api_menu.dart';
 import 'package:spectrum_speak/rest/rest_api_profile.dart';
 import 'package:spectrum_speak/rest/rest_api_profile_delete.dart';
 import 'package:spectrum_speak/screen/center_profile.dart';
+import 'package:spectrum_speak/screen/chat_bot.dart';
 import 'package:spectrum_speak/screen/contact_us.dart';
 import 'package:spectrum_speak/screen/login.dart';
 import 'package:spectrum_speak/screen/main_page.dart';
@@ -57,6 +58,7 @@ class CustomAppBar extends StatefulWidget implements PreferredSizeWidget {
 
 class _CustomAppBarState extends State<CustomAppBar> {
   late bool? showNotif = false;
+  String category = '';
   @override
   initState() {
     super.initState();
@@ -69,8 +71,8 @@ class _CustomAppBarState extends State<CustomAppBar> {
   }
 
   Future<void> updateShowNotif() async {
-    if (await getUserCategory(AuthManager.u.UserID.toString()) ==
-        'Specialist') {
+    category = await getUserCategory(AuthManager.u.UserID.toString());
+    if (category == 'Specialist') {
       showNotif = true;
       print('checkkkk sp');
     }
@@ -87,6 +89,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
   @override
   Widget build(BuildContext context) {
     print('after $showNotif');
+    print('after $category');
     MediaQueryData mq = MediaQuery.of(context);
     return FutureBuilder<List<int>>(
         future: Future.wait([
@@ -642,21 +645,26 @@ class TopBar extends StatelessWidget {
                       ),
                       onTap: () {},
                     ),
-                    ListTile(
-                      leading: Icon(
-                        FontAwesomeIcons.brain,
-                        color: kDarkerColor,
-                        size: 22,
-                      ),
-                      title: const Text(
-                        "Spectrum Bot",
-                        style: TextStyle(
-                          fontWeight: FontWeight.w700,
-                          fontSize: 17,
+                    if (category == 'Parent')
+                      ListTile(
+                        leading: Icon(
+                          FontAwesomeIcons.brain,
+                          color: kDarkerColor,
+                          size: 22,
                         ),
+                        title: const Text(
+                          "Spectrum Bot",
+                          style: TextStyle(
+                            fontWeight: FontWeight.w700,
+                            fontSize: 17,
+                          ),
+                        ),
+                        onTap: () async{
+                          String n= (await AuthManager.getUserName())!;
+                          String ID= (await AuthManager.getUserId())!;
+                          final result = Navigator.push(context,MaterialPageRoute(builder: ((context) => ChatBot(name:n,id:ID))));
+                        },
                       ),
-                      onTap: () {},
-                    ),
                     ListTile(
                       leading: Icon(
                         FontAwesomeIcons.message,
@@ -824,61 +832,63 @@ class TopBar extends StatelessWidget {
 
   Future<bool> _showDestroyAccountConfirmation(BuildContext context) async {
     return await showDialog<bool>(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            backgroundColor: kDarkerBlue,
-            title: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-              Icon(
-                Icons.warning_amber,
-                color: kYellow,
-                size: 40,
-              ),
-              Text('Warning',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: kPrimary,
-                      fontSize: 30)),
-            ]),
-            content: Text(
-                'Are you sure you want to destroy your account?\nThis action cannot be undone.',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                    fontWeight: FontWeight.w300,
-                    fontSize: 21,
-                    color: kPrimary)),
-            actions: [
-              TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop(true);
-                  },
-                  style: ElevatedButton.styleFrom(
-                      backgroundColor: kPrimary,
-                      side: BorderSide(width: 1.0),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10))),
-                  child: Text('Yes',
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                backgroundColor: kDarkerBlue,
+                title:
+                    Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                  Icon(
+                    Icons.warning_amber,
+                    color: kYellow,
+                    size: 40,
+                  ),
+                  Text('Warning',
+                      textAlign: TextAlign.center,
                       style: TextStyle(
-                          color: kDarkerColor,
-                          fontWeight: FontWeight.w600,
-                          fontSize: 17))),
-              TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop(false);
-                  },
-                  style: ElevatedButton.styleFrom(
-                      backgroundColor: kPrimary,
-                      side: BorderSide(width: 1.0),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10))),
-                  child: Text('Cancel',
-                      style: TextStyle(
-                          color: kDarkerColor,
-                          fontWeight: FontWeight.w600,
-                          fontSize: 17))),
-            ],
-          );
-        })?? false;
+                          fontWeight: FontWeight.bold,
+                          color: kPrimary,
+                          fontSize: 30)),
+                ]),
+                content: Text(
+                    'Are you sure you want to destroy your account?\nThis action cannot be undone.',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        fontWeight: FontWeight.w300,
+                        fontSize: 21,
+                        color: kPrimary)),
+                actions: [
+                  TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop(true);
+                      },
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: kPrimary,
+                          side: BorderSide(width: 1.0),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10))),
+                      child: Text('Yes',
+                          style: TextStyle(
+                              color: kDarkerColor,
+                              fontWeight: FontWeight.w600,
+                              fontSize: 17))),
+                  TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop(false);
+                      },
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: kPrimary,
+                          side: BorderSide(width: 1.0),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10))),
+                      child: Text('Cancel',
+                          style: TextStyle(
+                              color: kDarkerColor,
+                              fontWeight: FontWeight.w600,
+                              fontSize: 17))),
+                ],
+              );
+            }) ??
+        false;
   }
 }
