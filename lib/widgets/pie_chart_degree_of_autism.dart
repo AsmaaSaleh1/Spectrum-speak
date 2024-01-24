@@ -18,7 +18,6 @@ class PieChartDegreeOfAutismState extends State {
 
   Future<void> getChildrenCount() async {
     var data = await getChildrenCountByDegreeOfAutism();
-    print(data);
     if (data != null) {
       setState(() {
         degree = data.keys.toList();
@@ -110,10 +109,6 @@ class PieChartDegreeOfAutismState extends State {
                             touchedIndex = pieTouchResponse
                                 .touchedSection!.touchedSectionIndex;
                           });
-
-                          // Here you can use the touchedIndex to display the corresponding count
-                          print(
-                              "Touched index: $touchedIndex, Count: ${counts[touchedIndex]}");
                         },
                       ),
                       startDegreeOffset: 180,

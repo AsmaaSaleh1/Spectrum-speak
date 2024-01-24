@@ -22,7 +22,6 @@ class _BarChartDataByCityState extends State<BarChartDataByCity> {
   Future<void> getUsersCount(String city) async {
     try {
       var data = await getUsersCountByCity(city);
-      print(data);
       var color = [kRed, kYellow.withGreen(180), kBlue, kGreen];
       setState(() {
         // Assuming data is a map with string keys and dynamic values
@@ -41,7 +40,6 @@ class _BarChartDataByCityState extends State<BarChartDataByCity> {
               counts.isNotEmpty ? counts.reduce((a, b) => a > b ? a : b) : 0.0;
           y = maxCount + (maxCount % 2 == 0 ? 4 : 3);
           barGroups = List.generate(categories.length, (index) {
-            String category = categories[index];
             double value = counts[index];
             Color colorColumn = color[index];
             return BarChartGroupData(

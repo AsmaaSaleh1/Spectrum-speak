@@ -5,32 +5,32 @@ import 'package:spectrum_speak/units/build_search_text_field.dart';
 import 'package:spectrum_speak/widgets/card_user.dart';
 import 'package:spectrum_speak/widgets/top_bar.dart';
 
-class RemoveUser extends StatefulWidget {
-  const RemoveUser({super.key});
+class BlockUser extends StatefulWidget {
+  const BlockUser({super.key});
 
   @override
-  State<RemoveUser> createState() => _RemoveUserState();
+  State<BlockUser> createState() => _BlockUserState();
 }
 
-class _RemoveUserState extends State<RemoveUser> {
+class _BlockUserState extends State<BlockUser> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: TopBar(
-        body: RemoveUserCall(),
+        body: BlockUserCall(),
       ),
     );
   }
 }
 
-class RemoveUserCall extends StatefulWidget {
-  const RemoveUserCall({super.key});
+class BlockUserCall extends StatefulWidget {
+  const BlockUserCall({super.key});
 
   @override
-  State<RemoveUserCall> createState() => _RemoveUserCallState();
+  State<BlockUserCall> createState() => _BlockUserCallState();
 }
 
-class _RemoveUserCallState extends State<RemoveUserCall> {
+class _BlockUserCallState extends State<BlockUserCall> {
   final TextEditingController _searchController = TextEditingController();
   List<dynamic> usersData = [];
 
@@ -75,7 +75,7 @@ class _RemoveUserCallState extends State<RemoveUserCall> {
               if (usersData.isNotEmpty)
                 Column(
                   children: usersData.map((data) {
-                    return CardUser(
+                    return CardUserToBlock(
                       userID: data['UserID'].toString(),
                       userName: data['Username'] ?? '',
                       userCategory: data['Category'] ?? '',

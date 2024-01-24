@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:mailer/smtp_server/gmail.dart';
 import 'package:spectrum_speak/constant/const_color.dart';
+import 'package:spectrum_speak/rest/rest_api_admin.dart';
 import 'package:spectrum_speak/rest/rest_api_menu.dart';
 import 'package:spectrum_speak/rest/rest_api_profile_delete.dart';
 import 'package:spectrum_speak/screen/parent_profile.dart';
@@ -10,11 +11,11 @@ import 'package:spectrum_speak/screen/shadow_teacher_profile.dart';
 import 'package:spectrum_speak/screen/specialist_profile.dart';
 import 'package:mailer/mailer.dart';
 
-class CardUser extends StatefulWidget {
+class CardUserToBlock extends StatefulWidget {
   final String userID;
   final String userName;
   final String userCategory;
-  const CardUser({
+  const CardUserToBlock({
     super.key,
     required this.userID,
     required this.userName,
@@ -22,10 +23,10 @@ class CardUser extends StatefulWidget {
   });
 
   @override
-  State<CardUser> createState() => _CardUserState();
+  State<CardUserToBlock> createState() => _CardUserToBlockState();
 }
 
-class _CardUserState extends State<CardUser> {
+class _CardUserToBlockState extends State<CardUserToBlock> {
   @override
   void initState() {
     super.initState();
@@ -101,21 +102,24 @@ class _CardUserState extends State<CardUser> {
           ),
           trailing: ElevatedButton.icon(
             onPressed: () async {
-              bool confirmed = await _showDestroyAccountConfirmation(context);
-              String email = await getEmailByID(widget.userID);
+              bool confirmed = await _showDestroyAccountConfirmation(
+                context,
+              );
+              String email = await getEmailByID(
+                widget.userID,
+              );
               if (confirmed) {
                 switch (widget.userCategory) {
                   case "Parent":
-                    deleteParent(widget.userID);
-                    sendEmail(email, widget.userName);
-                    break;
                   case "Specialist":
-                    deleteSpecialist(widget.userID);
-                    sendEmail(email, widget.userName);
-                    break;
                   case "ShadowTeacher":
-                    deleteShadowTeacher(widget.userID);
-                    sendEmail(email, widget.userName);
+                    blockUser(
+                      widget.userID,
+                    );
+                    sendEmail(
+                      email,
+                      widget.userName,
+                    );
                     break;
                   default:
                     print("error in category");
@@ -133,12 +137,12 @@ class _CardUserState extends State<CardUser> {
               ),
             ),
             icon: Icon(
-              FontAwesomeIcons.userMinus,
+              FontAwesomeIcons.userSlash,
               color: kPrimary,
               size: 17,
             ),
             label: Text(
-              "Remove",
+              "Block",
               style: TextStyle(
                 color: kPrimary,
                 fontWeight: FontWeight.bold,

@@ -18,7 +18,7 @@ import 'package:spectrum_speak/screen/contact_us.dart';
 import 'package:spectrum_speak/screen/login.dart';
 import 'package:spectrum_speak/screen/main_page.dart';
 import 'package:spectrum_speak/screen/parent_profile.dart';
-import 'package:spectrum_speak/screen/remove_user.dart';
+import 'package:spectrum_speak/screen/block_user.dart';
 import 'package:spectrum_speak/screen/search_page.dart';
 import 'package:spectrum_speak/screen/shadow_teacher_profile.dart';
 import 'package:spectrum_speak/screen/show_all_contact_us.dart';
@@ -453,12 +453,12 @@ class TopBar extends StatelessWidget {
                     if (isAdminForSystem)
                       ListTile(
                         leading: Icon(
-                          FontAwesomeIcons.personCircleMinus,
+                          FontAwesomeIcons.userXmark,
                           color: kDarkerColor,
                           size: 22,
                         ),
                         title: const Text(
-                          "Remove user",
+                          "Block user",
                           style: TextStyle(
                             fontWeight: FontWeight.w700,
                             fontSize: 17,
@@ -467,7 +467,7 @@ class TopBar extends StatelessWidget {
                         onTap: () => Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => const RemoveUser(),
+                            builder: (context) => const BlockUser(),
                           ),
                         ),
                       ),

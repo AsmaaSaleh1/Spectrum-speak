@@ -12,7 +12,8 @@ Future addAdmin(String userID) async {
   var decodedData = jsonDecode(response.body);
   return decodedData;
 }
-Future <bool?> isAdminSystem(String userID)async{
+
+Future<bool?> isAdminSystem(String userID) async {
   try {
     final response = await http.get(
       Uri.parse('${Utils.baseUrl}/admin/isAdmin/$userID'),
@@ -31,6 +32,7 @@ Future <bool?> isAdminSystem(String userID)async{
     throw Exception('Failed to check admin status');
   }
 }
+
 Future<List<dynamic>> searchToUsers(String namePrefix) async {
   try {
     final response = await http.get(
@@ -48,13 +50,15 @@ Future<List<dynamic>> searchToUsers(String namePrefix) async {
         throw Exception('Empty response body');
       }
     } else {
-      throw Exception('Failed to get data. Status code: ${response.statusCode}');
+      throw Exception(
+          'Failed to get data. Status code: ${response.statusCode}');
     }
   } catch (error) {
     print(error);
     throw Exception('Failed to get data error: $error');
   }
 }
+
 Future removeAdmin(String userID) async {
   final response = await http.delete(
     Uri.parse('${Utils.baseUrl}/admin/delete/$userID'),
@@ -68,4 +72,13 @@ Future removeAdmin(String userID) async {
   } else {
     throw Exception('Failed to delete child');
   }
+}
+
+Future blockUser(String userId) async {
+  final response = await http.post(
+      Uri.parse('${Utils.baseUrl}/admin/blocked/$userId'),
+      headers: {"Accept": "application/json"},
+      body: {});
+  var decodedData = jsonDecode(response.body);
+  return decodedData;
 }
