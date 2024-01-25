@@ -51,7 +51,14 @@ class _CardUserChatState extends State<CardUserChat> {
                 final data = snapshot.data?.docs;
                 final list =
                     data?.map((e) => Message.fromJson(e.data())).toList() ?? [];
-                if (list.isNotEmpty) _message = list[0];
+                if (list.isNotEmpty) {
+                  print('here');
+                  _message = list[0];
+                  print(_message!.sent);
+                }
+                print('fsdfdsf\n');
+                // MyDateUtil.getLastMessageTime(
+                // context: context, time: _message!.sent);
                 return ListTile(
                     leading: CircularProfileAvatar(
                       '',
@@ -68,7 +75,8 @@ class _CardUserChatState extends State<CardUserChat> {
                             shape: BoxShape.circle,
                             image: DecorationImage(
                               image: imageProvider,
-                              fit: BoxFit.cover, // Set the fit property to cover
+                              fit:
+                                  BoxFit.cover, // Set the fit property to cover
                             ),
                           ),
                         ),
@@ -106,7 +114,7 @@ class _CardUserChatState extends State<CardUserChat> {
                               )
                             : Text(
                                 MyDateUtil.getLastMessageTime(
-                                    context: context, time: _message!.sent),
+                                    context: context, time: _message!.sent)[0],
                                 style: TextStyle(color: Colors.black54)));
               })),
     );

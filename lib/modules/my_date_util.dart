@@ -38,29 +38,33 @@ class MyDateUtil {
   }
 
   //get last message time (used in chat user card)
-  static String getLastMessageTime(
+  static List<String> getLastMessageTime(
       {required BuildContext context,
       required String time,
       bool showYear = false}) {
+    List<String> t = [];
     final DateTime sent = DateTime.fromMillisecondsSinceEpoch(int.parse(time));
     final DateTime now = DateTime.now();
-
+    print('send is $sent');
     if (now.day == sent.day &&
         now.month == sent.month &&
         now.year == sent.year) {
-      return TimeOfDay.fromDateTime(sent).format(context);
+      t.add(TimeOfDay.fromDateTime(sent).format(context));
+      t.add("Today");
+      return t;
     }
-
-    return showYear
+    t.add(showYear
         ? '${sent.day} ${_getMonth(sent)} ${sent.year}'
-        : '${sent.day} ${_getMonth(sent)}';
+        : '${sent.day} ${_getMonth(sent)}');
+    t.add('Not Today');
+    return t;
   }
 
   //get formatted last active time of user in chat screen
   static String getLastActiveTime(
       {required BuildContext context, required String lastActive}) {
     final int i = int.tryParse(lastActive) ?? -1;
-
+    print('func here');
     //if time is not available then return below statement
     if (i == -1) return 'Last seen not available';
 
@@ -68,6 +72,7 @@ class MyDateUtil {
     DateTime now = DateTime.now();
 
     String formattedTime = TimeOfDay.fromDateTime(time).format(context);
+    print(formattedTime);
     if (time.day == now.day &&
         time.month == now.month &&
         time.year == time.year) {
@@ -145,6 +150,9 @@ class MyDateUtil {
       // Less than an hour ago
       return '${difference.inMinutes} minute${difference.inMinutes > 1 ? 's' : ''} ago';
     }
-
+  }
+  static String formatDateTime(DateTime dateTime) {
+  String formattedTime = DateFormat.jm().format(dateTime);
+  return formattedTime;
   }
 }

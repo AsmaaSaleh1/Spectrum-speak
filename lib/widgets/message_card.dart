@@ -20,6 +20,7 @@ class _MessageCardState extends State<MessageCard> {
   GlobalKey<_MessageCardState> _scaffoldKey = GlobalKey();
   final int id = AuthManager.u.UserID;
   late MediaQueryData mq;
+  bool showTrailing = false;
   bool isMe() {
     if (widget.message.fromID == id) return true;
     return false;
@@ -31,6 +32,11 @@ class _MessageCardState extends State<MessageCard> {
     return InkWell(
       onLongPress: () {
         _showBottomSheet();
+      },
+      onTap: () {
+        setState(() {
+          showTrailing = !showTrailing;
+        });
       },
       child: isMe() ? _greenMessage() : _blueMessage(),
     );
@@ -48,7 +54,9 @@ class _MessageCardState extends State<MessageCard> {
           child: Container(
             padding: EdgeInsets.all(widget.message.type == Type.image.toString()
                 ? mq.size.width * .03
-                : kIsWeb?mq.size.width*0.01:mq.size.width * .04),
+                : kIsWeb
+                    ? mq.size.width * 0.01
+                    : mq.size.width * .04),
             margin: EdgeInsets.symmetric(
                 horizontal: mq.size.width * .04,
                 vertical: mq.size.height * .01),
@@ -56,9 +64,9 @@ class _MessageCardState extends State<MessageCard> {
             decoration: BoxDecoration(
                 color: kreceiverMessage,
                 borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(30),
-                    topRight: Radius.circular(30),
-                    bottomRight: Radius.circular(30)),
+                    topLeft: Radius.circular(20),
+                    topRight: Radius.circular(20),
+                    bottomRight: Radius.circular(20)),
                 border: Border.all(color: kreceiverMessageBorder)),
             //display text or  image
             child: widget.message.type == Type.text.toString()
@@ -78,14 +86,15 @@ class _MessageCardState extends State<MessageCard> {
                   ),
           ),
         ),
-        Padding(
-          padding: EdgeInsets.only(right: mq.size.width * .04),
-          child: Text(
-            MyDateUtil.getFormattedTime(
-                context: context, time: widget.message.sent),
-            style: const TextStyle(fontSize: 13, color: Colors.black54),
+        if (showTrailing)
+          Padding(
+            padding: EdgeInsets.only(right: mq.size.width * .04),
+            child: Text(
+              MyDateUtil.getFormattedTime(
+                  context: context, time: widget.message.sent),
+              style: const TextStyle(fontSize: 13, color: Colors.black54),
+            ),
           ),
-        ),
       ],
     );
   }
@@ -94,14 +103,15 @@ class _MessageCardState extends State<MessageCard> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
+        
         Row(children: [
           SizedBox(width: mq.size.width * .04),
-          if (widget.message.read.isNotEmpty)
+          if (widget.message.read.isNotEmpty&&showTrailing)
             Icon(Icons.done_all_rounded, color: kBlue, size: 20),
           const SizedBox(width: 2),
-          Text(
+          Text(showTrailing?
             MyDateUtil.getFormattedTime(
-                context: context, time: widget.message.sent),
+                context: context, time: widget.message.sent):'            ',
             style: const TextStyle(fontSize: 13, color: Colors.black54),
           ),
         ]),
@@ -109,15 +119,17 @@ class _MessageCardState extends State<MessageCard> {
             child: Container(
           padding: EdgeInsets.all(widget.message.type == Type.image
               ? mq.size.width * .03
-              : kIsWeb?mq.size.width*0.01:mq.size.width * .04),
+              : kIsWeb
+                  ? mq.size.width * 0.01
+                  : mq.size.width * .04),
           margin: EdgeInsets.symmetric(
               horizontal: mq.size.width * .04, vertical: mq.size.height * .01),
           decoration: BoxDecoration(
               color: ksenderMessage,
               borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(30),
-                  topRight: Radius.circular(30),
-                  bottomLeft: Radius.circular(30)),
+                  topLeft: Radius.circular(20),
+                  topRight: Radius.circular(20),
+                  bottomLeft: Radius.circular(20)),
               border: Border.all(color: ksenderMessageBorder)),
           child: widget.message.type == Type.text.toString()
               ? Text(widget.message.message,
@@ -209,8 +221,8 @@ class _MessageCardState extends State<MessageCard> {
     showDialog(
         context: context,
         builder: (_) => AlertDialog(
-              backgroundColor: kDarkBlue,       
-               key: _scaffoldKey,
+              backgroundColor: kDarkBlue,
+              key: _scaffoldKey,
               contentPadding: const EdgeInsets.only(
                   left: 24, right: 24, top: 20, bottom: 10),
 
@@ -261,8 +273,9 @@ class _MessageCardState extends State<MessageCard> {
                 MaterialButton(
                     onPressed: () {
                       //hide alert dialog
-                      Utils.updateMessage(widget.message, updatedMesage).then((value){
-                      Navigator.of(_scaffoldKey.currentContext!).pop();
+                      Utils.updateMessage(widget.message, updatedMesage)
+                          .then((value) {
+                        Navigator.of(_scaffoldKey.currentContext!).pop();
                       });
                     },
                     child: const Text(

@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:circular_profile_avatar/circular_profile_avatar.dart';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'dart:convert';
 import 'dart:developer';
@@ -13,10 +14,17 @@ import 'package:spectrum_speak/modules/ChatUser.dart';
 import 'package:spectrum_speak/modules/Message.dart';
 import 'package:spectrum_speak/modules/my_date_util.dart';
 import 'package:spectrum_speak/rest/auth_manager.dart';
+import 'package:spectrum_speak/rest/rest_api_menu.dart';
 import 'package:spectrum_speak/screen/call_page.dart';
+import 'package:spectrum_speak/screen/parent_profile.dart';
+import 'package:spectrum_speak/screen/shadow_teacher_profile.dart';
+import 'package:spectrum_speak/screen/specialist_profile.dart';
 import 'package:spectrum_speak/units/build_text_field.dart';
 import 'package:spectrum_speak/widgets/message_card.dart';
 import 'login.dart';
+
+List<bool> showSeperators = [];
+
 class ChatScreen extends StatefulWidget {
   final ChatUser user;
   const ChatScreen({super.key, required this.user});
@@ -31,6 +39,9 @@ class _ChatScreenState extends State<ChatScreen> {
   bool _showEmoji = false;
   TextEditingController _textController = TextEditingController();
   bool _isUploading = false;
+  String lastT = '';
+  bool showSeperator = true;
+  bool firstTime = true;
   late FocusNode _focusNode;
   ScrollController _scrollController = ScrollController();
 
@@ -109,18 +120,37 @@ class _ChatScreenState extends State<ChatScreen> {
                                     ?.map((e) => Message.fromJson(e.data()))
                                     .toList() ??
                                 [];
-
+                            showSeperators =
+                                showSepertorsList(context, _messagesList);
                             if (_messagesList.isNotEmpty) {
                               return ListView.builder(
                                   controller: _scrollController,
-                                  reverse: true,
                                   itemCount: _messagesList.length,
+                                  reverse: true,
                                   padding: const EdgeInsets.only(top: 8),
                                   physics: const BouncingScrollPhysics(),
                                   itemBuilder: (context, index) {
-                                    return MessageCard(
-                                        message: _messagesList[
-                                            _messagesList.length - index - 1]);
+                                    List<String> t =
+                                        MyDateUtil.getLastMessageTime(
+                                            context: context,
+                                            time: _messagesList[
+                                                    _messagesList.length -
+                                                        1 -
+                                                        index]
+                                                .sent);
+                                    return Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          if (showSeperators[
+                                              _messagesList.length - index - 1])
+                                            Center(child: Text('${t[0]}')),
+                                          MessageCard(
+                                              message: _messagesList[
+                                                  _messagesList.length -
+                                                      index -
+                                                      1])
+                                        ]);
                                   });
                             } else {
                               return const Center(
@@ -174,13 +204,47 @@ class _ChatScreenState extends State<ChatScreen> {
                     icon: const Icon(Icons.arrow_back),
                     color: kPrimary,
                   ),
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(mq.size.height * .03),
+                  CircularProfileAvatar(
+                    '',
+                    onTap: () async {
+                      var category =
+                          await getUserCategory('${widget.user.UserID}');
+                      if (category == 'Parent')
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ParentProfile(
+                                    userID: widget.user.UserID.toString())));
+                      else if (category == 'Specialist')
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => SpecialistProfile(
+                                    userId: widget.user.UserID.toString())));
+                      else if (category == 'Shadow Teacher')
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ShadowTeacherProfile(
+                                    userId: widget.user.UserID.toString())));
+                    },
+                    borderWidth: 1.0,
+                    borderColor: kDarkerColor,
+                    backgroundColor: kPrimary,
+                    radius: 23.0,
                     child: CachedNetworkImage(
-                      width: mq.size.height * .055,
-                      height: mq.size.height * .055,
-                      imageUrl:
-                          list.isNotEmpty ? list[0].image : widget.user.image,
+                      width: mq.size.height * .0015,
+                      height: mq.size.height * .0015,
+                      imageUrl: widget.user.image,
+                      imageBuilder: (context, imageProvider) => Container(
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          image: DecorationImage(
+                            image: imageProvider,
+                            fit: BoxFit.cover, // Set the fit property to cover
+                          ),
+                        ),
+                      ),
                       errorWidget: (context, url, error) => const CircleAvatar(
                           child: Icon(CupertinoIcons.person)),
                     ),
@@ -222,7 +286,7 @@ class _ChatScreenState extends State<ChatScreen> {
                     ],
                   ),
                   SizedBox(width: mq.size.width * 0.05),
-                  // if (!foundation.kIsWeb)
+                  if (!foundation.kIsWeb)
                     IconButton(
                       onPressed: () {
                         int max = AuthManager.u.UserID > widget.user.UserID
@@ -347,9 +411,10 @@ class _ChatScreenState extends State<ChatScreen> {
 
             //send message button
             MaterialButton(
-              onPressed: () {
+              onPressed: () async {
                 if (_textController.text.isNotEmpty) {
-                  Utils.sendMessage(
+                  showSeperators.add(false);
+                  await Utils.sendMessage(
                       widget.user, _textController.text, Type.text);
                   if (firstMessage) {
                     print('First Message ever\n');
@@ -371,4 +436,31 @@ class _ChatScreenState extends State<ChatScreen> {
       ),
     );
   }
+}
+
+List<bool> showSepertorsList(BuildContext context, List<Message> list) {
+  List<bool> boolList = [];
+  boolList.add(true);
+  for (int i = 1; i < list.length; i++) {
+    List<String> t1 =
+        MyDateUtil.getLastMessageTime(context: context, time: list[i - 1].sent);
+    List<String> t2 =
+        MyDateUtil.getLastMessageTime(context: context, time: list[i].sent);
+    if ((t1[1] == t2[1]) && (t1[1] == 'Not Today')) {
+      if (t1[0] == t2[0])
+        boolList.add(false);
+      else {
+        print(t1[0]);
+        print(t2[0]);
+        boolList.add(true);
+      }
+    } else if ((t2[1] == 'Today') && (t1[1] == 'Not Today'))
+      boolList.add(true);
+    else
+      boolList.add(false);
+    print(list[i].message);
+  }
+  print('bool List now');
+  print(boolList);
+  return boolList;
 }

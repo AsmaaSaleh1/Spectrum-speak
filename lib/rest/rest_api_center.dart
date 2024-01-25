@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:spectrum_speak/constant/utils.dart';
+import 'package:spectrum_speak/modules/CenterUser.dart';
+import 'package:spectrum_speak/modules/Event.dart';
 import 'package:spectrum_speak/modules/center.dart';
 
 Future<bool> isEmailAlreadyExistsCenter(String email) async {
@@ -251,7 +253,6 @@ Future<dynamic> getSpecialistAdminUserIDForCenter(String centerID) async {
   }
 }
 
-
 Future<String> getCenterName(String centerID) async {
   try {
     final response = await http.get(
@@ -290,12 +291,11 @@ Future<String> getCenterName(String centerID) async {
 }
 
 Future<void> addSpecialistToCenter(String userId, String centerId) async {
-
   try {
     final response = await http.patch(
       Uri.parse('${Utils.baseUrl}/center/addSpecialist/$userId'),
       headers: <String, String>{
-        'Accept':'application/json',
+        'Accept': 'application/json',
         'Content-Type': 'application/json',
       },
       body: jsonEncode(<String, dynamic>{'centerId': int.parse(centerId)}),
@@ -313,4 +313,35 @@ Future<void> addSpecialistToCenter(String userId, String centerId) async {
   }
 }
 
+Future<List<Event>> fetchEvents() async {
+  List<Event> list = [];
+  final response = await http.get(
+      Uri.parse('${Utils.baseUrl}/center/eventsWithCenters'),
+      headers: <String, String>{'Accept': 'application/json'});
+  print('events api');
+  if (response.statusCode == 200) {
+    final data = json.decode(response.body);
 
+    // Check if 'result' is not empty
+    if (data['result'] != null && data['result'].isNotEmpty) {
+      // Assuming you want to create an Event object for the first result
+      for (var res in data['result']) {
+        final eventResult = res;
+        String id = '${eventResult['CenterID']}';
+        CenterUser center =
+            await Utils.fetchCenter(eventResult['CenterID'].toString());
+        Event e = Event(
+          image: center.image,
+          eventID: eventResult['EventID'].toString() ??
+              '', // Provide a default value
+          centerName: eventResult['CenterName'] ?? '',
+          city: eventResult['City'] ?? '',
+          description: eventResult['Description'] ?? '',
+          time: DateTime.parse(eventResult['EventTime']),
+        );
+        list.add(e);
+      }
+    }
+  }
+  return list;
+}

@@ -11,6 +11,7 @@ import 'package:spectrum_speak/modules/CenterUser.dart';
 import 'package:spectrum_speak/modules/ChatUser.dart';
 import 'package:spectrum_speak/modules/Message.dart';
 import 'package:spectrum_speak/rest/auth_manager.dart';
+import 'package:spectrum_speak/screen/chat_screen.dart';
 import 'package:spectrum_speak/widgets/top_bar.dart';
 
 import '../screen/offers_and_requests.dart';
@@ -166,9 +167,14 @@ class Utils {
 
   static Stream<QuerySnapshot<Map<String, dynamic>>> getAllMessages(
       ChatUser user) {
-    return firestore
-        .collection('chats/${getConversationID(user.UserID)}/messages/')
-        .snapshots();
+    try {
+      return firestore
+          .collection('chats/${getConversationID(user.UserID)}/messages/')
+          .snapshots();
+    } catch (e) {
+      print('all messages $e');
+      throw e;
+    }
   }
 
   static Future<void> sendMessage(
@@ -522,7 +528,6 @@ class Utils {
           decisionMade = 'decline';
         break;
       }
-      
     }
     print('inside function $decisionMade');
   }

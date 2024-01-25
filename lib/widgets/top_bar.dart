@@ -28,6 +28,7 @@ import 'package:spectrum_speak/screen/search_page.dart';
 import 'package:spectrum_speak/screen/shadow_teacher_profile.dart';
 import 'package:spectrum_speak/screen/specialist_profile.dart';
 import 'package:spectrum_speak/screen/splash_screen_chat.dart';
+import 'package:spectrum_speak/screen/calendar_grid.dart';
 import 'package:spectrum_speak/widgets/notification_card.dart';
 import 'package:tuple/tuple.dart';
 
@@ -132,8 +133,8 @@ class _CustomAppBarState extends State<CustomAppBar> {
                 badgeColor: kRed,
                 position: badges.BadgePosition.topEnd(top: 0, end: 3),
                 child: IconButton(
-                  onPressed: () {
-                    Utils.getUnreadConversations(true);
+                  onPressed: () async{
+                    await Utils.getUnreadConversations(true);
                     _showMessagesPopUpMenu(context, popUpMenuList);
                   },
                   icon: const Icon(
@@ -146,6 +147,8 @@ class _CustomAppBarState extends State<CustomAppBar> {
               IconButton(
                 onPressed: () {
                   print('Calendar button pressed');
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => CalendarPage()));
                 },
                 icon: const Icon(
                   CupertinoIcons.calendar,
@@ -659,10 +662,14 @@ class TopBar extends StatelessWidget {
                             fontSize: 17,
                           ),
                         ),
-                        onTap: () async{
-                          String n= (await AuthManager.getUserName())!;
-                          String ID= (await AuthManager.getUserId())!;
-                          final result = Navigator.push(context,MaterialPageRoute(builder: ((context) => ChatBot(name:n,id:ID))));
+                        onTap: () async {
+                          String n = (await AuthManager.getUserName())!;
+                          String ID = (await AuthManager.getUserId())!;
+                          final result = Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: ((context) =>
+                                      ChatBot(name: n, id: ID))));
                         },
                       ),
                     ListTile(
