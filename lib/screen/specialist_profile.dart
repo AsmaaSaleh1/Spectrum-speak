@@ -119,6 +119,9 @@ class _SpecialistProfileState extends State<SpecialistProfile> {
           } else {
             linePadding = 20;
           }
+          if (userIdLogin == "" || specialistID == "") {
+            return Container();
+          }
           return FutureBuilder<bool?>(
               future: checkSpecialistRate(userIdLogin, specialistID),
               builder: (context, snapshot) {

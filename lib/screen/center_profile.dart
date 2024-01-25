@@ -117,6 +117,9 @@ class _CenterProfileState extends State<CenterProfile> {
           } else {
             linePadding = 20;
           }
+          if (userIdLogin == "" || centerID == "") {
+            return Container();
+          }
           return FutureBuilder<bool?>(
               future: checkCenterRate(userIdLogin, centerID),
               builder: (context, snapshot) {
