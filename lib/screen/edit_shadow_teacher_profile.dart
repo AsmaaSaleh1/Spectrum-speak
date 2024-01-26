@@ -14,6 +14,7 @@ import 'package:spectrum_speak/units/build_drop_down_menu.dart';
 import 'package:spectrum_speak/units/validate_input_from_user.dart';
 
 import 'login.dart';
+import 'main_page.dart';
 import 'otp_screen.dart';
 
 class EditShadowTeacherProfile extends StatefulWidget {
@@ -520,9 +521,7 @@ class _EditShadowTeacherProfileState extends State<EditShadowTeacherProfile> {
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-              builder: (_) => ShadowTeacherProfile(
-                userId: userID,
-              ),
+              builder: (_) => MainPage(),
             ),
           );
         } else {

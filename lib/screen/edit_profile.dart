@@ -5,6 +5,7 @@ import 'package:spectrum_speak/modules/parent.dart';
 import 'package:spectrum_speak/rest/auth_manager.dart';
 import 'package:spectrum_speak/rest/rest_api_profile.dart';
 import 'package:spectrum_speak/rest/rest_api_profile_edit.dart';
+import 'package:spectrum_speak/screen/main_page.dart';
 import 'package:spectrum_speak/screen/parent_profile.dart';
 import 'package:spectrum_speak/units/build_date_text_field.dart';
 import 'package:spectrum_speak/units/build_text_field.dart';
@@ -413,9 +414,7 @@ class _EditProfileState extends State<EditProfile> {
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-              builder: (_) => ParentProfile(
-                userID: userID,
-              ),
+              builder: (_) => MainPage(),
             ),
           );
         } else {

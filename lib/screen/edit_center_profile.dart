@@ -10,6 +10,7 @@ import 'package:spectrum_speak/units/custom_button.dart';
 import 'package:spectrum_speak/units/validate_input_from_user.dart';
 
 import 'login.dart';
+import 'main_page.dart';
 
 class EditCenterProfile extends StatefulWidget {
   const EditCenterProfile({super.key});
@@ -395,7 +396,11 @@ class _EditCenterProfileState extends State<EditCenterProfile> {
         );
         if (rest['success']) {
           Navigator.pushReplacement(
-              context, MaterialPageRoute(builder: (_) => CenterProfile(userId: userId,)));
+            context,
+            MaterialPageRoute(
+              builder: (_) => MainPage(),
+            ),
+          );
         } else {
           setState(() {
             _showErrorText = true;

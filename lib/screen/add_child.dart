@@ -74,14 +74,9 @@ class _AddChildState extends State<AddChild> {
                 : Padding(
                     padding: EdgeInsets.symmetric(horizontal: 30, vertical: 50),
                     child: GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => ParentProfile(
-                                    userID: '',
-                                  )),
-                        );
+                      onTap: () async{
+                        String? userId = await AuthManager.getUserId();
+                        Navigator.of(context).pop();
                       },
                       child: Row(
                         children: [

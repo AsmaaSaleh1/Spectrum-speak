@@ -12,6 +12,7 @@ import 'package:spectrum_speak/units/custom_button.dart';
 import 'package:spectrum_speak/units/validate_input_from_user.dart';
 
 import 'login.dart';
+import 'main_page.dart';
 
 class EditChildCard extends StatefulWidget {
   final String childId;
@@ -218,10 +219,16 @@ class _EditChildCardState extends State<EditChildCard> {
                     CustomButton(
                       foregroundColor: kDarkerColor,
                       backgroundColor: kPrimary,
-                      onPressed: () async{
+                      onPressed: () async {
                         String? userId = await AuthManager.getUserId();
-                        Navigator.pushReplacement(context,
-                            MaterialPageRoute(builder: (_) => ParentProfile(userID: userId!,),),);
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => ParentProfile(
+                              userID: userId!,
+                            ),
+                          ),
+                        );
                       },
                       buttonText: 'Cansel',
                       icon: const Icon(
@@ -303,9 +310,7 @@ class _EditChildCardState extends State<EditChildCard> {
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-              builder: (_) => ParentProfile(
-                userID: userID,
-              ),
+              builder: (_) => MainPage(),
             ),
           );
         } else {

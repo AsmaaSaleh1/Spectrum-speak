@@ -14,6 +14,7 @@ import 'package:spectrum_speak/units/build_drop_down_menu.dart';
 import 'package:spectrum_speak/units/validate_input_from_user.dart';
 
 import 'login.dart';
+import 'main_page.dart';
 import 'otp_screen.dart';
 
 class EditSpecialistProfile extends StatefulWidget {
@@ -460,9 +461,7 @@ class _EditSpecialistProfileState extends State<EditSpecialistProfile> {
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-              builder: (_) => SpecialistProfile(
-                userId: userID,
-              ),
+              builder: (_) => MainPage(),
             ),
           );
         } else {
