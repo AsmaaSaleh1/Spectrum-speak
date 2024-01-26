@@ -2,12 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:spectrum_speak/constant/const_color.dart';
 import 'package:spectrum_speak/rest/auth_manager.dart';
-import 'package:spectrum_speak/units/custom_button.dart';
-import 'package:spectrum_speak/units/custom_clipper.dart';
+import 'package:spectrum_speak/rest/rest_api_menu.dart';
 import 'package:spectrum_speak/units/custom_clipper_Main_square.dart';
 import 'package:spectrum_speak/units/custom_clipper_main.dart';
 import 'package:spectrum_speak/units/custom_clipper_main_upper.dart';
-import 'package:spectrum_speak/units/custom_clipper_puzzle.dart';
 import 'package:spectrum_speak/units/custom_main_button.dart';
 import 'package:spectrum_speak/widgets/top_bar.dart';
 
@@ -21,10 +19,21 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
+  String category = "";
+  Future getData() async {
+    String? userId = await AuthManager.getUserId();
+    if (userId != null) {
+      category = await getUserCategory(userId);
+    } else {
+      print("null userID");
+    }
+  }
+
   @override
   void initState() {
     super.initState();
     checkLoginStatus();
+    getData();
   }
 
   // Method to check if the user is logged in
@@ -51,6 +60,9 @@ class _MainPageState extends State<MainPage> {
             linePadding = 70;
           } else {
             linePadding = 20;
+          }
+          if (category == "") {
+            return Container();
           }
           return TopBar(
             body: SingleChildScrollView(
@@ -125,7 +137,7 @@ class _MainPageState extends State<MainPage> {
                       ),
                       Positioned(
                         bottom: screenWidth / 40,
-                        left: (screenWidth-(linePadding*2)-(120*3))/2 ,
+                        left: (screenWidth - (linePadding * 2) - (120 * 3)) / 2,
                         child: SingleChildScrollView(
                           scrollDirection: Axis.horizontal,
                           child: Row(
@@ -137,7 +149,7 @@ class _MainPageState extends State<MainPage> {
                                   foregroundColor: kPrimary,
                                   backgroundColor: kBlue,
                                   onPressed: () {},
-                                  buttonText: 'To-DO',
+                                  buttonText: 'To-Do',
                                   icon: const Icon(
                                     FontAwesomeIcons.clipboardList,
                                     size: 35.0,
@@ -145,7 +157,9 @@ class _MainPageState extends State<MainPage> {
                                   iconColor: kPrimary,
                                 ),
                               ),
-                              SizedBox(width: linePadding,),
+                              SizedBox(
+                                width: linePadding,
+                              ),
                               Container(
                                 width: 120,
                                 height: 120,
@@ -161,7 +175,9 @@ class _MainPageState extends State<MainPage> {
                                   iconColor: kPrimary,
                                 ),
                               ),
-                              SizedBox(width: linePadding,),
+                              SizedBox(
+                                width: linePadding,
+                              ),
                               Container(
                                 width: 120,
                                 height: 120,
@@ -183,16 +199,80 @@ class _MainPageState extends State<MainPage> {
                       ),
                     ],
                   ),
-                  SizedBox(height: 10,),
+                  SizedBox(
+                    height: 10,
+                  ),
                   Row(
                     children: [
-                      SizedBox(width: linePadding,),
+                      SizedBox(
+                        width: linePadding,
+                      ),
+                      Icon(
+                        FontAwesomeIcons.bookBookmark,
+                        size: 28,
+                        color: kDarkerColor,
+                      ),
+                      SizedBox(
+                        width: linePadding,
+                      ),
+                      Text(
+                        "Booking for This Week",
+                        style: TextStyle(
+                          color: kDarkerColor,
+                          fontSize: 25,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                  // Visibility(
+                  //   visible: children.isNotEmpty,
+                  //   child: SingleChildScrollView(
+                  //     scrollDirection: Axis.horizontal,
+                  //     child: Row(
+                  //       children: children
+                  //           .map((child) => CardItem(
+                  //         childId: child.childID,
+                  //         userName: child.childName,
+                  //         gender: child.gender,
+                  //         birthDate: child.birthDate,
+                  //         degreeOfAutism:
+                  //         child.degreeOfAutism,
+                  //         userID: child.userID,
+                  //         // Add other properties as needed
+                  //       ))
+                  //           .toList(),
+                  //     ),
+                  //   ),
+                  // ),
+                  // Visibility(
+                  //   visible: children.isEmpty &&
+                  //       userIdLogin != widget.userID,
+                  //   child: Padding(
+                  //     padding: const EdgeInsets.all(8.0),
+                  //     child: Text(
+                  //       "No children For this user",
+                  //       style: TextStyle(
+                  //         fontSize: 17.0,
+                  //         fontWeight: FontWeight.bold,
+                  //         color: kBlue,
+                  //       ),
+                  //     ),
+                  //   ),
+                  // ),
+                  Row(
+                    children: [
+                      SizedBox(
+                        width: linePadding,
+                      ),
                       Icon(
                         FontAwesomeIcons.businessTime,
                         size: 28,
                         color: kDarkerColor,
                       ),
-                      SizedBox(width: linePadding,),
+                      SizedBox(
+                        width: linePadding,
+                      ),
                       Text(
                         "Week Centers Events",
                         style: TextStyle(
@@ -203,6 +283,41 @@ class _MainPageState extends State<MainPage> {
                       ),
                     ],
                   ),
+                  // Visibility(
+                  //   visible: children.isNotEmpty,
+                  //   child: SingleChildScrollView(
+                  //     scrollDirection: Axis.horizontal,
+                  //     child: Row(
+                  //       children: children
+                  //           .map((child) => CardItem(
+                  //         childId: child.childID,
+                  //         userName: child.childName,
+                  //         gender: child.gender,
+                  //         birthDate: child.birthDate,
+                  //         degreeOfAutism:
+                  //         child.degreeOfAutism,
+                  //         userID: child.userID,
+                  //         // Add other properties as needed
+                  //       ))
+                  //           .toList(),
+                  //     ),
+                  //   ),
+                  // ),
+                  // Visibility(
+                  //   visible: children.isEmpty &&
+                  //       userIdLogin != widget.userID,
+                  //   child: Padding(
+                  //     padding: const EdgeInsets.all(8.0),
+                  //     child: Text(
+                  //       "No children For this user",
+                  //       style: TextStyle(
+                  //         fontSize: 17.0,
+                  //         fontWeight: FontWeight.bold,
+                  //         color: kBlue,
+                  //       ),
+                  //     ),
+                  //   ),
+                  // ),
                 ],
               ),
             ),
