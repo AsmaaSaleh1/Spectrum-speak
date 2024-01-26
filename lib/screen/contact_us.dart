@@ -74,7 +74,7 @@ class _ContactUsCallState extends State<ContactUsCall> {
                   margin:
                       const EdgeInsets.only(bottom: 35, left: 20, right: 20),
                   child: Text(
-                    "Your opinion make a dentifrice",
+                    "Your contribution makes a difference",
                     style: TextStyle(
                       color: kDarkerColor.withOpacity(0.5),
                       fontSize: 16,
@@ -89,7 +89,7 @@ class _ContactUsCallState extends State<ContactUsCall> {
                   height: 50,
                   child: CustomTextField(
                     preIcon: Icons.person,
-                    labelText: "User Name",
+                    labelText: "Name",
                     placeholder: "Asmaa",
                     isPasswordTextField: false,
                     controller: _usernameController,
@@ -100,9 +100,9 @@ class _ContactUsCallState extends State<ContactUsCall> {
                   width: 320,
                   height: 260,
                   child: CustomTextField(
-                    labelText: "Contact",
+                    labelText: "Feedback",
                     placeholder:
-                        "Hello Spectrum Speak,\nI would send to you a small feedback.",
+                        "Hello Spectrum Speak Team!,\nI would like to send a feedback about...",
                     isPasswordTextField: false,
                     controller: _contactController,
                     numOfLine: 10,

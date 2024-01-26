@@ -15,6 +15,7 @@ import 'package:spectrum_speak/modules/ChatUser.dart';
 import 'package:spectrum_speak/modules/specialist.dart';
 import 'package:spectrum_speak/rest/auth_manager.dart';
 import 'package:spectrum_speak/rest/rest_api_center.dart';
+import 'package:spectrum_speak/rest/rest_api_login.dart';
 import 'package:spectrum_speak/rest/rest_api_menu.dart';
 import 'package:spectrum_speak/rest/rest_api_profile.dart';
 import 'package:spectrum_speak/rest/rest_api_profile_delete.dart';
@@ -145,10 +146,11 @@ class _CustomAppBarState extends State<CustomAppBar> {
                 ),
               ),
               IconButton(
-                onPressed: () {
+                onPressed: () async{
                   print('Calendar button pressed');
+                  String city=await getCity('${AuthManager.u.UserID}');
                   Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => CalendarPage()));
+                      MaterialPageRoute(builder: (context) => CalendarPage(city:city,category:category)));
                 },
                 icon: const Icon(
                   CupertinoIcons.calendar,

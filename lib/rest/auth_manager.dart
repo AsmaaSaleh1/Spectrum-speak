@@ -1,6 +1,7 @@
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spectrum_speak/constant/utils.dart';
 import 'package:spectrum_speak/modules/ChatUser.dart';
+import 'package:spectrum_speak/rest/rest_api_login.dart';
 
 class AuthManager {
   static late ChatUser u;
@@ -26,6 +27,8 @@ class AuthManager {
     u.lastActive = DateTime.now().millisecondsSinceEpoch.toString();
     u.image = (await Utils.getProfilePictureUrl(userId, ''))!;
     print(u.image);
+    print('Cityyyy');
+    print(await getCity(userId));
     /*If the timestamp is within the valid session duration,
      the user is considered logged in;
      otherwise,

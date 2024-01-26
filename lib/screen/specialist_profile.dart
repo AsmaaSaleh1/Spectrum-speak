@@ -33,6 +33,7 @@ class _SpecialistProfileState extends State<SpecialistProfile> {
   String name = "";
   String userIdLogin = "";
   String specialistID = "";
+  String category = '';
   @override
   void initState() {
     super.initState();
@@ -41,6 +42,13 @@ class _SpecialistProfileState extends State<SpecialistProfile> {
     getName();
     getID();
     getSpecialistID();
+    print('userId ${widget.userId}');
+    print('userIdLogin $userIdLogin');
+    getCategory();
+  }
+
+  Future<void> getCategory() async {
+    category = await getUserCategory('${AuthManager.u.UserID}');
   }
 
   Future<void> getSpecialistID() async {
@@ -151,6 +159,7 @@ class _SpecialistProfileState extends State<SpecialistProfile> {
                             children: <Widget>[
                               StackContainerSpecialist(
                                 userId: widget.userId,
+                                category: category,
                               ),
                               SpecialistInformation(
                                 userId: widget.userId,

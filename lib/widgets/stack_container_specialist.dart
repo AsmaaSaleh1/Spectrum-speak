@@ -3,11 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:spectrum_speak/constant/const_color.dart';
+import 'package:spectrum_speak/modules/Dialogs.dart';
+import 'package:spectrum_speak/modules/child.dart';
 import 'package:spectrum_speak/modules/specialist.dart';
 import 'package:spectrum_speak/rest/auth_manager.dart';
+import 'package:spectrum_speak/rest/rest_api_booking.dart';
 import 'package:spectrum_speak/rest/rest_api_profile.dart';
 import 'package:spectrum_speak/screen/center_profile.dart';
-import 'package:spectrum_speak/screen/edit_specialist_profile.dart';
+import 'package:spectrum_speak/screen/search_page.dart';
 import 'package:spectrum_speak/screen/sign_up_center.dart';
 import 'package:spectrum_speak/screen/sign_up_specialist.dart';
 import 'package:spectrum_speak/units/custom_button.dart';
@@ -16,9 +19,11 @@ import 'package:tuple/tuple.dart';
 
 class StackContainerSpecialist extends StatelessWidget {
   final String userId;
+  final String category;
   const StackContainerSpecialist({
     super.key,
     required this.userId,
+    required this.category,
   });
   @override
   Widget build(BuildContext context) {
@@ -127,19 +132,28 @@ class StackContainerSpecialist extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Visibility(
-                              visible: userId == userIdLogin,
+                              visible: category == 'Parent',
                               child: CustomButton(
                                 foregroundColor: kDarkerColor,
                                 backgroundColor: kBlue,
                                 onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                           EditSpecialistProfile(),
-                                    ),
-                                  );
+                                  _bookSessionButtonPressed(context,specialist);
                                 },
+                                buttonText: 'Book a session',
+                                icon: const Icon(
+                                  Icons.calendar_month,
+                                  color: kRed,
+                                  size: 18.0,
+                                ),
+                                iconColor: kPrimary,
+                              ),
+                            ),
+                            Visibility(
+                              visible: userId == userIdLogin,
+                              child: CustomButton(
+                                foregroundColor: kDarkerColor,
+                                backgroundColor: kBlue,
+                                onPressed: () {},
                                 buttonText: 'Edit Profile',
                                 icon: const Icon(
                                   Icons.edit,
@@ -220,6 +234,92 @@ class StackContainerSpecialist extends StatelessWidget {
             return const Text('No data available');
           }
         });
+  }
+
+  Future<void> _showDateTimePickerDialog(BuildContext context,Specialist specialist) async {
+    DateTime selectedDate = DateTime.now();
+    TimeOfDay selectedTime = TimeOfDay.now();
+
+    // Show Date Picker
+    DateTime? pickedDate = await showDatePicker(
+      context: context,
+      initialDate: selectedDate,
+      firstDate: DateTime.now(),
+      lastDate: DateTime.now().add(Duration(days: 365)),
+    );
+
+    if (pickedDate != null) {
+      // Show Time Picker
+      TimeOfDay? pickedTime = await showTimePicker(
+        context: context,
+        initialTime: selectedTime,
+      );
+
+      if (pickedTime != null) {
+        // Combine selected date and time
+        selectedDate = DateTime(
+          pickedDate.year,
+          pickedDate.month,
+          pickedDate.day,
+          pickedTime.hour,
+          pickedTime.minute,
+        );
+
+        // Retrieve the list of children
+        List<Child> loadedChildren =
+            await childCard(AuthManager.u.UserID.toString());
+
+        // Show dialog to select a child
+        Child? selectedChild = await showDialog<Child>(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text('Select a Child'),
+              content: SingleChildScrollView(
+                child: Column(
+                  children: loadedChildren.map((child) {
+                    return ListTile(
+                      title: Text(child.childName),
+                      onTap: () {
+                        Navigator.pop(context, child);
+                      },
+                    );
+                  }).toList(),
+                ),
+              ),
+            );
+          },
+        );
+
+        if (selectedChild != null) {
+          // TODO: Handle the selected date, time, and child as needed
+          print('Selected Date and Time: $selectedDate');
+          print('Selected Child: ${selectedChild.childName}');
+          String availability =
+              await checkBooking(userId,AuthManager.u.UserID.toString(), selectedDate.toString());
+          if (availability=='Parent Unavailable') {
+            Dialogs.showSnackbar(context, 'You have a session at the requested time, please pick a different date and time slot');
+          }
+          else if(availability=='Specialist Unavailable'){
+            Dialogs.showSnackbar(context,
+                'Unable to book the session. Specialist is unavailable at the requested time, please pick a different date and time slot');
+          }
+          else {
+            await addBooking(AuthManager.u.UserID.toString(),selectedChild!.childID,userId,'${specialist.specialistCategory}',selectedDate.toString());
+            Dialogs.showSnackbar(context,
+                "Session for ${selectedChild!.childName} has been booked successfully}");
+            Navigator.push(context,MaterialPageRoute(builder: ((context) => Search())));
+          }
+          // TODO: Implement the logic to book a session with the selected date, time, and child
+        }
+      }
+    }
+  }
+
+// Call this function when the "Book a session" button is pressed
+  void _bookSessionButtonPressed(BuildContext context,Specialist specialist) {
+    // Show the date, time, and child selection dialog
+    _showDateTimePickerDialog(context,specialist);
   }
 
   Future<Tuple2<Specialist?, String?>> _getSpecialist(

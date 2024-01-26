@@ -12,6 +12,7 @@ class EventCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print('event card');
     MediaQueryData mq = MediaQuery.of(context);
     return Padding(
       padding: const EdgeInsets.all(19.0),
@@ -41,8 +42,8 @@ class EventCard extends StatelessWidget {
                   child: Padding(
                     padding: const EdgeInsets.all(5.0),
                     child: Container(
-                      width: 120, // Adjust the width as needed
-                      height: 120, // Adjust the height as needed
+                      width: 110, // Adjust the width as needed
+                      height: 110, // Adjust the height as needed
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         boxShadow: [
@@ -58,10 +59,10 @@ class EventCard extends StatelessWidget {
                         padding: const EdgeInsets.only(top: 8.0),
                         child: CircularProfileAvatar(
                           '',
-                          radius: 120,
+                          radius: 110,
                           child: CachedNetworkImage(
-                            width: mq.size.height * .2,
-                            height: mq.size.height * .2,
+                            width: mq.size.height * .4,
+                            height: mq.size.height * .4,
                             imageUrl: event.image,
                             imageBuilder: (context, imageProvider) => Container(
                               decoration: BoxDecoration(
@@ -89,7 +90,7 @@ class EventCard extends StatelessWidget {
                         CrossAxisAlignment.start, // Align text to the center
                     children: [
                       Padding(
-                        padding: const EdgeInsets.only(left:8.0),
+                        padding: const EdgeInsets.only(left: 8.0),
                         child: Text(
                           '${event.centerName} Center',
                           style: TextStyle(
@@ -100,7 +101,7 @@ class EventCard extends StatelessWidget {
                         ),
                       ),
                       Padding(
-                        padding: EdgeInsets.only(top:5.0,left:5.0),
+                        padding: EdgeInsets.only(top: 5.0, left: 5.0),
                         child: Row(
                           children: [
                             Icon(Icons.location_on_outlined,
@@ -116,7 +117,7 @@ class EventCard extends StatelessWidget {
                         ),
                       ),
                       Padding(
-                        padding: EdgeInsets.only(top:3.0,left:8),
+                        padding: EdgeInsets.only(top: 3.0, left: 8),
                         child: Row(
                           children: [
                             Icon(Icons.calendar_today_rounded,
@@ -132,7 +133,7 @@ class EventCard extends StatelessWidget {
                         ),
                       ),
                       Padding(
-                        padding: EdgeInsets.only(top:3.0,left:8),
+                        padding: EdgeInsets.only(top: 3.0, left: 8),
                         child: Row(
                           children: [
                             Icon(Icons.access_time_filled_outlined,
@@ -152,28 +153,26 @@ class EventCard extends StatelessWidget {
                 ),
               ],
             ),
-            Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
+            Row(mainAxisAlignment: MainAxisAlignment.start, children: [
               Padding(
-                        padding: EdgeInsets.only(top:8.0,left:2),
-                        child: Container(
-                          constraints: BoxConstraints(
-                            maxWidth: mq.size.width *0.8, // Adjust the maxWidth as needed
-                          ),
-                          child: Text(
-                            textAlign:TextAlign.center,
-                            event.description,
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              color: kDarkerBlue,
-                            ),
-                          ),
-                        ),
-                      ),
-            ]
-            )
+                padding: EdgeInsets.only(top: 8.0, left: 2),
+                child: Container(
+                  constraints: BoxConstraints(
+                    maxWidth:
+                        mq.size.width * 0.8, // Adjust the maxWidth as needed
+                  ),
+                  child: Text(
+                    textAlign: TextAlign.center,
+                    event.description,
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: kDarkerBlue,
+                    ),
+                  ),
+                ),
+              ),
+            ])
           ],
         ),
       ),

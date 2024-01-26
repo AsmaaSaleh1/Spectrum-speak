@@ -1,15 +1,22 @@
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:spectrum_speak/constant/const_color.dart';
+import 'package:spectrum_speak/modules/Booking.dart';
 import 'package:spectrum_speak/modules/Event.dart';
+import 'package:spectrum_speak/rest/auth_manager.dart';
 import 'package:spectrum_speak/rest/rest_api_center.dart';
+import 'package:spectrum_speak/rest/rest_api_booking.dart';
+import 'package:spectrum_speak/widgets/booking_card.dart';
 import 'package:spectrum_speak/widgets/event_card.dart';
 
 late int indexOfFirstDayMonth = 0;
 late int indexOfLastDayMonth = 0;
 
 class CalendarPage extends StatefulWidget {
-  const CalendarPage({Key? key}) : super(key: key);
+  final String city;
+  final String category;
+  const CalendarPage({Key? key, required this.city, required this.category})
+      : super(key: key);
 
   @override
   _CalendarPageState createState() => _CalendarPageState();
@@ -20,9 +27,12 @@ class _CalendarPageState extends State<CalendarPage> {
   int _selectedIndex = 0;
   List<Event> allEvents = [];
   List<Event> dayEvents = [];
+  List<Booking> dayBookings = [];
+  List<Booking> allBookings = [];
   @override
   void initState() {
     super.initState();
+    print('pspsppspsps ${widget.category}');
     _selectedDate = DateTime.now();
     indexOfFirstDayMonth = getIndexOfFirstDayInMonth(_selectedDate);
     indexOfLastDayMonth = indexOfLastDayMonth;
@@ -33,23 +43,42 @@ class _CalendarPageState extends State<CalendarPage> {
           1;
     });
     Future.delayed(Duration.zero, () async {
-      await getEvents();
-      getEvents();
+      if (widget.category == 'Parent') await getEvents();
       if (allEvents.isEmpty) {
         print('inittt empty');
       }
       for (var e in allEvents) {
         print('eventssssssss $e');
       }
+      allBookings =
+          await getBookings(AuthManager.u.UserID.toString(), widget.category);
+      setState(() {
+        allBookings = allBookings;
+      });
     });
-    dayEvents = getEventForDay(allEvents, _selectedDate);
+    setState(() {
+      if (widget.category == 'Parent')
+        dayEvents = getEventForDay(allEvents, _selectedDate);
+      dayBookings = getBookingForDay(allBookings, _selectedDate);
+    });
   }
 
   Future<void> getEvents() async {
-    allEvents = await fetchEvents();
+    allEvents = await fetchEvents(widget.city);
     if (allEvents.isEmpty) {
       print('init empty');
     }
+  }
+
+   Future<void> refreshPage() async {
+    allBookings = await getBookings(AuthManager.u.UserID.toString(), widget.category);
+    setState(() {
+      allBookings = allBookings;
+      dayBookings = getBookingForDay(allBookings, _selectedDate);
+    });
+  }
+  void refresh(){
+    refreshPage();
   }
 
   @override
@@ -202,6 +231,10 @@ class _CalendarPageState extends State<CalendarPage> {
                                   getEventForDay(allEvents, _selectedDate);
                               dayEvents.clear();
                               dayEvents = list;
+                              List<Booking> bList =
+                                  getBookingForDay(allBookings, _selectedDate);
+                              dayBookings.clear();
+                              dayBookings = bList;
                               print('new events');
                               for (var e in list) print('eventssss $e');
                             }
@@ -217,8 +250,37 @@ class _CalendarPageState extends State<CalendarPage> {
                                             indexOfFirstDayMonth +
                                                 listOfDatesInMonth(
                                                         _selectedDate)
-                                                    .length
-                                    ? Colors.transparent
+                                                    .length &&
+                                        index <= indexOfLastDayMonth
+                                    ? (((widget.category == 'Parent') &&
+                                                    hasEvents(
+                                                        DateTime(
+                                                            _selectedDate.year,
+                                                            _selectedDate.month,
+                                                            listOfDatesInMonth(
+                                                                    _selectedDate)[
+                                                                index]),
+                                                        allEvents) ||
+                                                hasBookings(
+                                                    DateTime(
+                                                        _selectedDate.year,
+                                                        _selectedDate.month,
+                                                        listOfDatesInMonth(
+                                                                _selectedDate)[
+                                                            index]),
+                                                    allBookings))) ||
+                                            ((widget.category ==
+                                                    'Specialist') &&
+                                                hasBookings(
+                                                    DateTime(
+                                                        _selectedDate.year,
+                                                        _selectedDate.month,
+                                                        listOfDatesInMonth(
+                                                                _selectedDate)[
+                                                            index]),
+                                                    allBookings))
+                                        ? Colors.grey
+                                        : Colors.transparent
                                     : Colors
                                         .transparent, // Grey color for days from previous and next months
                             borderRadius: BorderRadius.circular(50),
@@ -238,10 +300,47 @@ class _CalendarPageState extends State<CalendarPage> {
                                                               _selectedDate)
                                                           .length)
                                           ? (index <= indexOfLastDayMonth)
-                                              ? Colors.black
+                                              ? (((widget
+                                                                      .category ==
+                                                                  'Parent') &&
+                                                              hasEvents(
+                                                                  DateTime(
+                                                                      _selectedDate
+                                                                          .year,
+                                                                      _selectedDate
+                                                                          .month,
+                                                                      listOfDatesInMonth(
+                                                                              _selectedDate)[
+                                                                          index]),
+                                                                  allEvents) ||
+                                                          hasBookings(
+                                                              DateTime(
+                                                                  _selectedDate
+                                                                      .year,
+                                                                  _selectedDate
+                                                                      .month,
+                                                                  listOfDatesInMonth(
+                                                                          _selectedDate)[
+                                                                      index]),
+                                                              allBookings))) ||
+                                                      ((widget.category ==
+                                                              'Specialist') &&
+                                                          hasBookings(
+                                                              DateTime(
+                                                                  _selectedDate
+                                                                      .year,
+                                                                  _selectedDate
+                                                                      .month,
+                                                                  listOfDatesInMonth(
+                                                                          _selectedDate)[
+                                                                      index]),
+                                                              allBookings))
+                                                  ? kRed // Set the color for days with events
+                                                  : Colors.black
                                               : Colors.grey
                                           : Colors.grey,
                               fontSize: 17,
+                              // No underline for days without events
                             ),
                           ),
                         ),
@@ -256,17 +355,27 @@ class _CalendarPageState extends State<CalendarPage> {
               Expanded(
                 child: Column(
                   children: [
-                    Text(
-                        dayEvents.length == 0
-                            ? 'No events today'
-                            : '${dayEvents.length} event${dayEvents.length == 1 ? '' : 's'} today',
+                    Text(getMessage(widget.category, dayBookings, dayEvents),
+                        // widget.category=='Parent'
+                        //     ? dayBookings.isEmpty&&dayEvents.isEmpty?
+                        //     'No events or bookings today'
+                        //     : dayBookings.isNotEmpty &&dayEvents.isNotEmpty
+                        //         ? '${dayEvents.length} event${(dayEvents.length) == 1 ? '' : 's'} and ${dayBookings.length} event${(dayBookings.length) == 1 ? '' : 's'} today'
+                        //         : dayBookings.isEmpty
+                        //         ?'${dayEvents.length} event${(dayEvents.length) == 1 ? '' : 's'}'
+                        //         :dayEvents.isEmpty?
+                        //         ${dayBookings.length} event${(dayEvents.length) == 1 ? '' : 's'},
                         style: TextStyle(
                             fontSize: 20, fontWeight: FontWeight.w600)),
-                    if (dayEvents.isNotEmpty)
+                    if (dayEvents.isNotEmpty || dayBookings.isNotEmpty)
                       SingleChildScrollView(
                           scrollDirection: Axis.horizontal,
-                          child: Row(
-                              children: [for (var e in dayEvents) EventCard(event:e)]))
+                          child: Row(children: [
+                            if (widget.category == 'Parent')
+                              for (var e in dayEvents) EventCard(event: e),
+                            for (var b in dayBookings)
+                              BookingCard(booking: b, category: widget.category,onDelete: refresh)
+                          ]))
                   ],
                 ),
               ),
@@ -276,6 +385,26 @@ class _CalendarPageState extends State<CalendarPage> {
       ),
     );
   }
+}
+
+String getMessage(String category, List<Booking> b, List<Event> e) {
+  print('blength ${b.length}');
+  print('elength ${e.length}');
+  if (category == 'Parent') {
+    if (b.isEmpty && e.isEmpty)
+      return 'No events or bookings for today';
+    else if (b.isEmpty && e.isNotEmpty) {
+      return '${e.length} event${(e.length) == 1 ? '' : 's'}';
+    } else if (b.isNotEmpty && e.isEmpty) {
+      return '${b.length} booking${(b.length) == 1 ? '' : 's'}';
+    } else {
+      return '${e.length} event${(e.length) == 1 ? '' : 's'} and ${b.length} booking${(b.length) == 1 ? '' : 's'}';
+    }
+  }
+  if (b.isEmpty) {
+    return 'No bookings for today';
+  }
+  return '${b.length} booking${(b.length) == 1 ? '' : 's'}';
 }
 
 List<int> listOfDatesInMonth(DateTime currentDate) {
@@ -335,6 +464,20 @@ int getIndexOfFirstDayInMonth(DateTime currentDate) {
   return daysOfWeek.indexOf(day);
 }
 
+bool hasEvents(DateTime date, List<Event> events) {
+  return events.any((event) =>
+      event.time.year == date.year &&
+      event.time.month == date.month &&
+      event.time.day == date.day);
+}
+
+bool hasBookings(DateTime date, List<Booking> bookings) {
+  return bookings.any((booking) =>
+      booking.time.year == date.year &&
+      booking.time.month == date.month &&
+      booking.time.day == date.day);
+}
+
 List<Event> getEventForDay(List<Event> events, DateTime t) {
   List<Event> e = [];
 
@@ -354,6 +497,23 @@ List<Event> getEventForDay(List<Event> events, DateTime t) {
     }
   }
   return e;
+}
+
+List<Booking> getBookingForDay(List<Booking> allBookings, DateTime t) {
+  List<Booking> b = [];
+
+  for (var booking in allBookings) {
+    print(t);
+    print(booking.time);
+    print('pewpew');
+    if ((booking.time.month == t.month) &&
+        (booking.time.day == t.day) &&
+        (t.year == booking.time.year)) {
+      print(b);
+      b.add(booking);
+    }
+  }
+  return b;
 }
 
 final List<String> daysOfWeek = [
