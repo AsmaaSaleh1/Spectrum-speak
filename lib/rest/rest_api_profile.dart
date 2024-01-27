@@ -13,7 +13,10 @@ Future<ShadowTeacher?> profileShadowTeacher(String userId) async {
   try {
     final response = await http.get(
       Uri.parse('${Utils.baseUrl}/profile/shadowTeacher/$userId'),
-      headers: {"Accept": "application/json"},
+      headers: {
+        "Accept": "application/json",
+        "Content-Type": "application/json"
+      },
     );
     if (response.statusCode == 200) {
       var decodedData = jsonDecode(response.body)["data"][0];
@@ -45,7 +48,10 @@ Future<Specialist?> profileSpecialist(String userId) async {
   try {
     final response = await http.get(
       Uri.parse('${Utils.baseUrl}/profile/specialist/$userId'),
-      headers: {"Accept": "application/json"},
+      headers: {
+        "Accept": "application/json",
+        "Content-Type": "application/json"
+      },
     );
     if (response.statusCode == 200) {
       var decodedData = jsonDecode(response.body)["data"][0];
@@ -63,7 +69,7 @@ Future<Specialist?> profileSpecialist(String userId) async {
             (e) => e.toString() == 'UserCategory.${decodedData['Category']}'),
         specialistCategory: decodedData['SpecialistCategory'].toString(),
         price: double.parse(decodedData['Price']),
-        admin: decodedData['Admin']==1,
+        admin: decodedData['Admin'] == 1,
         centerID: decodedData['CenterID'].toString(),
       );
     } else {
@@ -80,7 +86,10 @@ Future<Parent?> profileParent(String userId) async {
   try {
     final response = await http.get(
       Uri.parse('${Utils.baseUrl}/profile/parent/$userId'),
-      headers: {"Accept": "application/json"},
+      headers: {
+        "Accept": "application/json",
+        "Content-Type": "application/json"
+      },
     );
     if (response.statusCode == 200) {
       var decodedData = jsonDecode(response.body)["data"][0];
@@ -109,7 +118,10 @@ Future<List<Child>> childCard(String userId) async {
   try {
     final response = await http.get(
       Uri.parse('${Utils.baseUrl}/profile/child/$userId'),
-      headers: {"Accept": "application/json"},
+      headers: {
+        "Accept": "application/json",
+        "Content-Type": "application/json"
+      },
     );
     if (response.statusCode == 200) {
       var decodedData = jsonDecode(response.body)["data"];
@@ -140,7 +152,10 @@ Future<int?> countOfChildForParent(String userId) async {
   try {
     final response = await http.get(
       Uri.parse('${Utils.baseUrl}/users/childCount/$userId'),
-      headers: {"Accept": "application/json"},
+      headers: {
+        "Accept": "application/json",
+        "Content-Type": "application/json"
+      },
     );
 
     var decodedData = jsonDecode(response.body);
@@ -162,7 +177,10 @@ Future<Child?> getChildByID(String childId) async {
   try {
     final response = await http.get(
       Uri.parse('${Utils.baseUrl}/profile/childByID/$childId'),
-      headers: {"Accept": "application/json"},
+      headers: {
+        "Accept": "application/json",
+        "Content-Type": "application/json"
+      },
     );
     if (response.statusCode == 200) {
       var decodedData = jsonDecode(response.body)["data"][0];
@@ -206,6 +224,7 @@ Future<File> getPhoto(String userID) async {
       Uri.parse('${Utils.baseUrl}/profile/getPhoto/$userID'),
       headers: {
         "Accept": "application/json",
+        "Content-Type": "application/json",
         "Cache-Control": "no-store",
       },
     );
@@ -230,39 +249,47 @@ Future<File> getPhoto(String userID) async {
   }
 }
 
-Future<bool?> checkSpecialistSignUpComplete(String userID)async{
-  try{
+Future<bool?> checkSpecialistSignUpComplete(String userID) async {
+  try {
     final response = await http.get(
       Uri.parse('${Utils.baseUrl}/users/specialist/check/$userID'),
-      headers: {"Accept": "application/json"},
+      headers: {
+        "Accept": "application/json",
+        "Content-Type": "application/json"
+      },
     );
     if (response.statusCode == 200) {
       var decodedData = jsonDecode(response.body);
       return decodedData["result"];
-    }else {
-      print('Failed to retrieve checkSpecialistSignUpComplete. Status code: ${response.statusCode}');
+    } else {
+      print(
+          'Failed to retrieve checkSpecialistSignUpComplete. Status code: ${response.statusCode}');
       return false;
     }
-  }catch(e){
+  } catch (e) {
     print("error in checkSpecialistSignUpComplete: $e");
   }
   return null;
 }
 
-Future<bool?> checkShadowTeacherSignUpComplete(String userID)async{
-  try{
+Future<bool?> checkShadowTeacherSignUpComplete(String userID) async {
+  try {
     final response = await http.get(
       Uri.parse('${Utils.baseUrl}/users/shadowTeacher/check/$userID'),
-      headers: {"Accept": "application/json"},
+      headers: {
+        "Accept": "application/json",
+        "Content-Type": "application/json"
+      },
     );
     if (response.statusCode == 200) {
       var decodedData = jsonDecode(response.body);
       return decodedData["result"];
-    }else {
-      print('Failed to retrieve checkShadowTeacherSignUpComplete. Status code: ${response.statusCode}');
+    } else {
+      print(
+          'Failed to retrieve checkShadowTeacherSignUpComplete. Status code: ${response.statusCode}');
       return false;
     }
-  }catch(e){
+  } catch (e) {
     print("error in checkShadowTeacherSignUpComplete: $e");
   }
   return null;

@@ -5,6 +5,7 @@ Future addRate(String userID, double rate, String date, String comment,
     String specialistID, String centerID,) async {
   final response =
   await http.post(Uri.parse('${Utils.baseUrl}/rate'), headers: {
+    "Content-Type":"application/json",
     "Accept": "application/json"
   }, body: {
     'UserID': userID,
@@ -21,7 +22,10 @@ Future <dynamic> getReviewSpecialist(String userId) async {
   try {
     final response = await http.get(
       Uri.parse('${Utils.baseUrl}/rate/specialist/$userId'),
-      headers: {"Accept": "application/json"},
+      headers: {
+        "Content-Type":"application/json",
+        "Accept": "application/json"
+      },
     );
     if (response.statusCode == 200) {
       var decodedData = jsonDecode(response.body)["data"];
@@ -40,7 +44,10 @@ Future <dynamic> getReviewCenter(String userId) async {
   try {
     final response = await http.get(
       Uri.parse('${Utils.baseUrl}/rate/center/$userId'),
-      headers: {"Accept": "application/json"},
+      headers: {
+        "Content-Type":"application/json",
+        "Accept": "application/json"
+      },
     );
     if (response.statusCode == 200) {
       var decodedData = jsonDecode(response.body)["data"];
@@ -59,8 +66,9 @@ Future deleteRate(String rateId)async{
   final response = await http.delete(
     Uri.parse('${Utils.baseUrl}/rate/delete/$rateId'),
     headers: {
-      "Accept": "application/json",
-    },
+    "Content-Type":"application/json",
+    "Accept": "application/json"
+  },
   );
   if (response.statusCode == 200) {
     var decodedData = jsonDecode(response.body);
@@ -74,7 +82,8 @@ Future<bool> checkIfUserRateSpecialistBefore(String userID, String specialistID,
     final response = await http.get(
       Uri.parse('${Utils.baseUrl}/rate/check/specialist?UserID=$userID&SpecialistID=$specialistID'),
       headers: {
-        'Accept': 'application/json',
+        "Content-Type":"application/json",
+        "Accept": "application/json"
       },
     );
 
@@ -82,7 +91,6 @@ Future<bool> checkIfUserRateSpecialistBefore(String userID, String specialistID,
       // Check if the response body is not empty before decoding
       if (response.body.isNotEmpty) {
         var decodedData = jsonDecode(response.body);
-        print(decodedData['data']);
         return decodedData['data']; // Return the array directly
       } else {
         throw Exception('Empty response body');
@@ -100,7 +108,8 @@ Future<bool> checkIfUserRateCenterBefore(String userID, String centerID, ) async
     final response = await http.get(
       Uri.parse('${Utils.baseUrl}/rate/check/center?UserID=$userID&CenterID=$centerID'),
       headers: {
-        'Accept': 'application/json',
+        "Content-Type":"application/json",
+        "Accept": "application/json"
       },
     );
 
@@ -108,7 +117,6 @@ Future<bool> checkIfUserRateCenterBefore(String userID, String centerID, ) async
       // Check if the response body is not empty before decoding
       if (response.body.isNotEmpty) {
         var decodedData = jsonDecode(response.body);
-        print(decodedData['data']);
         return decodedData['data']; // Return the array directly
       } else {
         throw Exception('Empty response body');

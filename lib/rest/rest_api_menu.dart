@@ -7,7 +7,7 @@ Future getUserCategory(String userId) async {
   try {
     final response = await http.get(
       Uri.parse('${Utils.baseUrl}/users/category/$userId'),
-      headers: {"Accept": "application/json"},
+      headers: {"Accept": "application/json","Content-Type":"application/json"},
     );
     var decodedData = jsonDecode(response.body);
     if (decodedData['data'] is List && decodedData['data'].isNotEmpty) {
@@ -26,7 +26,7 @@ Future getUserName(String userId) async {
   try {
     final response = await http.get(
       Uri.parse('${Utils.baseUrl}/users/username/$userId'),
-      headers: {"Accept": "application/json"},
+      headers: {"Accept": "application/json","Content-Type":"application/json"},
     );
     var decodedData = jsonDecode(response.body);
     if (decodedData['data'] is List && decodedData['data'].isNotEmpty) {

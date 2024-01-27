@@ -7,6 +7,7 @@ Future<List<dynamic>> searchSpecialist(String namePrefix,String city,String spec
       Uri.parse('${Utils.baseUrl}/search/specialist?city=$city&namePrefix=$namePrefix&specialistCategory=$specialistCategory'),
       headers: {
         'Accept': 'application/json',
+        'Content-Type':'application/json'
       },
     );
 
@@ -14,7 +15,6 @@ Future<List<dynamic>> searchSpecialist(String namePrefix,String city,String spec
       // Check if the response body is not empty before decoding
       if (response.body.isNotEmpty) {
         var decodedData = jsonDecode(response.body);
-        print(decodedData['message']);
         return decodedData['message']; // Return the array directly
       } else {
         throw Exception('Empty response body');
@@ -33,6 +33,7 @@ Future<List<dynamic>> searchCenter(String namePrefix,String city) async {
       Uri.parse('${Utils.baseUrl}/search/center?city=$city&namePrefix=$namePrefix'),
       headers: {
         'Accept': 'application/json',
+        'Content-Type':'application/json'
       },
     );
 
@@ -40,7 +41,6 @@ Future<List<dynamic>> searchCenter(String namePrefix,String city) async {
       // Check if the response body is not empty before decoding
       if (response.body.isNotEmpty) {
         var decodedData = jsonDecode(response.body);
-        print(decodedData['message']);
         return decodedData['message']; // Return the array directly
       } else {
         throw Exception('Empty response body');
@@ -59,6 +59,7 @@ Future<List<dynamic>> searchShadowTeacher(String namePrefix,String city,String g
       Uri.parse('${Utils.baseUrl}/search/shadowTeacher?city=$city&namePrefix=$namePrefix&Gender=$gender'),
       headers: {
         'Accept': 'application/json',
+        'Content-Type':'application/json'
       },
     );
 
@@ -66,7 +67,6 @@ Future<List<dynamic>> searchShadowTeacher(String namePrefix,String city,String g
       // Check if the response body is not empty before decoding
       if (response.body.isNotEmpty) {
         var decodedData = jsonDecode(response.body);
-        print(decodedData['message']);
         return decodedData['message']; // Return the array directly
       } else {
         throw Exception('Empty response body');

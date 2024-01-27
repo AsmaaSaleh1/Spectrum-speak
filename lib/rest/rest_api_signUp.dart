@@ -31,7 +31,6 @@ Future specialistSignUp(
     "SpecialistCategory": selectedSpecialistCategory
   });
   var decodedData = jsonDecode(response.body);
-  print(decodedData);
   return decodedData;
 }
 
@@ -40,7 +39,8 @@ Future shadowTeacherSignUp(String userId, String salary, String availability,
   final response = await http.post(
       Uri.parse('${Utils.baseUrl}/signUp/shadowTeacher/$userId'),
       headers: {
-        "Accept": "application/json"
+        "Accept": "application/json",
+        "Content-Type":"application/json"
       },
       body: {
         'Salary': salary,
@@ -90,7 +90,7 @@ Future<void> uploadImage(File image, String userID) async {
       'POST',
       Uri.parse('${Utils.baseUrl}/signUp/uploadPhoto/$userID'),
     );
-    request.headers['Accept'] = 'application/json';
+    request.headers['Content-Type'] = 'application/json';
     var multipartFile = await http.MultipartFile.fromPath(
       'image',
       image.path,

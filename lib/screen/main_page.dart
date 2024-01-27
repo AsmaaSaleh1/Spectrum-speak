@@ -1,12 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:spectrum_speak/constant/const_color.dart';
+import 'package:spectrum_speak/modules/Booking.dart';
+import 'package:spectrum_speak/modules/Event.dart';
 import 'package:spectrum_speak/rest/auth_manager.dart';
+import 'package:spectrum_speak/rest/rest_api_booking.dart';
+import 'package:spectrum_speak/rest/rest_api_center.dart';
+import 'package:spectrum_speak/rest/rest_api_login.dart';
 import 'package:spectrum_speak/rest/rest_api_menu.dart';
+import 'package:spectrum_speak/screen/search_page.dart';
 import 'package:spectrum_speak/units/custom_clipper_Main_square.dart';
 import 'package:spectrum_speak/units/custom_clipper_main.dart';
 import 'package:spectrum_speak/units/custom_clipper_main_upper.dart';
 import 'package:spectrum_speak/units/custom_main_button.dart';
+import 'package:spectrum_speak/widgets/card_booking_main.dart';
+import 'package:spectrum_speak/widgets/card_event_main.dart';
 import 'package:spectrum_speak/widgets/top_bar.dart';
 
 import 'login.dart';
@@ -20,12 +28,58 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   String category = "";
+  String userName = "";
+  String city="";
+  List<Booking> bookingList = [];
+  List<Event> eventList = [];
+  Future<List<Widget>?> getBookingWidgets() async {
+    return bookingList
+        .map(
+          (book) => CardBooking(
+            booking: book,
+            category: category,
+          ),
+        )
+        .toList();
+  }
+  Future<List<Widget>?> getEventsWidgets() async {
+    return eventList
+        .map(
+          (event) => CardEvent(
+        events: event,
+        category: category,
+      ),
+    )
+        .toList();
+  }
   Future getData() async {
-    String? userId = await AuthManager.getUserId();
-    if (userId != null) {
-      category = await getUserCategory(userId);
-    } else {
-      print("null userID");
+    try {
+      String? userId = await AuthManager.getUserId();
+
+      if (userId != null) {
+        String cat = await getUserCategory(userId);
+        String user = await getUserName(userId);
+        String cit= await getCity(userId);
+        setState(() {
+          userName = user;
+          category = cat;
+          city=cit;
+        });
+        if (category != '') {
+          var listBook = await getBookingsForSevenDay(userId, category);
+          var listEvent= await getEventsForSevenDay("Jerusalem");
+          setState(() {
+            bookingList = listBook;
+            eventList=listEvent;
+          });
+        } else {
+          print("Error: Empty category in getData class main page");
+        }
+      } else {
+        print("Error: Null userID in getData class main page");
+      }
+    } catch (e) {
+      print("Error in getData class main page: $e");
     }
   }
 
@@ -60,9 +114,6 @@ class _MainPageState extends State<MainPage> {
             linePadding = 70;
           } else {
             linePadding = 20;
-          }
-          if (category == "") {
-            return Container();
           }
           return TopBar(
             body: SingleChildScrollView(
@@ -112,7 +163,7 @@ class _MainPageState extends State<MainPage> {
                           children: [
                             Container(
                               child: Text(
-                                'Welcome Back,\n Asmaa!!',
+                                'Welcome Back,\n $userName!!',
                                 style: TextStyle(
                                   color: kDarkerColor,
                                   fontSize: 30,
@@ -149,9 +200,9 @@ class _MainPageState extends State<MainPage> {
                                   foregroundColor: kPrimary,
                                   backgroundColor: kBlue,
                                   onPressed: () {},
-                                  buttonText: 'To-Do',
+                                  buttonText: 'Calender',
                                   icon: const Icon(
-                                    FontAwesomeIcons.clipboardList,
+                                    FontAwesomeIcons.calendar,
                                     size: 35.0,
                                   ),
                                   iconColor: kPrimary,
@@ -167,7 +218,7 @@ class _MainPageState extends State<MainPage> {
                                   foregroundColor: kPrimary,
                                   backgroundColor: kBlue,
                                   onPressed: () {},
-                                  buttonText: 'Spectrum\nBot',
+                                  buttonText: 'Spectrum\n     Bot',
                                   icon: const Icon(
                                     FontAwesomeIcons.brain,
                                     size: 35.0,
@@ -184,10 +235,15 @@ class _MainPageState extends State<MainPage> {
                                 child: CustomMainButton(
                                   foregroundColor: kPrimary,
                                   backgroundColor: kBlue,
-                                  onPressed: () {},
-                                  buttonText: 'To-DO',
+                                  onPressed: ()=> Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => const Search(),
+                                    ),
+                                  ),
+                                  buttonText: 'Search',
                                   icon: const Icon(
-                                    Icons.edit,
+                                    FontAwesomeIcons.magnifyingGlass,
                                     size: 35.0,
                                   ),
                                   iconColor: kPrimary,
@@ -225,41 +281,56 @@ class _MainPageState extends State<MainPage> {
                       ),
                     ],
                   ),
-                  // Visibility(
-                  //   visible: children.isNotEmpty,
-                  //   child: SingleChildScrollView(
-                  //     scrollDirection: Axis.horizontal,
-                  //     child: Row(
-                  //       children: children
-                  //           .map((child) => CardItem(
-                  //         childId: child.childID,
-                  //         userName: child.childName,
-                  //         gender: child.gender,
-                  //         birthDate: child.birthDate,
-                  //         degreeOfAutism:
-                  //         child.degreeOfAutism,
-                  //         userID: child.userID,
-                  //         // Add other properties as needed
-                  //       ))
-                  //           .toList(),
-                  //     ),
-                  //   ),
-                  // ),
-                  // Visibility(
-                  //   visible: children.isEmpty &&
-                  //       userIdLogin != widget.userID,
-                  //   child: Padding(
-                  //     padding: const EdgeInsets.all(8.0),
-                  //     child: Text(
-                  //       "No children For this user",
-                  //       style: TextStyle(
-                  //         fontSize: 17.0,
-                  //         fontWeight: FontWeight.bold,
-                  //         color: kBlue,
-                  //       ),
-                  //     ),
-                  //   ),
-                  // ),
+                  FutureBuilder<List<Widget>?>(
+                    future: getBookingWidgets(),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return Container(
+                          color: kPrimary,
+                          child: Container(
+                            alignment: Alignment.center,
+                            child: const CircularProgressIndicator(
+                              backgroundColor: kDarkBlue,
+                              color: kDarkBlue,
+                            ),
+                          ),
+                        );
+                      } else if (snapshot.hasError) {
+                        return Text('Error: ${snapshot.error}');
+                      } else {
+                        return Stack(
+                          children: [
+                            Visibility(
+                              visible: snapshot.data != null &&
+                                  snapshot.data!.isNotEmpty,
+                              child: SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                child: Row(
+                                  children: snapshot.data ??
+                                      [], // Provide a default value when null
+                                ),
+                              ),
+                            ),
+                            Visibility(
+                              visible: snapshot.data == null &&
+                                  snapshot.data!.isEmpty,
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(
+                                  "No Booking For This Week",
+                                  style: TextStyle(
+                                    fontSize: 17.0,
+                                    fontWeight: FontWeight.bold,
+                                    color: kBlue,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        );
+                      }
+                    },
+                  ),
                   Row(
                     children: [
                       SizedBox(
@@ -274,7 +345,7 @@ class _MainPageState extends State<MainPage> {
                         width: linePadding,
                       ),
                       Text(
-                        "Week Centers Events",
+                        "Centers Events for This Week",
                         style: TextStyle(
                           color: kDarkerColor,
                           fontSize: 25,
@@ -283,41 +354,57 @@ class _MainPageState extends State<MainPage> {
                       ),
                     ],
                   ),
-                  // Visibility(
-                  //   visible: children.isNotEmpty,
-                  //   child: SingleChildScrollView(
-                  //     scrollDirection: Axis.horizontal,
-                  //     child: Row(
-                  //       children: children
-                  //           .map((child) => CardItem(
-                  //         childId: child.childID,
-                  //         userName: child.childName,
-                  //         gender: child.gender,
-                  //         birthDate: child.birthDate,
-                  //         degreeOfAutism:
-                  //         child.degreeOfAutism,
-                  //         userID: child.userID,
-                  //         // Add other properties as needed
-                  //       ))
-                  //           .toList(),
-                  //     ),
-                  //   ),
-                  // ),
-                  // Visibility(
-                  //   visible: children.isEmpty &&
-                  //       userIdLogin != widget.userID,
-                  //   child: Padding(
-                  //     padding: const EdgeInsets.all(8.0),
-                  //     child: Text(
-                  //       "No children For this user",
-                  //       style: TextStyle(
-                  //         fontSize: 17.0,
-                  //         fontWeight: FontWeight.bold,
-                  //         color: kBlue,
-                  //       ),
-                  //     ),
-                  //   ),
-                  // ),
+                  FutureBuilder<List<Widget>?>(
+                    future: getEventsWidgets(),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return Container(
+                          color: kPrimary,
+                          child: Container(
+                            alignment: Alignment.center,
+                            child: const CircularProgressIndicator(
+                              backgroundColor: kDarkBlue,
+                              color: kDarkBlue,
+                            ),
+                          ),
+                        );
+                      } else if (snapshot.hasError) {
+                        return Text('Error: ${snapshot.error}');
+                      } else {
+                        return Stack(
+                          children: [
+                            Visibility(
+                              visible: snapshot.data != null ||
+                                  snapshot.data!.isNotEmpty,
+                              child: SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                child: Row(
+                                  children: snapshot.data ??
+                                      [], // Provide a default value when null
+                                ),
+                              ),
+                            ),
+                            Visibility(
+                              visible: snapshot.data == null ||
+                                  snapshot.data!.isEmpty,
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(
+                                  "No Events For This Week",
+                                  style: TextStyle(
+                                    fontSize: 17.0,
+                                    fontWeight: FontWeight.bold,
+                                    color: kBlue,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        );
+                      }
+                    },
+                  ),
+                  SizedBox(height: 50,)
                 ],
               ),
             ),
