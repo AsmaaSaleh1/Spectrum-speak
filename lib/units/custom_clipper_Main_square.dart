@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'dart:math';
 
@@ -7,7 +8,7 @@ class MyCustomClipperMainSquare extends CustomClipper<Path> {
     Path path = Path();
     double widthSize = size.width;
     double heightSize = size.height - (size.height / 4);
-    double radius2 = widthSize / 4;
+    double radius2 = kIsWeb ? heightSize / 4 : widthSize / 4;
 
     //Draw the square
     path.moveTo(0, 0);

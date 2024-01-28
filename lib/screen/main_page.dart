@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:spectrum_speak/constant/const_color.dart';
@@ -109,6 +110,7 @@ class _MainPageState extends State<MainPage> {
   Widget build(BuildContext context) => LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) {
           double screenWidth = constraints.maxWidth;
+          print(screenWidth);
           double linePadding;
           if (screenWidth >= 1200) {
             linePadding = 110;
@@ -128,7 +130,7 @@ class _MainPageState extends State<MainPage> {
                           clipper: MyCustomClipperMainSquare(),
                           child: Container(
                             color: kYellow,
-                            height: screenWidth,
+                            height: kIsWeb ? 500 : screenWidth,
                             width: screenWidth,
                           ),
                         ),
@@ -158,10 +160,12 @@ class _MainPageState extends State<MainPage> {
                         ),
                       ),
                       Positioned(
-                        bottom: screenWidth / 2,
+                        bottom: kIsWeb ? 0 : screenWidth / 2,
+                        top: kIsWeb ? screenWidth / 10 : 0,
                         left: linePadding,
                         right: 0,
                         child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
                             Container(
                               child: Text(
