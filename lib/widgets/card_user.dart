@@ -15,11 +15,12 @@ class CardUserToBlock extends StatefulWidget {
   final String userID;
   final String userName;
   final String userCategory;
+  final VoidCallback? onBlockPressed;
   const CardUserToBlock({
     super.key,
     required this.userID,
     required this.userName,
-    required this.userCategory,
+    required this.userCategory, this.onBlockPressed,
   });
 
   @override
@@ -120,6 +121,7 @@ class _CardUserToBlockState extends State<CardUserToBlock> {
                       email,
                       widget.userName,
                     );
+                    widget.onBlockPressed!();
                     break;
                   default:
                     print("error in category");

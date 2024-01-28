@@ -79,6 +79,9 @@ class _BlockUserCallState extends State<BlockUserCall> {
                       userID: data['UserID'].toString(),
                       userName: data['Username'] ?? '',
                       userCategory: data['Category'] ?? '',
+                      onBlockPressed: () {
+                        getUsers(_searchController.text);
+                      },
                     );
                   }).toList(),
                 )
