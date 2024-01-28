@@ -1,8 +1,12 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:circular_profile_avatar/circular_profile_avatar.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:spectrum_speak/constant/const_color.dart';
+import 'package:spectrum_speak/constant/utils.dart';
+import 'package:spectrum_speak/modules/ChatUser.dart';
 import 'package:spectrum_speak/modules/parent.dart';
 import 'package:spectrum_speak/rest/auth_manager.dart';
 import 'package:spectrum_speak/rest/rest_api_profile.dart';
@@ -13,9 +17,12 @@ import 'package:tuple/tuple.dart';
 
 class StackContainerParent extends StatelessWidget {
   final String userID;
-  const StackContainerParent({super.key, required this.userID});
+  StackContainerParent({super.key, required this.userID});
   @override
+  String? url = '';
   Widget build(BuildContext context) {
+    assignUrl();
+    MediaQueryData mq = MediaQuery.of(context);
     return FutureBuilder<Tuple2<Parent?, String?>>(
         future: _getParent(userID),
         builder: (context, snapshot) {
@@ -57,10 +64,28 @@ class StackContainerParent extends StatelessWidget {
                       children: <Widget>[
                         CircularProfileAvatar(
                           '',
-                          borderWidth: 4.0,
-                          borderColor: kPrimary,
+                          borderWidth: 3.0,
+                          borderColor: kDarkerBlue,
+                          backgroundColor: kPrimary,
                           radius: 80.0,
-                          //child: ProfileImageDisplay(updateStreamController: updateStreamController,),
+                          child: CachedNetworkImage(
+                            width: mq.size.height * .05,
+                            height: mq.size.height * .05,
+                            imageUrl: url!,
+                            imageBuilder: (context, imageProvider) => Container(
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                image: DecorationImage(
+                                  image: imageProvider,
+                                  fit: BoxFit
+                                      .cover, // Set the fit property to cover
+                                ),
+                              ),
+                            ),
+                            errorWidget: (context, url, error) =>
+                                const CircleAvatar(
+                                    child: Icon(CupertinoIcons.person)),
+                          ),
                         ),
                         const SizedBox(height: 4.0),
                         Text(
@@ -147,5 +172,10 @@ class StackContainerParent extends StatelessWidget {
       print('Error in _getParent: $error');
       return Tuple2(null, null);
     }
+  }
+
+  Future<void> assignUrl() async {
+    ChatUser u = await Utils.fetchUser(userID);
+    url = u.image;
   }
 }

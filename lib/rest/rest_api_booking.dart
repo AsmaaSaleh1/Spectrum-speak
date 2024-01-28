@@ -2,11 +2,13 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:spectrum_speak/constant/utils.dart';
 import 'package:spectrum_speak/modules/Booking.dart';
+import 'package:spectrum_speak/modules/ChatUser.dart';
+
 Future<String> checkBooking(String SpID, String parentID, String d) async {
   String date = d.split('.')[0];
   try {
     final response = await http.post(
-        Uri.parse('${Utils.baseUrl}/bookings/checkBooking'),
+        Uri.parse('${Utils.baseUrl}/booking/checkBooking'),
         headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json'
@@ -30,12 +32,13 @@ Future<String> checkBooking(String SpID, String parentID, String d) async {
     throw Exception('Internal Server Error');
   }
 }
+
 Future<List<Booking>> getBookings(String uid, String category) async {
   List<Booking> bookings = [];
   try {
     print('bookings here');
     final response = await http.get(
-      Uri.parse('${Utils.baseUrl}/bookings/getBookings/$uid/$category'),
+      Uri.parse('${Utils.baseUrl}/booking/getBookings/$uid/$category'),
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json'
@@ -44,8 +47,8 @@ Future<List<Booking>> getBookings(String uid, String category) async {
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
       for (var item in data['result']) {
-        String? url =
-            await Utils.getProfilePictureUrl('${item['imageTargetUserID']}', '');
+        String? url = await Utils.getProfilePictureUrl(
+            '${item['imageTargetUserID']}', '');
         Booking booking = Booking(
             item['ParentName'],
             item['ChildName'],
@@ -64,12 +67,13 @@ Future<List<Booking>> getBookings(String uid, String category) async {
   print('length bookings is ${bookings.length}');
   return bookings;
 }
+
 Future addBooking(String ParentID, String ChildID, String UserID,
     String Description, String Time) async {
   String date = Time.split('.')[0];
   try {
     final response = await http.post(
-        Uri.parse('${Utils.baseUrl}/bookings/addBooking'),
+        Uri.parse('${Utils.baseUrl}/booking/addBooking'),
         headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json'
@@ -89,10 +93,11 @@ Future addBooking(String ParentID, String ChildID, String UserID,
     throw Exception('Internal Server Error');
   }
 }
+
 Future<void> deleteBooking(int bookingID) async {
   try {
     final response = await http.delete(
-        Uri.parse('${Utils.baseUrl}/bookings/deleteBooking/$bookingID'),
+        Uri.parse('${Utils.baseUrl}/booking/deleteBooking/$bookingID'),
         headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json'
@@ -102,4 +107,40 @@ Future<void> deleteBooking(int bookingID) async {
   } catch (e) {
     print("Error deleting booking $e");
   }
+}
+
+Future<List<Booking>> getBookingsForSevenDay(
+    String uid, String category) async {
+  List<Booking> bookings = [];
+  try {
+    print('bookings here');
+    final response = await http.get(
+      Uri.parse('${Utils.baseUrl}/booking/getBookings/7day/$uid/$category'),
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+    );
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      for (var item in data['result']) {
+        ChatUser u = await Utils.fetchUser('${item['imageTargetUserID']}');
+        String url = u.image;
+        Booking booking = Booking(
+            item['ParentName'],
+            item['ChildName'],
+            item['SpecialistName'],
+            DateTime.parse(item['Time']),
+            item['Description'],
+            item['BookingID'],
+            category == 'Specialist' ? url! : '',
+            category == 'Parent' ? url! : '');
+        bookings.add(booking);
+      }
+    }
+  } catch (e) {
+    print("error fetching bookings $e");
+  }
+  print('length bookings is ${bookings.length}');
+  return bookings;
 }

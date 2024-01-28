@@ -58,10 +58,8 @@ class _OfferorResponseState extends State<OfferorResponse> {
                 unreadNotificationsCount=await Utils.getUnreadNotifications('${AuthManager.u.UserID}');
                 widget.callBack!(unreadMessagesCount,unreadNotificationsCount);
               },
-              child: widget.cn.type == 'response'
-                  ? _showResponseWidget(context)
-                  : _showOfferWidget(context))),
-    );
+              child: _showOfferWidget(context),
+    )));
   }
 
   Widget _showOfferWidget(BuildContext context) {
@@ -200,10 +198,6 @@ class _OfferorResponseState extends State<OfferorResponse> {
                       }))
       ]),
     );
-  }
-
-  Widget _showResponseWidget(BuildContext context) {
-    return Center(child: Text('response'));
   }
 
   Future<void> getAdminName(String id) async {

@@ -327,8 +327,7 @@ Future<List<Event>> fetchEvents(String city) async {
       // Assuming you want to create an Event object for the first result
       for (var res in data['result']) {
         final eventResult = res;
-        if(eventResult['City']==city)
-        {
+        if (eventResult['City'] == city) {
           CenterUser center =
               await Utils.fetchCenter(eventResult['CenterID'].toString());
           Event e = Event(
@@ -342,6 +341,42 @@ Future<List<Event>> fetchEvents(String city) async {
           );
           list.add(e);
         }
+      }
+    }
+  }
+  return list;
+}
+
+Future<List<Event>> getEventsForSevenDay(String city) async {
+  List<Event> list = [];
+  final response = await http.get(
+      Uri.parse('${Utils.baseUrl}/center/eventsWithCenters/city?city=$city'),
+      headers: <String, String>{
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      });
+  print('events api');
+  if (response.statusCode == 200) {
+    final data = json.decode(response.body);
+
+    // Check if 'result' is not empty
+    if (data['result'] != null && data['result'].isNotEmpty) {
+      // Assuming you want to create an Event object for the first result
+      for (var res in data['result']) {
+        final eventResult = res;
+
+        CenterUser center =
+            await Utils.fetchCenter(eventResult['CenterID'].toString());
+        Event e = Event(
+          image: center.image, //center.image,//TODO: handle image
+          eventID: eventResult['EventID'].toString() ??
+              '', // Provide a default value
+          centerName: eventResult['CenterName'] ?? '',
+          city: eventResult['City'] ?? '',
+          description: eventResult['Description'] ?? '',
+          time: DateTime.parse(eventResult['EventTime']),
+        );
+        list.add(e);
       }
     }
   }

@@ -11,9 +11,11 @@ import 'package:spectrum_speak/widgets/stack_container_specialist.dart';
 import 'package:spectrum_speak/widgets/specialist_information.dart';
 
 import 'package:spectrum_speak/units/review_add_from_user.dart';
+import 'package:spectrum_speak/widgets/top_bar.dart';
+import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
 import 'login.dart';
-
+bool spprofileGuide=true;
 class SpecialistProfile extends StatefulWidget {
   final String userId;
   const SpecialistProfile({
@@ -34,17 +36,90 @@ class _SpecialistProfileState extends State<SpecialistProfile> {
   String userIdLogin = "";
   String specialistID = "";
   String category = '';
+  TutorialCoachMark? tutorialCoachMark;
+  List<TargetFocus>? targets;
+  GlobalKey bookSessionKey = GlobalKey();
+  GlobalKey rateKey = GlobalKey();
+  void _showTutorialCoachmark() {
+    spprofileGuide = true;
+    _initTarget();
+    tutorialCoachMark = TutorialCoachMark(
+      targets: targets!,
+      pulseEnable: false,
+      colorShadow: Color.fromARGB(110, 14, 95, 136),
+      onClickTarget: (target) {
+        print("${target.identify}");
+      },
+      hideSkip: true,
+      alignSkip: Alignment.topRight,
+      onFinish: () {
+        print("Finish");
+      },
+    )..show(context: context);
+  }
+
+  void _initTarget() {
+    targets = [
+      // profile
+      TargetFocus(
+        identify: "bookSession-key",
+        keyTarget: bookSessionKey,
+        shape: ShapeLightFocus.RRect,
+        contents: [
+          TargetContent(
+            align: ContentAlign.bottom,
+            builder: (context, controller) {
+              return CoachmarkDesc(
+                text:
+                    "Tap here to book a session with the specialist for your child",
+                onNext: () {
+                  controller.next();
+                },
+                onSkip: () {
+                  controller.skip();
+                },
+              );
+            },
+          )
+        ],
+      ),
+      TargetFocus(
+        identify: "rate-key",
+        keyTarget: rateKey,
+        shape: ShapeLightFocus.RRect,
+        contents: [
+          TargetContent(
+            align: ContentAlign.top,
+            builder: (context, controller) {
+              return CoachmarkDesc(
+                text:
+                    "Rate this specialist after your experience with them and spread your feedback across the spectrum🌈",
+                onNext: () {
+                  controller.next();
+                },
+                onSkip: () {
+                  controller.skip();
+                },
+              );
+            },
+          )
+        ],
+      ),
+    ];
+  }
+
   @override
   void initState() {
+    if (AuthManager.firstTime && spprofileGuide &&AuthManager.getCategory()=='Parent')
+    Future.delayed(const Duration(seconds: 1), () {
+      _showTutorialCoachmark();
+    });
     super.initState();
     checkLoginStatus();
     loadReviews(); // Call the method to load reviews
     getName();
     getID();
     getSpecialistID();
-    print('userId ${widget.userId}');
-    print('userIdLogin $userIdLogin');
-    getCategory();
   }
 
   Future<void> getCategory() async {
@@ -158,9 +233,10 @@ class _SpecialistProfileState extends State<SpecialistProfile> {
                           child: Column(
                             children: <Widget>[
                               StackContainerSpecialist(
-                                userId: widget.userId,
-                                category: category,
-                              ),
+                                  key: bookSessionKey,
+                                  userId: widget.userId,
+                                  category: category,
+                                ),
                               SpecialistInformation(
                                 userId: widget.userId,
                               ),
@@ -181,6 +257,7 @@ class _SpecialistProfileState extends State<SpecialistProfile> {
                                 child: Visibility(
                                   visible: !checkSpecialist,
                                   child: AddReview(
+                                    key: rateKey,
                                     image: 'images/prof.png',
                                     name: name,
                                     userRating: userRating,
@@ -283,7 +360,6 @@ class _SpecialistProfileState extends State<SpecialistProfile> {
   Future<dynamic> getReviews(String userID) async {
     try {
       var data = await getReviewSpecialist(userID);
-      print(data);
       return data;
     } catch (e) {
       print("error$e");
@@ -294,7 +370,6 @@ class _SpecialistProfileState extends State<SpecialistProfile> {
     try {
       // Check if userId is not null before calling profileShadowTeacher
       var result = await profileSpecialist(userID);
-      print(result?.specialistID);
       return result?.specialistID.toString();
     } catch (error) {
       // Handle errors here

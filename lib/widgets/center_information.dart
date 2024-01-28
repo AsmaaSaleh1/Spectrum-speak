@@ -319,7 +319,7 @@ class _CenterInformationState extends State<CenterInformation> {
               );
             } else {
               // Return a default UI if no data is available
-              return const Text('No data available');
+              return const Text('NNo data available');
             }
           },
         );
@@ -329,7 +329,7 @@ class _CenterInformationState extends State<CenterInformation> {
 
   Future<Tuple2<CenterAutism?, dynamic>> _getCenter() async {
     try {
-      print('UserId: ${widget.userId}');
+      print('UserIddddd: ${widget.userId}');
       String spID = '${await getSpecialistAdminUserIDForCenter(widget.userId)}';
       print('spID $spID');
       var result = await profileCenter(

@@ -69,7 +69,8 @@ dependencies:
   badges: ^2.0.1
   dash_chat_2: ^0.0.18
   chat_gpt_sdk: ^2.2.5
-
+  tutorial_coach_mark: ^1.2.11
+  flutter_swiper_view: ^1.1.8
 
 dev_dependencies:
   flutter_test:

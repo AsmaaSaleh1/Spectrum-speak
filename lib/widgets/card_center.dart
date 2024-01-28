@@ -1,11 +1,17 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:circular_profile_avatar/circular_profile_avatar.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'package:spectrum_speak/constant/const_color.dart';
+import 'package:spectrum_speak/constant/utils.dart';
+import 'package:spectrum_speak/modules/CenterUser.dart';
+import 'package:spectrum_speak/rest/rest_api_center.dart';
 import 'package:spectrum_speak/screen/center_profile.dart';
 import 'package:spectrum_speak/units/custom_clipper_center_card.dart';
 
-class CenterCard extends StatelessWidget {
+class CenterCard extends StatefulWidget {
   final String userId;
   final Color cardColor;
   final String about;
@@ -23,8 +29,31 @@ class CenterCard extends StatelessWidget {
     required this.onTap,
     required this.isLess,
   });
+
+  @override
+  State<CenterCard> createState() => _CenterCardState();
+}
+
+class _CenterCardState extends State<CenterCard> {
+  String url = '';
+  Future<void> assignUrl() async {
+    String centerID = (await getCenterIdForSpecialist(widget.userId))!;
+    CenterUser c = await Utils.fetchCenter(centerID);
+    await (url = c.image);
+    setState(() {
+      url = url;
+    });
+  }
+
+  @override
+  initState() {
+    super.initState();
+    assignUrl();
+  }
+
   @override
   Widget build(BuildContext context) {
+    MediaQueryData mq = MediaQuery.of(context);
     return Padding(
       padding: const EdgeInsets.all(19.0),
       child: Container(
@@ -35,7 +64,7 @@ class CenterCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(15),
           boxShadow: [
             BoxShadow(
-              color: cardColor.withOpacity(0.5),
+              color: widget.cardColor.withOpacity(0.5),
               spreadRadius: 3,
               blurRadius: 10,
               offset: const Offset(0, 5),
@@ -47,7 +76,7 @@ class CenterCard extends StatelessWidget {
             ClipPath(
               clipper: CustomClipperCard(),
               child: Container(
-                color: cardColor,
+                color: widget.cardColor,
               ),
             ),
             Column(
@@ -58,28 +87,37 @@ class CenterCard extends StatelessWidget {
                     padding: const EdgeInsets.only(
                       top: 20,
                     ),
-                    child: Container(
-                      width: 250, // Adjust the width as needed
-                      height: 130, // Adjust the height as needed
-                      decoration: BoxDecoration(
-                        shape: BoxShape.rectangle,
-                        boxShadow: [
-                          BoxShadow(
-                            color: cardColor.withOpacity(0.5),
-                            blurRadius: 8.0, // Blur radius
-                            spreadRadius: 2.0, // Spread radius
-                            offset: const Offset(7, 7),
+                    child: CircularProfileAvatar(
+                      '',
+                      borderWidth: 3.0,
+                      borderColor: kDarkerBlue,
+                      backgroundColor: kPrimary,
+                      radius: 70.0,
+                      child: CachedNetworkImage(
+                        width: mq.size.height * .1,
+                        height: mq.size.height * .1,
+                        imageUrl: url,
+                        imageBuilder: (context, imageProvider) => Container(
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            image: DecorationImage(
+                              image: imageProvider,
+                              fit:
+                                  BoxFit.cover, // Set the fit property to cover
+                            ),
                           ),
-                        ],
+                        ),
+                        errorWidget: (context, url, error) =>
+                            const CircleAvatar(
+                                child: Icon(CupertinoIcons.person)),
                       ),
-                      child: Image.asset('images/center.jpg'),
                     ),
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(3.0),
                   child: Text(
-                    centerName,
+                    widget.centerName,
                     style: TextStyle(
                       fontSize: 20.0,
                       fontWeight: FontWeight.w900,
@@ -98,7 +136,7 @@ class CenterCard extends StatelessWidget {
                         color: kRed,
                       ),
                       Text(
-                        city,
+                        widget.city,
                         style: TextStyle(
                           fontSize: 12.0,
                           color: Colors.grey[700],
@@ -113,7 +151,7 @@ class CenterCard extends StatelessWidget {
                       padding: const EdgeInsets.only(
                           left: 20, right: 20, top: 2, bottom: 2),
                       child: AboutSection(
-                        about: about,
+                        about: widget.about,
                       )),
                 ),
                 Align(
@@ -130,7 +168,7 @@ class CenterCard extends StatelessWidget {
                               context,
                               MaterialPageRoute(
                                 builder: (context) => CenterProfile(
-                                  userId: userId,
+                                  userId: widget.userId,
                                 ),
                               ),
                             );
@@ -151,7 +189,7 @@ class CenterCard extends StatelessWidget {
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) => CenterProfile(
-                                        userId: userId,
+                                        userId: widget.userId,
                                       ),
                                     ),
                                   );
@@ -159,7 +197,7 @@ class CenterCard extends StatelessWidget {
                                 icon: Icon(
                                   FontAwesomeIcons.anglesRight,
                                   size: 14,
-                                  color: cardColor,
+                                  color: widget.cardColor,
                                 ),
                               ),
                             ],

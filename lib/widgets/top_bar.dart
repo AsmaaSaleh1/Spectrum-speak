@@ -19,8 +19,9 @@ import 'package:spectrum_speak/rest/rest_api_login.dart';
 import 'package:spectrum_speak/rest/rest_api_menu.dart';
 import 'package:spectrum_speak/rest/rest_api_profile.dart';
 import 'package:spectrum_speak/rest/rest_api_profile_delete.dart';
+import 'package:spectrum_speak/screen/Quiz.dart';
 import 'package:spectrum_speak/screen/center_profile.dart';
-import 'package:spectrum_speak/screen/chat_bot.dart';
+import 'package:spectrum_speak/screen/spectrum_bot.dart';
 import 'package:spectrum_speak/screen/contact_us.dart';
 import 'package:spectrum_speak/screen/login.dart';
 import 'package:spectrum_speak/screen/main_page.dart';
@@ -32,12 +33,14 @@ import 'package:spectrum_speak/screen/splash_screen_chat.dart';
 import 'package:spectrum_speak/screen/calendar_grid.dart';
 import 'package:spectrum_speak/widgets/notification_card.dart';
 import 'package:tuple/tuple.dart';
+import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
 import 'card_user_chat.dart';
 
 int unreadMessagesCount = 0;
 int unreadNotificationsCount = 0;
 List<ChatUser> popUpMenuList = [];
+bool topBarGuide = true;
 CenterNotification cn = CenterNotification(
     fromID: "2",
     time: "2024/01/19 11:00 PM",
@@ -61,8 +64,20 @@ class CustomAppBar extends StatefulWidget implements PreferredSizeWidget {
 class _CustomAppBarState extends State<CustomAppBar> {
   late bool? showNotif = false;
   String category = '';
+  TutorialCoachMark? tutorialCoachMark;
+  List<TargetFocus>? targets;
+  GlobalKey profileKey = GlobalKey();
+  GlobalKey notificationsKey = GlobalKey();
+  GlobalKey calendarKey = GlobalKey();
+  GlobalKey inboxKey = GlobalKey();
+  GlobalKey menuKey = GlobalKey();
+  GlobalKey spectrumBotKey = GlobalKey();
   @override
   initState() {
+    if (AuthManager.firstTime && topBarGuide)
+      Future.delayed(const Duration(seconds: 1), () {
+        _showTutorialCoachmark();
+      });
     super.initState();
     setState(() {
       Future.delayed(Duration.zero, () async {
@@ -72,13 +87,163 @@ class _CustomAppBarState extends State<CustomAppBar> {
     });
   }
 
+  void _showTutorialCoachmark() {
+    topBarGuide = false;
+    _initTarget();
+    tutorialCoachMark = TutorialCoachMark(
+      targets: targets!,
+      pulseEnable: false,
+      colorShadow: tutorialColor,
+      onClickTarget: (target) {
+        print("${target.identify}");
+      },
+      hideSkip: true,
+      alignSkip: Alignment.topRight,
+      onFinish: () {
+        print("Finish");
+        topBarGuide = false;
+      },
+    )..show(context: context);
+  }
+
+  void _initTarget() {
+    targets = [
+      // profile
+      TargetFocus(
+        identify: "profile-key",
+        keyTarget: profileKey,
+        contents: [
+          TargetContent(
+            align: ContentAlign.bottom,
+            builder: (context, controller) {
+              return CoachmarkDesc(
+                next: "Start👏",
+                text:
+                    "Hello there!👋This is your Spectrum Speak Buddy🤖! I'll be here to assist you on how to use Spectrum Speak to the fullest and to introduce you to its features! Let's get started💪",
+                onNext: () {
+                  controller.next();
+                },
+                onSkip: () {
+                  controller.skip();
+                },
+              );
+            },
+          )
+        ],
+      ),
+      TargetFocus(
+        identify: "profile-key",
+        keyTarget: profileKey,
+        contents: [
+          TargetContent(
+            align: ContentAlign.bottom,
+            builder: (context, controller) {
+              return CoachmarkDesc(
+                text:
+                    "Tap on your profile picture icon to access your profile!",
+                onNext: () {
+                  controller.next();
+                },
+                onSkip: () {
+                  controller.skip();
+                },
+              );
+            },
+          )
+        ],
+      ),
+      TargetFocus(
+        identify: "notifications-key",
+        keyTarget: notificationsKey,
+        contents: [
+          TargetContent(
+            align: ContentAlign.bottom,
+            builder: (context, controller) {
+              return CoachmarkDesc(
+                text:
+                    "Tap on this Notifications bell to view your notifications!",
+                onNext: () {
+                  controller.next();
+                },
+                onSkip: () {
+                  controller.skip();
+                },
+              );
+            },
+          )
+        ],
+      ),
+      TargetFocus(
+        identify: "calendar-key",
+        keyTarget: calendarKey,
+        contents: [
+          TargetContent(
+            align: ContentAlign.bottom,
+            builder: (context, controller) {
+              return CoachmarkDesc(
+                text:
+                    "You're one click away from your Sepctrum Speak Calendar! Here you can view events near you or manage bookings!",
+                onNext: () {
+                  controller.next();
+                },
+                onSkip: () {
+                  controller.skip();
+                },
+              );
+            },
+          )
+        ],
+      ),
+      TargetFocus(
+        identify: "inbox-key",
+        keyTarget: inboxKey,
+        contents: [
+          TargetContent(
+            align: ContentAlign.bottom,
+            builder: (context, controller) {
+              return CoachmarkDesc(
+                text:
+                    "Tap the Inbox icon to access your messages. Stay informed, manage important updates, and keep your communication in check!",
+                onNext: () {
+                  controller.next();
+                },
+                onSkip: () {
+                  controller.skip();
+                },
+              );
+            },
+          )
+        ],
+      ),
+      TargetFocus(
+        identify: "menu-key",
+        keyTarget: menuKey,
+        contents: [
+          TargetContent(
+            align: ContentAlign.bottom,
+            builder: (context, controller) {
+              return CoachmarkDesc(
+                text:
+                    "Tap on the menu to discover more of Spectrum's Speak features",
+                onNext: () {
+                  controller.next();
+                },
+                onSkip: () {
+                  controller.skip();
+                },
+              );
+            },
+          )
+        ],
+      ),
+    ];
+  }
+
   Future<void> updateShowNotif() async {
     category = await getUserCategory(AuthManager.u.UserID.toString());
     if (category == 'Specialist') {
       showNotif = true;
-      print('checkkkk sp');
     }
-    print(showNotif);
   }
 
   void _updateData(int unreadM, int unreadN) {
@@ -90,8 +255,6 @@ class _CustomAppBarState extends State<CustomAppBar> {
 
   @override
   Widget build(BuildContext context) {
-    print('after $showNotif');
-    print('after $category');
     MediaQueryData mq = MediaQuery.of(context);
     return FutureBuilder<List<int>>(
         future: Future.wait([
@@ -106,15 +269,13 @@ class _CustomAppBarState extends State<CustomAppBar> {
             if (showNotif!)
               unreadNotificationsCount = snapshot.data![1];
             else {
-              print('yo');
               unreadNotificationsCount = 0;
             }
-            print('unread M $unreadMessagesCount');
-            print('unread N $unreadNotificationsCount');
           }
           return AppBar(
             leading: IconButton(
-              icon: const Icon(
+              icon: Icon(
+                key: menuKey,
                 CupertinoIcons.list_bullet,
                 color: kPrimary,
                 size: 30,
@@ -134,11 +295,12 @@ class _CustomAppBarState extends State<CustomAppBar> {
                 badgeColor: kRed,
                 position: badges.BadgePosition.topEnd(top: 0, end: 3),
                 child: IconButton(
-                  onPressed: () async{
+                  onPressed: () async {
                     await Utils.getUnreadConversations(true);
                     _showMessagesPopUpMenu(context, popUpMenuList);
                   },
-                  icon: const Icon(
+                  icon: Icon(
+                    key: inboxKey,
                     CupertinoIcons.envelope_open,
                     color: kPrimary,
                     size: 30,
@@ -146,11 +308,15 @@ class _CustomAppBarState extends State<CustomAppBar> {
                 ),
               ),
               IconButton(
-                onPressed: () async{
+                key: calendarKey,
+                onPressed: () async {
                   print('Calendar button pressed');
-                  String city=await getCity('${AuthManager.u.UserID}');
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => CalendarPage(city:city,category:category)));
+                  String city = await getCity('${AuthManager.u.UserID}');
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              CalendarPage(city: city, category: category)));
                 },
                 icon: const Icon(
                   CupertinoIcons.calendar,
@@ -177,8 +343,6 @@ class _CustomAppBarState extends State<CustomAppBar> {
                     if (category == 'Specialist') {
                       s = await profileSpecialist(
                           await '${AuthManager.u.UserID}');
-                      print('now fr ${s!.centerID}');
-                      print('is admin? ${s!.admin}');
                       if (s!.admin)
                         _showNotificationsPopUpMenu(
                             context,
@@ -191,7 +355,8 @@ class _CustomAppBarState extends State<CustomAppBar> {
                                 'Specialist', s!.userID));
                     }
                   },
-                  icon: const Icon(
+                  icon: Icon(
+                    key: notificationsKey,
                     CupertinoIcons.bell,
                     color: kPrimary,
                     size: 30,
@@ -199,6 +364,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
                 ),
               ),
               Padding(
+                key:profileKey,
                 padding: const EdgeInsets.all(8.0),
                 child: CircularProfileAvatar(
                   '',
@@ -329,7 +495,6 @@ class _CustomAppBarState extends State<CustomAppBar> {
         ChatUser user = await Utils.fetchUser(list[i].fromID);
         u.add(user);
       } else {
-        print('centerhere');
         CenterUser user = await Utils.fetchCenter(list[i].fromID);
         u.add(user);
       }
@@ -401,7 +566,20 @@ class TopBar extends StatelessWidget {
     super.key,
     required this.body,
   });
+
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  String url = '';
+
+  Future<void> assignUrl() async {
+    String centerID =
+        (await getCenterIdForSpecialist(AuthManager.u.UserID.toString()))!;
+    CenterUser c = await Utils.fetchCenter(centerID);
+    await (url = c.image);
+      url = url;
+    print('$url');
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -562,43 +740,47 @@ class TopBar extends StatelessWidget {
                       otherAccountsPicturesSize: const Size.square(45),
                       otherAccountsPictures: [
                         if (category == "Specialist" && isAdmin!)
-                          Container(
-                            width: 90.0,
-                            height: 90.0,
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                color: kPrimary.withOpacity(0.5),
-                                width: 1.0,
+                            CircularProfileAvatar(
+                              '',
+                              backgroundColor: kPrimary,
+                              borderWidth: 1.0,
+                              borderColor: kPrimary.withOpacity(0.5),
+                              radius:18,
+                              child: CachedNetworkImage(
+                                width: mq.size.height * .05,
+                                height: mq.size.height * .05,
+                                imageUrl: AuthManager.url,
+                                imageBuilder: (context, imageProvider) =>
+                                    Container(
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    image: DecorationImage(
+                                      image: imageProvider,
+                                      fit: BoxFit
+                                          .cover, // Set the fit property to cover
+                                    ),
+                                  ),
+                                ),
+                                errorWidget: (context, url, error) =>
+                                    const CircleAvatar(
+                                        child: Icon(CupertinoIcons.person)),
                               ),
-                              color: kPrimary,
-                            ),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(
-                                  0.0), // Set borderRadius to 0.0
-                              child: CircularProfileAvatar(
-                                '',
-                                backgroundColor: kPrimary,
-                                borderWidth: 1.0,
-                                borderColor: kPrimary.withOpacity(0.5),
-                                onTap: () async {
-                                  if (userId != null) {
-                                    Navigator.of(context).push(
-                                      MaterialPageRoute(
-                                        builder: (context) => CenterProfile(
-                                          userId: userId,
-                                        ),
+                              onTap: () async {
+                                if (userId != null) {
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (context) => CenterProfile(
+                                        userId: userId,
                                       ),
-                                    );
-                                  } else {
-                                    print('userId null');
-                                  }
-                                },
-                              ),
+                                    ),
+                                  );
+                                }
+                              },
                             ),
-                          ),
                       ],
                     ),
                     ListTile(
+                      // key:homeKey,
                       leading: Icon(
                         FontAwesomeIcons.house,
                         color: kDarkerColor,
@@ -618,6 +800,7 @@ class TopBar extends StatelessWidget {
                       ),
                     ),
                     ListTile(
+                      // key:searchKey,
                       leading: Icon(
                         FontAwesomeIcons.magnifyingGlass,
                         color: kDarkerColor,
@@ -648,7 +831,10 @@ class TopBar extends StatelessWidget {
                           fontSize: 17,
                         ),
                       ),
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) => Quiz()));
+                      },
                     ),
                     if (category == 'Parent')
                       ListTile(
@@ -671,7 +857,7 @@ class TopBar extends StatelessWidget {
                               context,
                               MaterialPageRoute(
                                   builder: ((context) =>
-                                      ChatBot(name: n, id: ID))));
+                                      SpectrumBot(name: n, id: ID))));
                         },
                       ),
                     ListTile(
@@ -788,7 +974,6 @@ class TopBar extends StatelessWidget {
         // Return a tuple of email, userName, and category
         return Tuple5(email, userName, category, isAdmin, userId);
       } else {
-        print('UserId is null');
         return Tuple5(null, null, null, false, null);
       }
     } catch (error) {
@@ -822,8 +1007,6 @@ class TopBar extends StatelessWidget {
           context,
           MaterialPageRoute(builder: (context) => const Login()),
         );
-      } else {
-        print('UserId is null');
       }
     } catch (error) {}
   }
@@ -833,8 +1016,6 @@ class TopBar extends StatelessWidget {
       String? userId = await AuthManager.getUserId();
       if (userId != null) {
         deleteCenter(userId);
-      } else {
-        print('UserId is null');
       }
     } catch (error) {}
   }
@@ -899,5 +1080,108 @@ class TopBar extends StatelessWidget {
               );
             }) ??
         false;
+  }
+}
+
+class CoachmarkDesc extends StatefulWidget {
+  const CoachmarkDesc({
+    super.key,
+    required this.text,
+    this.skip = "Skip",
+    this.next = "Next",
+    this.onSkip,
+    this.onNext,
+  });
+
+  final String text;
+  final String skip;
+  final String next;
+  final void Function()? onSkip;
+  final void Function()? onNext;
+
+  @override
+  State<CoachmarkDesc> createState() => _CoachmarkDescState();
+}
+
+class _CoachmarkDescState extends State<CoachmarkDesc>
+    with SingleTickerProviderStateMixin {
+  late AnimationController animationController;
+
+  @override
+  void initState() {
+    animationController = AnimationController(
+      vsync: this,
+      lowerBound: 0,
+      upperBound: 20,
+      duration: const Duration(milliseconds: 800),
+    )..repeat(min: 0, max: 20, reverse: true);
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    animationController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: animationController,
+      builder: (context, child) {
+        return Transform.translate(
+          offset: Offset(0, animationController.value),
+          child: child,
+        );
+      },
+      child: Container(
+        padding: const EdgeInsets.all(15),
+        decoration: BoxDecoration(
+          color: kPrimary,
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              widget.text,
+              style: TextStyle(
+                  color: kDarkerBlue,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 18),
+            ),
+            const SizedBox(height: 16),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                TextButton(
+                    onPressed: widget.onSkip,
+                    child: Text(widget.skip,
+                        style: TextStyle(color: kPrimary, fontSize: 15)),
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: kDarkerBlue,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ))),
+                const SizedBox(width: 16),
+                ElevatedButton(
+                    onPressed: widget.onNext,
+                    child: Text(widget.next,
+                        style: TextStyle(
+                            color: kPrimary,
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold)),
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: kDarkerBlue,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ))),
+              ],
+            )
+          ],
+        ),
+      ),
+    );
   }
 }

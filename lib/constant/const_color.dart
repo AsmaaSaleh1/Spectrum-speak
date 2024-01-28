@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+const Color tutorialColor = const Color(0xFF1C3E66);
 const Color kBlue= Color(0xff04b5e4);
 const Color kPrimary= Color(0xffE8E5E0);
 const Color kRed= Color(0xffE61B23);
 const Color kDarkBlue= Color(0xff0E5F88);
 const Color kYellow=Color(0xffFFC40C);//#F6EE04
+const Color kLighterYellow = Color(0xffffc835);
 const Color kGreen=Color(0xff00A550);
 const Color kDarkerBlue=Color.fromARGB(255, 11, 75, 107);
 const Color ksenderMessage=Color.fromARGB(255, 11, 75, 107);

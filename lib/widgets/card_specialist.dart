@@ -2,6 +2,7 @@ import 'package:circular_profile_avatar/circular_profile_avatar.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:spectrum_speak/constant/const_color.dart';
+import 'package:spectrum_speak/constant/utils.dart';
 import 'package:spectrum_speak/screen/specialist_profile.dart';
 import 'package:spectrum_speak/units/custom_clipper_puzzle.dart';
 
@@ -207,12 +208,13 @@ class CardSpecialist extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           GestureDetector(
-                            onTap: () {
+                            onTap: () async {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) =>
-                                        SpecialistProfile(userId: userId,)),
+                                    builder: (context) => SpecialistProfile(
+                                          userId: userId,
+                                        )),
                               );
                             },
                             child: Row(
@@ -231,7 +233,9 @@ class CardSpecialist extends StatelessWidget {
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) =>
-                                              SpecialistProfile(userId: userId,)),
+                                              SpecialistProfile(
+                                                userId: userId,
+                                              )),
                                     );
                                   },
                                   icon: Icon(

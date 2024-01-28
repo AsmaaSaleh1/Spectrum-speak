@@ -1,7 +1,12 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:circular_profile_avatar/circular_profile_avatar.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:spectrum_speak/constant/const_color.dart';
+import 'package:spectrum_speak/constant/utils.dart';
+import 'package:spectrum_speak/modules/CenterUser.dart';
 import 'package:spectrum_speak/modules/center.dart';
 import 'package:spectrum_speak/rest/auth_manager.dart';
 import 'package:spectrum_speak/rest/rest_api_center.dart';
@@ -11,15 +16,39 @@ import 'package:spectrum_speak/units/custom_button.dart';
 import 'package:spectrum_speak/units/custom_clipper.dart';
 import 'package:tuple/tuple.dart';
 
-class StackContainerCenter extends StatelessWidget {
+class StackContainerCenter extends StatefulWidget {
   final String userId;
-  const StackContainerCenter({
+  StackContainerCenter({
     super.key,
     required this.userId,
   });
+
+  @override
+  State<StackContainerCenter> createState() => _StackContainerCenterState();
+}
+
+class _StackContainerCenterState extends State<StackContainerCenter> {
+  String url = '';
+
+  Future<void> assignUrl() async {
+    String centerID = (await getCenterIdForSpecialist(widget.userId))!;
+    CenterUser c = await Utils.fetchCenter(centerID);
+    await (url = c.image);
+    print('$url');
+    setState(() {
+      url = url;
+    });
+  }
+  @override
+  initState(){
+    super.initState();
+    assignUrl();
+  }
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<Tuple2<CenterAutism?,String?>>(
+
+    MediaQueryData mq = MediaQuery.of(context);
+    return FutureBuilder<Tuple2<CenterAutism?, String?>>(
         future: _getCenter(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -58,21 +87,30 @@ class StackContainerCenter extends StatelessWidget {
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
-                        Container(
-                          width: 250, // Adjust the width as needed
-                          height: 140, // Adjust the height as needed
-                          decoration: const BoxDecoration(
-                            shape: BoxShape.rectangle,
-                            boxShadow: [
-                              BoxShadow(
-                                color: kDarkBlue,
-                                blurRadius: 5.0, // Blur radius
-                                spreadRadius: 5.0, // Spread radius
-                                offset: Offset(1, 1),
+                        CircularProfileAvatar(
+                          '',
+                          borderWidth: 3.0,
+                          borderColor: kDarkerBlue,
+                          backgroundColor: kPrimary,
+                          radius: 80.0,
+                          child: CachedNetworkImage(
+                            width: mq.size.height * .1,
+                            height: mq.size.height * .1,
+                            imageUrl: url,
+                            imageBuilder: (context, imageProvider) => Container(
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                image: DecorationImage(
+                                  image: imageProvider,
+                                  fit: BoxFit
+                                      .cover, // Set the fit property to cover
+                                ),
                               ),
-                            ],
+                            ),
+                            errorWidget: (context, url, error) =>
+                                const CircleAvatar(
+                                    child: Icon(CupertinoIcons.person)),
                           ),
-                          child: Image.asset('images/center.jpg'),
                         ),
                         const SizedBox(height: 10.0),
                         Text(
@@ -108,7 +146,7 @@ class StackContainerCenter extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Visibility(
-                              visible: userId == userIdLogin,
+                              visible: widget.userId == userIdLogin,
                               child: CustomButton(
                                 foregroundColor: kDarkerColor,
                                 backgroundColor: kBlue,
@@ -116,7 +154,8 @@ class StackContainerCenter extends StatelessWidget {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) => const EditCenterProfile(),
+                                      builder: (context) =>
+                                          const EditCenterProfile(),
                                     ),
                                   );
                                 },
@@ -132,7 +171,7 @@ class StackContainerCenter extends StatelessWidget {
                               width: 20,
                             ),
                             Visibility(
-                              visible: userId == userIdLogin,
+                              visible: widget.userId == userIdLogin,
                               child: CustomButton(
                                 foregroundColor: kDarkerColor,
                                 backgroundColor: kBlue,
@@ -140,7 +179,8 @@ class StackContainerCenter extends StatelessWidget {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) => const AddSpecialistFromCenter(),
+                                      builder: (context) =>
+                                          const AddSpecialistFromCenter(),
                                     ),
                                   );
                                 },
@@ -167,14 +207,14 @@ class StackContainerCenter extends StatelessWidget {
         });
   }
 
-  Future<Tuple2<CenterAutism?,String?>> _getCenter() async {
+  Future<Tuple2<CenterAutism?, String?>> _getCenter() async {
     try {
       //String? userId = await AuthManager.getUserId();
-      print('UserId: $userId');
+      print('UserIdd: ${widget.userId}');
       String? userIdLogin = await AuthManager.getUserId();
 
       // Check if userId is not null before calling profileShadowTeacher
-      var result = await profileCenter(userId);
+      var result = await profileCenter(widget.userId);
       return Tuple2(result, userIdLogin);
     } catch (error) {
       // Handle errors here

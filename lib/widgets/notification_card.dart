@@ -107,11 +107,6 @@ class _NotificationCardState extends State<NotificationCard> {
                             )));
               } else {
                 Utils.retrieveOfferResponseValue(widget.cn);
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (_) =>
-                            OfferorResponse(cn: widget.cn, u: widget.u,callBack: _updateData,)));
               }
             },
             child: ListTile(

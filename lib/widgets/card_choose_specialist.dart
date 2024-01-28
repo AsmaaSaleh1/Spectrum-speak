@@ -1,8 +1,10 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:circular_profile_avatar/circular_profile_avatar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:spectrum_speak/constant/const_color.dart';
 import 'package:spectrum_speak/constant/utils.dart';
+import 'package:spectrum_speak/modules/ChatUser.dart';
 import 'package:spectrum_speak/modules/my_date_util.dart';
 import 'package:spectrum_speak/screen/center_profile.dart';
 import 'package:spectrum_speak/screen/specialist_profile.dart';
@@ -27,6 +29,7 @@ class CardChooseSpecialist extends StatefulWidget {
 class _CardChooseSpecialistState extends State<CardChooseSpecialist> {
   bool isButtonPressed = false;
   bool _hasRequestBeenMade = false;
+  String url = '';
   Future<void> initButton() async {
     bool r =
         await Utils.checkIfRequestHasBeenMade(widget.userID, globalCenterID);
@@ -38,14 +41,27 @@ class _CardChooseSpecialistState extends State<CardChooseSpecialist> {
         'bool value is $_hasRequestBeenMade\nButton pressed value is $isButtonPressed');
   }
 
+  Future<void> assignUrl() async {
+    ChatUser u = await Utils.fetchUser(widget.userID);
+    await (url = u.image);
+    setState(() {
+      url = url;
+    });
+  }
+
   @override
   initState() {
     super.initState();
     initButton();
+    assignUrl();
+    setState(() {
+      url = url;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    MediaQueryData mq = MediaQuery.of(context);
     return Card(
       elevation: 3,
       shadowColor: kDarkerColor,
@@ -68,12 +84,24 @@ class _CardChooseSpecialistState extends State<CardChooseSpecialist> {
           leading: CircularProfileAvatar(
             '',
             borderWidth: 1.0,
-            borderColor: kDarkerColor,
+            borderColor: kDarkerBlue,
             backgroundColor: kPrimary,
             radius: 25.0,
-            child: Image.asset(
-              'images/prof.png',
-              fit: BoxFit.cover,
+            child: CachedNetworkImage(
+              width: mq.size.height * .05,
+              height: mq.size.height * .05,
+              imageUrl: url,
+              imageBuilder: (context, imageProvider) => Container(
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  image: DecorationImage(
+                    image: imageProvider,
+                    fit: BoxFit.cover, // Set the fit property to cover
+                  ),
+                ),
+              ),
+              errorWidget: (context, url, error) =>
+                  const CircleAvatar(child: Icon(CupertinoIcons.person)),
             ),
           ),
           title: Text(
@@ -111,12 +139,21 @@ class _CardChooseSpecialistState extends State<CardChooseSpecialist> {
                     builder: (context) {
                       return AlertDialog(
                         backgroundColor: kDarkerBlue,
-                        title: Row(mainAxisAlignment:MainAxisAlignment.center,
-                        children:[Icon(Icons.warning_amber,color: kYellow,size: 40,),
-                        Text('Warning',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold, color: kPrimary,fontSize:30)),]),
+                        title: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.warning_amber,
+                                color: kYellow,
+                                size: 40,
+                              ),
+                              Text('Warning',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: kPrimary,
+                                      fontSize: 30)),
+                            ]),
                         content: Text(
                             'You\'re going to cancel your offer for ${widget.userName}',
                             textAlign: TextAlign.center,
@@ -144,7 +181,8 @@ class _CardChooseSpecialistState extends State<CardChooseSpecialist> {
                               child: Text('Okay',
                                   style: TextStyle(
                                       color: kDarkerColor,
-                                      fontWeight: FontWeight.w600,fontSize:17))),
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 17))),
                           TextButton(
                               onPressed: () {
                                 Navigator.pop(context);
@@ -157,7 +195,8 @@ class _CardChooseSpecialistState extends State<CardChooseSpecialist> {
                               child: Text('Cancel',
                                   style: TextStyle(
                                       color: kDarkerColor,
-                                      fontWeight: FontWeight.w600,fontSize:17))),
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 17))),
                         ],
                       );
                     });

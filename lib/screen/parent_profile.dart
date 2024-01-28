@@ -21,7 +21,6 @@ class ParentProfile extends StatefulWidget {
 
 class _ParentProfileState extends State<ParentProfile> {
   List<Child> children = [];
-
   @override
   void initState() {
     super.initState();

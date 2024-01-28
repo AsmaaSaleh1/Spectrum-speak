@@ -42,8 +42,7 @@ class Utils {
           pushT = t;
           AuthManager.u.pushToken = t;
           u.pushToken = t;
-          print('Push Token: $t');
-          print('Utils u token ${u.pushToken}');
+          print('Utils Push token:${u.pushToken}');
         } else {
           print('Nopushtoken');
         }
@@ -129,6 +128,7 @@ class Utils {
       if (files.isNotEmpty) {
         // Return the download URL of the first file found
         final file = files.first;
+        print('im here storage');
         return await file.getDownloadURL();
       } else {
         // File not found
@@ -294,7 +294,6 @@ class Utils {
       'isOnline': isOnline,
       'lastActive': DateTime.now().millisecondsSinceEpoch.toString(),
     });
-    print('Push token is $pushT');
   }
 
   //delete message

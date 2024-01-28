@@ -55,10 +55,11 @@ class _AddReviewState extends State<AddReview> {
         return Padding(
           padding: contentPadding,
           child: Column(
+            key:widget.key,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "Rate this app",
+                "Rate this SpectrumSpeaker🚀",
                 style: TextStyle(
                   fontSize: 30.0,
                   fontWeight: FontWeight.bold,
@@ -69,7 +70,7 @@ class _AddReviewState extends State<AddReview> {
                 height: 7,
               ),
               Text(
-                "Tell others what you think",
+                "Tell others about your experience",
                 style: TextStyle(
                   fontSize: 15.0,
                   fontWeight: FontWeight.bold,

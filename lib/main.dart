@@ -1,4 +1,5 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -21,6 +22,7 @@ final navigatorKey = GlobalKey<NavigatorState>();
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   _initializeFirebase();
+  
   AwesomeNotifications().initialize(null, [
     NotificationChannel(
         channelKey: "call_channel",
@@ -152,6 +154,16 @@ _initializeFirebase() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  await FirebaseAuth.instance.useAuthEmulator('localhost', 9099);
+  FirebaseAuth.instance
+  .authStateChanges()
+  .listen((User? user) {
+    if (user == null) {
+      print('User is currently signed out!');
+    } else {
+      print('User is signed in!');
+    }
+  });
   if (!kIsWeb||kIsWeb) {
     var result = await FlutterNotificationChannel.registerNotificationChannel(
       description: 'For Showing Messaging ',

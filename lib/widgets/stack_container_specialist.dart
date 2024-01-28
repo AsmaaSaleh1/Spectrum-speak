@@ -1,8 +1,11 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:circular_profile_avatar/circular_profile_avatar.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:spectrum_speak/constant/const_color.dart';
+import 'package:spectrum_speak/modules/ChatUser.dart';
 import 'package:spectrum_speak/modules/Dialogs.dart';
 import 'package:spectrum_speak/modules/child.dart';
 import 'package:spectrum_speak/modules/specialist.dart';
@@ -17,16 +20,37 @@ import 'package:spectrum_speak/units/custom_button.dart';
 import 'package:spectrum_speak/units/custom_clipper.dart';
 import 'package:tuple/tuple.dart';
 
-class StackContainerSpecialist extends StatelessWidget {
+import '../constant/utils.dart';
+
+class StackContainerSpecialist extends StatefulWidget {
   final String userId;
   final String category;
-  const StackContainerSpecialist({
+  StackContainerSpecialist({
     super.key,
     required this.userId,
     required this.category,
   });
+
+  @override
+  State<StackContainerSpecialist> createState() => _StackContainerSpecialistState();
+}
+
+class _StackContainerSpecialistState extends State<StackContainerSpecialist> {
+  String url='';
+
+  Future<void> assignUrl() async {
+    ChatUser u = await Utils.fetchUser(widget.userId);
+    await(url = u.image);
+    setState((){url=url;});
+  }
+  @override
+  initState(){
+    super.initState();
+    assignUrl();
+  }
   @override
   Widget build(BuildContext context) {
+    MediaQueryData mq = MediaQuery.of(context);
     return FutureBuilder<Tuple2<Specialist?, String?>>(
         future: _getSpecialist(context),
         builder: (context, snapshot) {
@@ -68,10 +92,28 @@ class StackContainerSpecialist extends StatelessWidget {
                       children: <Widget>[
                         CircularProfileAvatar(
                           '',
-                          borderWidth: 4.0,
-                          borderColor: kPrimary,
+                          borderWidth: 3.0,
+                          borderColor: kDarkerBlue,
+                          backgroundColor: kPrimary,
                           radius: 80.0,
-                          //child: ProfileImageDisplay(),
+                          child: CachedNetworkImage(
+                            width: mq.size.height * .1,
+                            height: mq.size.height * .1,
+                            imageUrl: url!,
+                            imageBuilder: (context, imageProvider) => Container(
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                image: DecorationImage(
+                                  image: imageProvider,
+                                  fit: BoxFit
+                                      .cover, // Set the fit property to cover
+                                ),
+                              ),
+                            ),
+                            errorWidget: (context, url, error) =>
+                                const CircleAvatar(
+                                    child: Icon(CupertinoIcons.person)),
+                          ),
                         ),
                         const SizedBox(height: 4.0),
                         Text(
@@ -132,12 +174,14 @@ class StackContainerSpecialist extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Visibility(
-                              visible: category == 'Parent',
+                              visible: widget.category == 'Parent',
                               child: CustomButton(
+                                key: widget.key,
                                 foregroundColor: kDarkerColor,
                                 backgroundColor: kBlue,
                                 onPressed: () {
-                                  _bookSessionButtonPressed(context,specialist);
+                                  _bookSessionButtonPressed(
+                                      context, specialist);
                                 },
                                 buttonText: 'Book a session',
                                 icon: const Icon(
@@ -149,7 +193,7 @@ class StackContainerSpecialist extends StatelessWidget {
                               ),
                             ),
                             Visibility(
-                              visible: userId == userIdLogin,
+                              visible: widget.userId == userIdLogin,
                               child: CustomButton(
                                 foregroundColor: kDarkerColor,
                                 backgroundColor: kBlue,
@@ -168,7 +212,7 @@ class StackContainerSpecialist extends StatelessWidget {
                             if (specialist.specialistCategory ==
                                 'Rehabilitation')
                               Visibility(
-                                visible: userId ==
+                                visible: widget.userId ==
                                     userIdLogin, // Show only if userId equals userIdLogin
                                 child: specialist.admin
                                     ? CustomButton(
@@ -208,7 +252,7 @@ class StackContainerSpecialist extends StatelessWidget {
                                                   SignUpCenter(
                                                 SpecialistID:
                                                     specialist.specialistID,
-                                                userId: userId,
+                                                userId: widget.userId,
                                               ),
                                             ),
                                           );
@@ -236,7 +280,8 @@ class StackContainerSpecialist extends StatelessWidget {
         });
   }
 
-  Future<void> _showDateTimePickerDialog(BuildContext context,Specialist specialist) async {
+  Future<void> _showDateTimePickerDialog(
+      BuildContext context, Specialist specialist) async {
     DateTime selectedDate = DateTime.now();
     TimeOfDay selectedTime = TimeOfDay.now();
 
@@ -295,20 +340,25 @@ class StackContainerSpecialist extends StatelessWidget {
           // TODO: Handle the selected date, time, and child as needed
           print('Selected Date and Time: $selectedDate');
           print('Selected Child: ${selectedChild.childName}');
-          String availability =
-              await checkBooking(userId,AuthManager.u.UserID.toString(), selectedDate.toString());
-          if (availability=='Parent Unavailable') {
-            Dialogs.showSnackbar(context, 'You have a session at the requested time, please pick a different date and time slot');
-          }
-          else if(availability=='Specialist Unavailable'){
+          String availability = await checkBooking(
+              widget.userId, AuthManager.u.UserID.toString(), selectedDate.toString());
+          if (availability == 'Parent Unavailable') {
+            Dialogs.showSnackbar(context,
+                'You have a session at the requested time, please pick a different date and time slot');
+          } else if (availability == 'Specialist Unavailable') {
             Dialogs.showSnackbar(context,
                 'Unable to book the session. Specialist is unavailable at the requested time, please pick a different date and time slot');
-          }
-          else {
-            await addBooking(AuthManager.u.UserID.toString(),selectedChild!.childID,userId,'${specialist.specialistCategory}',selectedDate.toString());
+          } else {
+            await addBooking(
+                AuthManager.u.UserID.toString(),
+                selectedChild!.childID,
+                widget.userId,
+                '${specialist.specialistCategory}',
+                selectedDate.toString());
             Dialogs.showSnackbar(context,
                 "Session for ${selectedChild!.childName} has been booked successfully}");
-            Navigator.push(context,MaterialPageRoute(builder: ((context) => Search())));
+            Navigator.push(
+                context, MaterialPageRoute(builder: ((context) => Search())));
           }
           // TODO: Implement the logic to book a session with the selected date, time, and child
         }
@@ -317,21 +367,21 @@ class StackContainerSpecialist extends StatelessWidget {
   }
 
 // Call this function when the "Book a session" button is pressed
-  void _bookSessionButtonPressed(BuildContext context,Specialist specialist) {
+  void _bookSessionButtonPressed(BuildContext context, Specialist specialist) {
     // Show the date, time, and child selection dialog
-    _showDateTimePickerDialog(context,specialist);
+    _showDateTimePickerDialog(context, specialist);
   }
 
   Future<Tuple2<Specialist?, String?>> _getSpecialist(
       BuildContext context) async {
     try {
       // Check if userId is not null before calling profileSpecialist
-      var result = await profileSpecialist(userId);
+      var result = await profileSpecialist(widget.userId);
       String? userIdLogin = await AuthManager.getUserId();
 
       // Check if result is null or if specialist sign-up is not complete
       if (result == null) {
-        var check = await checkSpecialistSignUpComplete(userId);
+        var check = await checkSpecialistSignUpComplete(widget.userId);
         if (!check!) {
           Navigator.push(
             context,

@@ -1,5 +1,10 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:circular_profile_avatar/circular_profile_avatar.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:spectrum_speak/constant/const_color.dart';
+import 'package:spectrum_speak/constant/utils.dart';
+import 'package:spectrum_speak/modules/CenterUser.dart';
 import 'package:spectrum_speak/modules/center.dart';
 import 'package:spectrum_speak/rest/auth_manager.dart';
 import 'package:spectrum_speak/rest/rest_api_center.dart';
@@ -39,9 +44,22 @@ class _EditCenterProfileState extends State<EditCenterProfile> {
       return "Error";
     }
   }
+
+  String url = '';
+  Future<void> assignUrl() async {
+    String centerID =
+        (await getCenterIdForSpecialist(AuthManager.u.UserID.toString()))!;
+    CenterUser c = await Utils.fetchCenter(centerID);
+    await (url = c.image);
+    setState(() {
+      url = url;
+    });
+  }
+
   @override
   void initState() {
     super.initState();
+    assignUrl();
     // Call your method to fetch user data from the database
     _getCenter().then((center) {
       // Update text controllers with fetched data
@@ -68,8 +86,10 @@ class _EditCenterProfileState extends State<EditCenterProfile> {
       );
     }
   }
+
   @override
   Widget build(BuildContext context) {
+    MediaQueryData mq = MediaQuery.of(context);
     return Scaffold(
       body: GestureDetector(
         onTap: () {
@@ -82,41 +102,29 @@ class _EditCenterProfileState extends State<EditCenterProfile> {
                 children: [
                   Padding(
                     padding: const EdgeInsets.only(top: 50.0, bottom: 20),
-                    child: Container(
-                      width: 250,
-                      height: 140,
-                      decoration: BoxDecoration(
-                        border: Border.all(width: 4, color: kPrimary),
-                        boxShadow: [
-                          BoxShadow(
-                            color: kDarkBlue.withOpacity(0.5),
-                            blurRadius: 8.0, // Blur radius
-                            spreadRadius: 5.0, // Spread radius
-                            offset: const Offset(-5, 5),
+                    child: CircularProfileAvatar(
+                      '',
+                      borderWidth: 3.0,
+                      borderColor: kDarkerBlue,
+                      backgroundColor: kPrimary,
+                      radius: 80.0,
+                      child: CachedNetworkImage(
+                        width: mq.size.height * .1,
+                        height: mq.size.height * .1,
+                        imageUrl: url,
+                        imageBuilder: (context, imageProvider) => Container(
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            image: DecorationImage(
+                              image: imageProvider,
+                              fit:
+                                  BoxFit.cover, // Set the fit property to cover
+                            ),
                           ),
-                        ],
-                        shape: BoxShape.rectangle, // Set to rectangle
-                        image: const DecorationImage(
-                          fit: BoxFit.cover,
-                          image: AssetImage('images/center.jpg'),
                         ),
-                      ),
-                    ),
-                  ),
-                  Positioned(
-                    bottom: 0,
-                    right: 0,
-                    child: Container(
-                      height: 40,
-                      width: 40,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        border: Border.all(width: 3, color: kPrimary),
-                        color: kDarkBlue,
-                      ),
-                      child: const Icon(
-                        Icons.edit,
-                        color: kPrimary,
+                        errorWidget: (context, url, error) =>
+                            const CircleAvatar(
+                                child: Icon(CupertinoIcons.person)),
                       ),
                     ),
                   ),
@@ -289,7 +297,7 @@ class _EditCenterProfileState extends State<EditCenterProfile> {
                       onPressed: () {
                         Navigator.pop(context);
                       },
-                      buttonText: 'Cansel',
+                      buttonText: 'Cancel',
                       icon: const Icon(
                         Icons.cancel,
                         size: 18.0,
@@ -359,6 +367,7 @@ class _EditCenterProfileState extends State<EditCenterProfile> {
       ),
     );
   }
+
   Future<CenterAutism?> _getCenter() async {
     try {
       String? userId = await AuthManager.getUserId();
@@ -378,29 +387,36 @@ class _EditCenterProfileState extends State<EditCenterProfile> {
       return null;
     }
   }
-  Future doEdit(String userId,
-      String centerName,
-      String email,
-      String phone,
-      String description,
-      String city,)async {
+
+  Future doEdit(
+    String userId,
+    String centerName,
+    String email,
+    String phone,
+    String description,
+    String city,
+  ) async {
     try {
-        var rest = await editProfileCenter(
-          userId,
-          centerName.trim(),
-            email.trim(),
-          phone.trim(),
-          description.trim(),
-          city.trim(),
-        );
-        if (rest['success']) {
-          Navigator.pushReplacement(
-              context, MaterialPageRoute(builder: (_) => CenterProfile(userId: userId,)));
-        } else {
-          setState(() {
-            _showErrorText = true;
-          });
-        }
+      var rest = await editProfileCenter(
+        userId,
+        centerName.trim(),
+        email.trim(),
+        phone.trim(),
+        description.trim(),
+        city.trim(),
+      );
+      if (rest['success']) {
+        Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+                builder: (_) => CenterProfile(
+                      userId: userId,
+                    )));
+      } else {
+        setState(() {
+          _showErrorText = true;
+        });
+      }
     } catch (error) {
       print('Error in doEditProfile: $error');
       return null;

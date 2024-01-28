@@ -7,6 +7,7 @@ import 'package:spectrum_speak/modules/Booking.dart';
 import 'package:spectrum_speak/constant/const_color.dart';
 import 'package:spectrum_speak/modules/Dialogs.dart';
 import 'package:spectrum_speak/modules/my_date_util.dart';
+import 'package:spectrum_speak/rest/rest_api_booking.dart';
 import 'package:spectrum_speak/rest/rest_api_profile.dart';
 import 'package:spectrum_speak/screen/calendar_grid.dart';
 
@@ -236,11 +237,11 @@ class BookingCard extends StatelessWidget {
                                 actions: [
                                   TextButton(
                                       onPressed: () async {
-                                        // await deleteBooking(booking.bookingID);
-                                        // Navigator.of(context).pop(true);
-                                        // onDelete();
-                                        // Dialogs.showSnackbar(context,
-                                        //     'Booking has been deleted successfully');
+                                        await deleteBooking(booking.bookingID);
+                                        Navigator.of(context).pop(true);
+                                        onDelete();
+                                        Dialogs.showSnackbar(context,
+                                            'Session booking has been deleted successfully');
                                       },
                                       style: ElevatedButton.styleFrom(
                                           backgroundColor: kPrimary,

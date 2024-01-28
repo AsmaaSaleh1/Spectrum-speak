@@ -8,9 +8,12 @@ import 'package:spectrum_speak/rest/rest_api_center.dart';
 import 'package:spectrum_speak/rest/rest_api_booking.dart';
 import 'package:spectrum_speak/widgets/booking_card.dart';
 import 'package:spectrum_speak/widgets/event_card.dart';
+import 'package:spectrum_speak/widgets/top_bar.dart';
+import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
 late int indexOfFirstDayMonth = 0;
 late int indexOfLastDayMonth = 0;
+bool calendarGuide = true;
 
 class CalendarPage extends StatefulWidget {
   final String city;
@@ -29,14 +32,88 @@ class _CalendarPageState extends State<CalendarPage> {
   List<Event> dayEvents = [];
   List<Booking> dayBookings = [];
   List<Booking> allBookings = [];
+  TutorialCoachMark? tutorialCoachMark;
+  List<TargetFocus>? targets;
+  GlobalKey changeMonthKey = GlobalKey();
+  GlobalKey viewCalendarKey = GlobalKey();
+  void _showTutorialCoachmark() {
+    calendarGuide = true;
+    _initTarget();
+    tutorialCoachMark = TutorialCoachMark(
+      targets: targets!,
+      pulseEnable: false,
+      colorShadow: Color.fromARGB(72, 14, 95, 136),
+      onClickTarget: (target) {
+        print("${target.identify}");
+      },
+      hideSkip: true,
+      alignSkip: Alignment.topRight,
+      onFinish: () {
+        print("Finish");
+      },
+    )..show(context: context);
+  }
+
+  void _initTarget() {
+    targets = [
+      // profile
+      TargetFocus(
+        identify: "viewCalendar-key",
+        keyTarget: viewCalendarKey,
+        shape: ShapeLightFocus.RRect,
+        contents: [
+          TargetContent(
+            align: ContentAlign.bottom,
+            builder: (context, controller) {
+              return CoachmarkDesc(
+                text:
+                    "Welcome to your calendar where you'll be able to manage your bookings${widget.category == 'Parent' ? ' and view events near you📆!' : '📆!'} ",
+                onNext: () {
+                  controller.next();
+                },
+                onSkip: () {
+                  controller.skip();
+                },
+              );
+            },
+          )
+        ],
+      ),
+      TargetFocus(
+        identify: "changeMonth-key",
+        keyTarget: changeMonthKey,
+        shape: ShapeLightFocus.RRect,
+        contents: [
+          TargetContent(
+            align: ContentAlign.bottom,
+            builder: (context, controller) {
+              return CoachmarkDesc(
+                text:
+                    "Tap the arrows to navigate between months and stay up to date on your commitments🚀",
+                onNext: () {
+                  controller.next();
+                },
+                onSkip: () {
+                  controller.skip();
+                },
+              );
+            },
+          )
+        ],
+      ),
+    ];
+  }
+
   @override
   void initState() {
+    if (AuthManager.firstTime && calendarGuide)
+    Future.delayed(const Duration(seconds: 1), () {
+      _showTutorialCoachmark();
+    });
     super.initState();
-    print('pspsppspsps ${widget.category}');
     _selectedDate = DateTime.now();
     indexOfFirstDayMonth = getIndexOfFirstDayInMonth(_selectedDate);
     indexOfLastDayMonth = indexOfLastDayMonth;
-    print('last $indexOfLastDayMonth');
     setState(() {
       _selectedIndex = indexOfFirstDayMonth +
           int.parse(DateFormat('d').format(DateTime.now())) -
@@ -44,12 +121,6 @@ class _CalendarPageState extends State<CalendarPage> {
     });
     Future.delayed(Duration.zero, () async {
       if (widget.category == 'Parent') await getEvents();
-      if (allEvents.isEmpty) {
-        print('inittt empty');
-      }
-      for (var e in allEvents) {
-        print('eventssssssss $e');
-      }
       allBookings =
           await getBookings(AuthManager.u.UserID.toString(), widget.category);
       setState(() {
@@ -65,19 +136,18 @@ class _CalendarPageState extends State<CalendarPage> {
 
   Future<void> getEvents() async {
     allEvents = await fetchEvents(widget.city);
-    if (allEvents.isEmpty) {
-      print('init empty');
-    }
   }
 
-   Future<void> refreshPage() async {
-    allBookings = await getBookings(AuthManager.u.UserID.toString(), widget.category);
+  Future<void> refreshPage() async {
+    allBookings =
+        await getBookings(AuthManager.u.UserID.toString(), widget.category);
     setState(() {
       allBookings = allBookings;
       dayBookings = getBookingForDay(allBookings, _selectedDate);
     });
   }
-  void refresh(){
+
+  void refresh() {
     refreshPage();
   }
 
@@ -90,6 +160,7 @@ class _CalendarPageState extends State<CalendarPage> {
         child: Scaffold(
           backgroundColor: kPrimary,
           appBar: AppBar(
+            key: changeMonthKey,
             backgroundColor: kPrimary,
             shadowColor: Colors.transparent,
             leading: IconButton(
@@ -199,6 +270,7 @@ class _CalendarPageState extends State<CalendarPage> {
                   ],
                 ),
                 child: GridView.builder(
+                  key: viewCalendarKey,
                   physics: const NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
                   padding: EdgeInsets.zero,
@@ -224,8 +296,6 @@ class _CalendarPageState extends State<CalendarPage> {
                                 _selectedDate.month,
                                 _selectedIndex - indexOfFirstDayMonth + 1,
                               );
-                              print(
-                                  'index ${_selectedIndex - indexOfFirstDayMonth}');
                               print(_selectedDate);
                               List<Event> list =
                                   getEventForDay(allEvents, _selectedDate);
@@ -235,8 +305,6 @@ class _CalendarPageState extends State<CalendarPage> {
                                   getBookingForDay(allBookings, _selectedDate);
                               dayBookings.clear();
                               dayBookings = bList;
-                              print('new events');
-                              for (var e in list) print('eventssss $e');
                             }
                           });
                         },
@@ -374,7 +442,10 @@ class _CalendarPageState extends State<CalendarPage> {
                             if (widget.category == 'Parent')
                               for (var e in dayEvents) EventCard(event: e),
                             for (var b in dayBookings)
-                              BookingCard(booking: b, category: widget.category,onDelete: refresh)
+                              BookingCard(
+                                  booking: b,
+                                  category: widget.category,
+                                  onDelete: refresh)
                           ]))
                   ],
                 ),
@@ -388,8 +459,6 @@ class _CalendarPageState extends State<CalendarPage> {
 }
 
 String getMessage(String category, List<Booking> b, List<Event> e) {
-  print('blength ${b.length}');
-  print('elength ${e.length}');
   if (category == 'Parent') {
     if (b.isEmpty && e.isEmpty)
       return 'No events or bookings for today';
@@ -481,18 +550,12 @@ bool hasBookings(DateTime date, List<Booking> bookings) {
 List<Event> getEventForDay(List<Event> events, DateTime t) {
   List<Event> e = [];
 
-  if (events.isEmpty) {
-    print('empty');
-  }
+
 
   for (var event in events) {
-    print(t);
-    print(event);
-    print('\n\n');
     if ((event.time.month == t.month) &&
         (event.time.day == t.day) &&
         (t.year == event.time.year)) {
-      print(e);
       e.add(event);
     }
   }
@@ -503,13 +566,9 @@ List<Booking> getBookingForDay(List<Booking> allBookings, DateTime t) {
   List<Booking> b = [];
 
   for (var booking in allBookings) {
-    print(t);
-    print(booking.time);
-    print('pewpew');
     if ((booking.time.month == t.month) &&
         (booking.time.day == t.day) &&
         (t.year == booking.time.year)) {
-      print(b);
       b.add(booking);
     }
   }

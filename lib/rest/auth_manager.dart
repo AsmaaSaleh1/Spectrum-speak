@@ -1,11 +1,15 @@
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spectrum_speak/constant/utils.dart';
+import 'package:spectrum_speak/modules/CenterUser.dart';
 import 'package:spectrum_speak/modules/ChatUser.dart';
+import 'package:spectrum_speak/rest/rest_api_center.dart';
 import 'package:spectrum_speak/rest/rest_api_login.dart';
+import 'package:spectrum_speak/rest/rest_api_menu.dart';
 
 class AuthManager {
   static late ChatUser u;
-
+  static late bool firstTime;
+  static late String url;
   static Future<void> storeUserData(String userId, String userEmail,
       String userName, bool cameFromSignUp) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -26,13 +30,33 @@ class AuthManager {
     Utils.updateActiveStatus(userId, true);
     u.lastActive = DateTime.now().millisecondsSinceEpoch.toString();
     u.image = (await Utils.getProfilePictureUrl(userId, ''))!;
-    print(u.image);
-    print('Cityyyy');
-    print(await getCity(userId));
+    firstTime = await checkForFirstTime(userId);
+    String category = await getUserCategory(userId);
+    bool admin = await checkAdmin(userId);
+    prefs.setString('Category', category);
+    prefs.setBool('isAdmin', admin);
+    if (AuthManager.getCategory() == 'Specialist' &&
+        (AuthManager.checkIsAdmin == true)) {
+      String url = '';
+      String centerID = (await getCenterIdForSpecialist(userId))!;
+      CenterUser c = await Utils.fetchCenter(centerID);
+      url = c.image;
+    }
+    await setFirstTimeFalse(userId);
     /*If the timestamp is within the valid session duration,
      the user is considered logged in;
      otherwise,
      you'll require them to log in again.*/
+  }
+
+  static Future<String?> getCategory() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString('Categoy');
+  }
+
+  static Future<bool?> checkIsAdmin() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getBool('isAdmin');
   }
 
   static Future<String?> getUserId() async {

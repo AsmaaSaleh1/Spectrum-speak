@@ -16,13 +16,12 @@ Future userLogin(String email, String password) async {
 
 Future<String> getCity(String id) async {
   try {
-    final response = await http.post(
-        Uri.parse('${Utils.baseUrl}/users/city'),
+    final response = await http.post(Uri.parse('${Utils.baseUrl}/users/city'),
         headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json'
         },
-        body:jsonEncode({'UserID':id}));
+        body: jsonEncode({'UserID': id}));
     if (response.statusCode == 200) {
       // If the server returns a 200 OK response, parse the JSON
       Map<String, dynamic> data = json.decode(response.body);
@@ -37,6 +36,42 @@ Future<String> getCity(String id) async {
     }
   } catch (error) {
     // Handle errors during the API call
+    print('Error fetching city: $error');
+    throw Exception('Internal Server Error');
+  }
+}
+
+Future<bool> checkForFirstTime(String id) async {
+  try {
+    final response = await http.post(
+        Uri.parse('${Utils.baseUrl}/users/checkForFirstTime'),
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: jsonEncode({'id': id}));
+    var decodedData = jsonDecode(response.body);
+    if (decodedData['result'] == "Not The First Time") 
+      return false;
+    return true;
+  } catch (error) {
+// Handle errors during the API call
+    print('Error fetching city: $error');
+    throw Exception('Internal Server Error');
+  }
+}
+Future<void> setFirstTimeFalse(String id) async {
+  try {
+    final response = await http.patch(
+        Uri.parse('${Utils.baseUrl}/users/setFirstTimeFalse'),
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: jsonEncode({'id': id}));
+    var decodedData = jsonDecode(response.body);
+  } catch (error) {
+// Handle errors during the API call
     print('Error fetching city: $error');
     throw Exception('Internal Server Error');
   }
