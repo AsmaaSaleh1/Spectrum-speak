@@ -111,8 +111,6 @@ class _MainPageState extends State<MainPage> {
         builder: (BuildContext context, BoxConstraints constraints) {
           double screenWidth = constraints.maxWidth;
           double screenHeight = constraints.minHeight;
-          print(screenWidth);
-          print(screenHeight);
           double linePadding;
           if (screenWidth >= 1200) {
             linePadding = 110;

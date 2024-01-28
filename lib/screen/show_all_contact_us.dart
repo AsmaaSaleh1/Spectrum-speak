@@ -89,7 +89,7 @@ class _ContactUsAdminCallState extends State<ContactUsAdminCall> {
               Column(
                 children: [
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Container(
                         padding: EdgeInsets.zero, // No padding

@@ -76,172 +76,185 @@ class _BarChartDataByCityState extends State<BarChartDataByCity> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 400,
-      child: Scaffold(
-        body: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  Widget build(BuildContext context) => LayoutBuilder(
+          builder: (BuildContext context, BoxConstraints constraints) {
+        double screenWidth = constraints.maxWidth;
+        double linePadding;
+        if (screenWidth >= 1200) {
+          linePadding = 110;
+        } else if (screenWidth >= 800) {
+          linePadding = 70;
+        } else {
+          linePadding = 20;
+        }
+        return Container(
+          height: 400,
+          child: Scaffold(
+            body: Column(
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(top: 20, left: 10),
+                  padding: EdgeInsets.symmetric(horizontal: linePadding),
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Icon(
-                        FontAwesomeIcons.solidCircle,
-                        size: 22.0,
-                        color: kDarkBlue,
+                      Padding(
+                        padding: const EdgeInsets.only(top: 20, left: 10),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Icon(
+                              FontAwesomeIcons.solidCircle,
+                              size: 22.0,
+                              color: kDarkBlue,
+                            ),
+                            const SizedBox(
+                              width: 15,
+                            ),
+                            Text(
+                              "Data By City",
+                              style: TextStyle(
+                                fontSize: 22.0,
+                                fontWeight: FontWeight.bold,
+                                color: kDarkerColor,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                      const SizedBox(
-                        width: 15,
-                      ),
-                      Text(
-                        "Data By City",
-                        style: TextStyle(
-                          fontSize: 22.0,
-                          fontWeight: FontWeight.bold,
-                          color: kDarkerColor,
+                      Padding(
+                        padding: const EdgeInsets.only(top: 30, right: 40),
+                        child: CustomDropDown(
+                          items: const [
+                            'All',
+                            'Nablus',
+                            'Ramallah',
+                            'Jerusalem',
+                            'Bethlehem',
+                            'Qalqilya',
+                            'Hebron',
+                            'Jenin',
+                            'Tulkarm',
+                          ],
+                          selectedValue: selectedCity,
+                          hint: 'Select City',
+                          onChanged: onCityChanged,
                         ),
                       ),
                     ],
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 30, right: 40),
-                  child: CustomDropDown(
-                    items: const [
-                      'All',
-                      'Nablus',
-                      'Ramallah',
-                      'Jerusalem',
-                      'Bethlehem',
-                      'Qalqilya',
-                      'Hebron',
-                      'Jenin',
-                      'Tulkarm',
-                    ],
-                    selectedValue: selectedCity,
-                    hint: 'Select City',
-                    onChanged: onCityChanged,
+                Container(
+                  margin: EdgeInsets.only(right: 30, left: 5),
+                  width: 400,
+                  height: 300,
+                  child: BarChart(
+                    BarChartData(
+                      alignment: BarChartAlignment.spaceAround,
+                      barTouchData: BarTouchData(
+                        enabled: true,
+                        touchTooltipData: BarTouchTooltipData(
+                          tooltipBgColor: Colors.transparent,
+                          tooltipPadding: EdgeInsets.zero,
+                          tooltipMargin: 2,
+                          getTooltipItem: (
+                            BarChartGroupData group,
+                            int groupIndex,
+                            BarChartRodData rod,
+                            int rodIndex,
+                          ) {
+                            return BarTooltipItem(
+                              rod.toY.toString(),
+                              TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: rod.color,
+                                fontSize: 18,
+                              ),
+                            );
+                          },
+                        ),
+                        touchCallback: (event, response) {
+                          if (event.isInterestedForInteractions &&
+                              response != null &&
+                              response.spot != null) {
+                            setState(() {
+                              touchedGroupIndex =
+                                  response.spot!.touchedBarGroupIndex;
+                            });
+                          } else {
+                            setState(() {
+                              touchedGroupIndex = -1;
+                            });
+                          }
+                        },
+                      ),
+                      barGroups: barGroups,
+                      minY: 0,
+                      maxY: y,
+                      gridData: FlGridData(
+                        show: true,
+                        drawVerticalLine: false,
+                        getDrawingHorizontalLine: (value) => FlLine(
+                          color: kDarkerColor.withOpacity(0.5),
+                          strokeWidth: 1,
+                        ),
+                      ),
+                      borderData: FlBorderData(
+                        show: true,
+                        border: Border(
+                          top: BorderSide.none, // Remove top border
+                          right: BorderSide.none, // Remove right border
+                          bottom: BorderSide(
+                            color: kDarkerColor,
+                            width: 2,
+                          ),
+                          left: BorderSide(
+                            color: kDarkerColor,
+                            width: 2,
+                          ),
+                        ),
+                      ),
+                      titlesData: FlTitlesData(
+                        rightTitles: AxisTitles(
+                          sideTitles: SideTitles(
+                            showTitles: false,
+                          ),
+                        ),
+                        topTitles: AxisTitles(
+                          sideTitles: SideTitles(
+                            showTitles: false,
+                          ),
+                        ),
+                        bottomTitles: AxisTitles(
+                          sideTitles: SideTitles(
+                            showTitles: true,
+                            reservedSize: 50,
+                            getTitlesWidget: (value, meta) {
+                              final index = value.toInt();
+                              if (index >= 0 && index < xAxis.length) {
+                                return SideTitleWidget(
+                                  axisSide: meta.axisSide,
+                                  child: Text(
+                                    xAxis[index],
+                                    style: TextStyle(
+                                      color: kDarkerColor,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 15,
+                                    ),
+                                  ),
+                                );
+                              }
+                              return SizedBox
+                                  .shrink(); // Return an empty widget if index is out of bounds
+                            },
+                          ),
+                        ),
+                      ),
+                    ),
                   ),
                 ),
               ],
             ),
-            Container(
-              margin: EdgeInsets.only(right: 30, left: 5),
-              width: 400,
-              height: 300,
-              child: BarChart(
-                BarChartData(
-                  alignment: BarChartAlignment.spaceAround,
-                  barTouchData: BarTouchData(
-                    enabled: true,
-                    touchTooltipData: BarTouchTooltipData(
-                      tooltipBgColor: Colors.transparent,
-                      tooltipPadding: EdgeInsets.zero,
-                      tooltipMargin: 2,
-                      getTooltipItem: (
-                        BarChartGroupData group,
-                        int groupIndex,
-                        BarChartRodData rod,
-                        int rodIndex,
-                      ) {
-                        return BarTooltipItem(
-                          rod.toY.toString(),
-                          TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: rod.color,
-                            fontSize: 18,
-                          ),
-                        );
-                      },
-                    ),
-                    touchCallback: (event, response) {
-                      if (event.isInterestedForInteractions &&
-                          response != null &&
-                          response.spot != null) {
-                        setState(() {
-                          touchedGroupIndex =
-                              response.spot!.touchedBarGroupIndex;
-                        });
-                      } else {
-                        setState(() {
-                          touchedGroupIndex = -1;
-                        });
-                      }
-                    },
-                  ),
-                  barGroups: barGroups,
-                  minY: 0,
-                  maxY: y,
-                  gridData: FlGridData(
-                    show: true,
-                    drawVerticalLine: false,
-                    getDrawingHorizontalLine: (value) => FlLine(
-                      color: kDarkerColor.withOpacity(0.5),
-                      strokeWidth: 1,
-                    ),
-                  ),
-                  borderData: FlBorderData(
-                    show: true,
-                    border: Border(
-                      top: BorderSide.none, // Remove top border
-                      right: BorderSide.none, // Remove right border
-                      bottom: BorderSide(
-                        color: kDarkerColor,
-                        width: 2,
-                      ),
-                      left: BorderSide(
-                        color: kDarkerColor,
-                        width: 2,
-                      ),
-                    ),
-                  ),
-                  titlesData: FlTitlesData(
-                    rightTitles: AxisTitles(
-                      sideTitles: SideTitles(
-                        showTitles: false,
-                      ),
-                    ),
-                    topTitles: AxisTitles(
-                      sideTitles: SideTitles(
-                        showTitles: false,
-                      ),
-                    ),
-                    bottomTitles: AxisTitles(
-                      sideTitles: SideTitles(
-                        showTitles: true,
-                        reservedSize: 50,
-                        getTitlesWidget: (value, meta) {
-                          final index = value.toInt();
-                          if (index >= 0 && index < xAxis.length) {
-                            return SideTitleWidget(
-                              axisSide: meta.axisSide,
-                              child: Text(
-                                xAxis[index],
-                                style: TextStyle(
-                                  color: kDarkerColor,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 15,
-                                ),
-                              ),
-                            );
-                          }
-                          return SizedBox
-                              .shrink(); // Return an empty widget if index is out of bounds
-                        },
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+          ),
+        );
+      });
 }
