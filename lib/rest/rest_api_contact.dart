@@ -20,7 +20,7 @@ Future sendContact(
 }
 
 Future<List<Contact>?> getContact() async {
-  List <Contact> contact=[];
+  List<Contact> contact = [];
   final response = await http.get(
     Uri.parse('${Utils.baseUrl}/contactUs/getContact'),
     headers: {
@@ -36,11 +36,29 @@ Future<List<Contact>?> getContact() async {
         item["Username"],
         item["Contact"],
         item["Done"] == 1 ? 1 : 0,
-        DateTime.parse(item["DateTime"]),
+        DateTime.parse(item["Time"]),
       );
       contact.add(contactUs);
     }
     return contact;
+  } else {
+    print("Error in getContact: ${response.statusCode}");
+    return [];
+  }
+}
+
+Future contactUsDone(
+  String contactID,
+) async {
+  final response = await http.put(
+    Uri.parse('${Utils.baseUrl}/contactUs/updateContact/$contactID'),
+    headers: {
+      "Accept": "application/json",
+    },
+  );
+  if (response.statusCode == 200) {
+    var decodedData = jsonDecode(response.body);
+    return decodedData;
   } else {
     print("Error in getContact: ${response.statusCode}");
     return null;

@@ -3,12 +3,17 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:spectrum_speak/constant/const_color.dart';
 import 'package:spectrum_speak/modules/ContactUs.dart';
+import 'package:spectrum_speak/rest/rest_api_contact.dart';
+import 'package:spectrum_speak/units/custom_button.dart';
 
 class CardContactUsAdmin extends StatelessWidget {
   final Contact contact;
+  final VoidCallback onDonePressed;
+
   const CardContactUsAdmin({
     super.key,
     required this.contact,
+    required this.onDonePressed,
   });
 
   @override
@@ -17,7 +22,6 @@ class CardContactUsAdmin extends StatelessWidget {
       padding: const EdgeInsets.all(19.0),
       child: Container(
         width: 400,
-        height: 200,
         decoration: BoxDecoration(
           color: kPrimary,
           borderRadius: BorderRadius.circular(15),
@@ -43,94 +47,86 @@ class CardContactUsAdmin extends StatelessWidget {
                   bottom: 3,
                 ),
                 child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Icon(
-                      FontAwesomeIcons.userLarge,
-                      size: 15.0,
-                      color: kDarkerColor,
+                    Row(
+                      children: [
+                        Icon(
+                          FontAwesomeIcons.circleUser,
+                          size: 27.0,
+                          color: kDarkerColor,
+                        ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Text(
+                          toBeginningOfSentenceCase(contact.userName) ?? "",
+                          style: TextStyle(
+                            fontSize: 20.0,
+                            fontWeight: FontWeight.bold,
+                            color: kDarkerColor,
+                          ),
+                        ),
+                      ],
                     ),
-                    SizedBox(
-                      width: 5,
-                    ),
-                    Text(
-                      toBeginningOfSentenceCase(contact.userName) ??
-                          "",
-                      style: TextStyle(
-                        fontSize: 20.0,
-                        fontWeight: FontWeight.bold,
-                        color: kDarkerColor,
+                    CustomButton(
+                      foregroundColor: kPrimary,
+                      backgroundColor: kBlue,
+                      onPressed: () async {
+                        await contactUsDone(
+                          contact.contactID,
+                        );
+                        onDonePressed();
+                      },
+                      buttonText: "  Done",
+                      icon: Icon(
+                        Icons.done_all,
+                        size: 20,
                       ),
-                    ),
+                      iconColor: kDarkerColor,
+                    )
                   ],
                 ),
               ),
               Padding(
                 padding: EdgeInsets.all(2.0),
-                child: Row(
-                  children: [
-                    Icon(
-                      FontAwesomeIcons.child,
-                      size: 15.0,
-                      color: kRed,
-                    ),
-                    SizedBox(
-                      width: 5,
-                    ),
-                    Text(
-                      contact.contact,
-                      style: TextStyle(
-                        fontSize: 14.0,
-                        color: kRed,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
+                child: Text(
+                  contact.contact,
+                  style: TextStyle(
+                    fontSize: 15.0,
+                    color: kDarkBlue,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
+              ),
+              SizedBox(
+                height: 10,
               ),
               Padding(
                 padding: EdgeInsets.all(2.0),
                 child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    Icon(
-                      FontAwesomeIcons.calendar,
-                      size: 15.0,
-                      color: kGreen,
-                    ),
-                    SizedBox(
-                      width: 5,
-                    ),
                     Text(
                       // Display the date
-                      DateFormat('yyyy-MM-dd').format(
-                          DateTime.parse(contact.dateTime.toString())),
+                      DateFormat('yyyy-MM-dd')
+                          .format(DateTime.parse(contact.dateTime.toString())),
                       style: TextStyle(
                         fontSize: 14.0,
                         color: kGreen,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.all(2.0),
-                child: Row(
-                  children: [
-                    Icon(
-                      FontAwesomeIcons.clock,
-                      size: 15.0,
-                      color: kYellow.withGreen(180),
-                    ),
                     SizedBox(
                       width: 5,
                     ),
                     Text(
                       // Display the time
-                      DateFormat('HH:mm').format(
-                          DateTime.parse(contact.dateTime.toString())),
+                      DateFormat('HH:mm')
+                          .format(DateTime.parse(contact.dateTime.toString())),
                       style: TextStyle(
                         fontSize: 14.0,
-                        color: kYellow.withGreen(180),
+                        color: kRed,
                         fontWeight: FontWeight.bold,
                       ),
                     ),

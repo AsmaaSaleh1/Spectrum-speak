@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:spectrum_speak/constant/const_color.dart';
 import 'package:spectrum_speak/modules/ContactUs.dart';
 import 'package:spectrum_speak/rest/auth_manager.dart';
@@ -51,6 +52,7 @@ class _ContactUsAdminCallState extends State<ContactUsAdminCall> {
         .map(
           (contact) => CardContactUsAdmin(
             contact: contact,
+            onDonePressed: getData,
           ),
         )
         .toList();
@@ -82,54 +84,81 @@ class _ContactUsAdminCallState extends State<ContactUsAdminCall> {
       body: Container(
         child: SingleChildScrollView(
           scrollDirection: Axis.vertical,
-          child: Column(
+          child: Stack(
             children: [
-              FutureBuilder<List<Widget>?>(
-                future: getContactWidgets(),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Container(
-                      color: kPrimary,
-                      child: Container(
-                        alignment: Alignment.center,
-                        child: const CircularProgressIndicator(
-                          backgroundColor: kDarkBlue,
-                          color: kDarkBlue,
+              Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Container(
+                        padding: EdgeInsets.zero, // No padding
+                        margin: EdgeInsets.zero, // No margin
+                        child: Image.asset(
+                          'images/contact.png',
+                          width: 200,
+                          fit: BoxFit.cover,
                         ),
                       ),
-                    );
-                  } else if (snapshot.hasError) {
-                    return Text('Error: ${snapshot.error}');
-                  } else {
-                    return Stack(
-                      children: [
-                        Visibility(
-                          visible: snapshot.data != null ||
-                              snapshot.data!.isNotEmpty,
-                          child: Column(
-                            children: snapshot.data ??
-                                [], // Provide a default value when null
-                          ),
+                      Text(
+                        "Contact US",
+                        style: TextStyle(
+                          fontSize: 25.0,
+                          fontWeight: FontWeight.bold,
+                          color: kDarkerColor,
                         ),
-                        Visibility(
-                          visible:
-                              snapshot.data == null || snapshot.data!.isEmpty,
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(
-                              "No Contact available",
-                              style: TextStyle(
-                                fontSize: 17.0,
-                                fontWeight: FontWeight.bold,
-                                color: kBlue,
-                              ),
+                      ),
+                    ],
+                  ),
+                  FutureBuilder<List<Widget>?>(
+                    future: getContactWidgets(),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return Container(
+                          color: kPrimary,
+                          child: Container(
+                            alignment: Alignment.center,
+                            child: const CircularProgressIndicator(
+                              backgroundColor: kDarkBlue,
+                              color: kDarkBlue,
                             ),
                           ),
-                        ),
-                      ],
-                    );
-                  }
-                },
+                        );
+                      } else if (snapshot.hasError) {
+                        return Text('Error: ${snapshot.error}');
+                      } else {
+                        return Stack(
+                          children: [
+                            Visibility(
+                              visible: snapshot.data != null ||
+                                  snapshot.data!.isNotEmpty,
+                              child: Column(
+                                children: snapshot.data ??
+                                    [], // Provide a default value when null
+                              ),
+                            ),
+                            Visibility(
+                              visible: snapshot.data == null ||
+                                  snapshot.data!.isEmpty,
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(
+                                  "No Contact Available Until Now",
+                                  style: TextStyle(
+                                    fontSize: 17.0,
+                                    fontWeight: FontWeight.bold,
+                                    color: kBlue,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        );
+                      }
+                    },
+                  ),
+                  SizedBox(height: 70,),
+                ],
               ),
             ],
           ),
