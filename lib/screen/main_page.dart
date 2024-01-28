@@ -173,7 +173,7 @@ class _MainPageState extends State<MainPage> {
                                 child: Container(
                                   height: screenHeight / 2.3,
                                   child: Image.asset(
-                                    'images/spectrumSpeakWithoutWard.png',
+                                    'images/borderPuzzle.png',
                                     width: screenHeight / 2.3,
                                     height: screenHeight / 2.3,
                                     fit: BoxFit.cover,
@@ -205,7 +205,7 @@ class _MainPageState extends State<MainPage> {
                                   child: Container(
                                     height: screenWidth / 3,
                                     child: Image.asset(
-                                      'images/spectrumSpeakWithoutWard.png',
+                                      'images/borderPuzzle.png',
                                       width: screenWidth / 3,
                                       height: screenWidth / 3,
                                       fit: BoxFit.cover,
@@ -218,7 +218,8 @@ class _MainPageState extends State<MainPage> {
                         if (kIsWeb)
                           Positioned(
                             left:
-                                (screenWidth - (linePadding * 2) - (120 * 3)) / 2,
+                                (screenWidth - (linePadding * 2) - (120 * 3)) /
+                                    2,
                             top: screenHeight / 2.3,
                             child: SingleChildScrollView(
                               scrollDirection: Axis.horizontal,
@@ -289,7 +290,8 @@ class _MainPageState extends State<MainPage> {
                             bottom: screenWidth / 40,
                             top: screenWidth / 1.5,
                             left:
-                                (screenWidth - (linePadding * 2) - (120 * 3)) / 2,
+                                (screenWidth - (linePadding * 2) - (120 * 3)) /
+                                    2,
                             child: SingleChildScrollView(
                               scrollDirection: Axis.horizontal,
                               child: Row(
@@ -514,7 +516,7 @@ class _MainPageState extends State<MainPage> {
                   ),
                   Container(
                     alignment: Alignment.topLeft,
-                    margin: EdgeInsets.symmetric(horizontal: linePadding*1.5),
+                    margin: EdgeInsets.symmetric(horizontal: linePadding * 1.5),
                     child: Text(
                       "Be The Reason",
                       style: TextStyle(
@@ -526,7 +528,7 @@ class _MainPageState extends State<MainPage> {
                   ),
                   Container(
                     alignment: Alignment.topLeft,
-                    margin: EdgeInsets.symmetric(horizontal: linePadding*1.5),
+                    margin: EdgeInsets.symmetric(horizontal: linePadding * 1.5),
                     child: Text(
                       "Someone Smiles Today!",
                       style: TextStyle(
@@ -538,7 +540,7 @@ class _MainPageState extends State<MainPage> {
                   ),
                   Container(
                     alignment: Alignment.topLeft,
-                    margin: EdgeInsets.symmetric(horizontal: linePadding*1.5),
+                    margin: EdgeInsets.symmetric(horizontal: linePadding * 1.5),
                     child: Text(
                       "Join us in creating brighter futures and fostering a world where every child on the autism spectrum receives the support they deserve. Your support makes a meaningful difference.",
                       style: TextStyle(
@@ -550,7 +552,7 @@ class _MainPageState extends State<MainPage> {
                   ),
                   Container(
                     alignment: Alignment.topLeft,
-                    margin: EdgeInsets.symmetric(horizontal: linePadding*1.5),
+                    margin: EdgeInsets.symmetric(horizontal: linePadding * 1.5),
                     child: Padding(
                       padding: const EdgeInsets.only(top: 10.0),
                       child: Text(
@@ -565,75 +567,89 @@ class _MainPageState extends State<MainPage> {
                   ),
                   Container(
                     alignment: Alignment.topLeft,
-                    margin: EdgeInsets.symmetric(horizontal: linePadding*1.5+20),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                    margin: EdgeInsets.symmetric(
+                        horizontal: linePadding * 1.5 + 20),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        SizedBox(height: 10),
-                        Row(
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Icon(
-                              Icons.email,
-                              size: 30,
-                              color: kDarkBlue,
-                            ),
-                            const SizedBox(
-                              width: 10,
-                            ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                            SizedBox(height: 10),
+                            Row(
                               children: [
-                                Text(
-                                  'Email:',
-                                  style: TextStyle(
-                                    color: kDarkerColor,
-                                    fontSize: 17,
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                                Icon(
+                                  Icons.email,
+                                  size: 30,
+                                  color: kDarkBlue,
                                 ),
-                                Text(
-                                  'SpectrumSpeak@gmail.com',
-                                  style: TextStyle(
-                                    color: kDarkerColor,
-                                    fontSize: 16,
-                                  ),
+                                const SizedBox(
+                                  width: 10,
                                 ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'Email:',
+                                      style: TextStyle(
+                                        color: kDarkerColor,
+                                        fontSize: 17,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    Text(
+                                      'SpectrumSpeak@gmail.com',
+                                      style: TextStyle(
+                                        color: kDarkerColor,
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                  ],
+                                )
                               ],
-                            )
+                            ),
+                            SizedBox(height: 10),
+                            Row(
+                              children: [
+                                Icon(
+                                  Icons.phone,
+                                  size: 30,
+                                  color: kDarkBlue,
+                                ),
+                                const SizedBox(
+                                  width: 10,
+                                ),
+                                Row(
+                                  children: [
+                                    Text(
+                                      'Phone:',
+                                      style: TextStyle(
+                                        color: kDarkerColor,
+                                        fontSize: 17,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    Text(
+                                      '+(970) 592-676-710',
+                                      style: TextStyle(
+                                        color: kDarkerColor,
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                  ],
+                                )
+                              ],
+                            ),
                           ],
                         ),
-                        SizedBox(height: 10),
-                        Row(
-                          children: [
-                            Icon(
-                              Icons.phone,
-                              size: 30,
-                              color: kDarkBlue,
-                            ),
-                            const SizedBox(
-                              width: 10,
-                            ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Phone:',
-                                  style: TextStyle(
-                                    color: kDarkerColor,
-                                    fontSize: 17,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                Text(
-                                  '+(970) 592-676-710',
-                                  style: TextStyle(
-                                    color: kDarkerColor,
-                                    fontSize: 16,
-                                  ),
-                                ),
-                              ],
-                            )
-                          ],
+                        Container(
+                          height: screenWidth / 5,
+                          child: Image.asset(
+                            'images/donation_img.png',
+                            width: screenWidth / 5,
+                            height: screenWidth / 5,
+                            fit: BoxFit.cover,
+                          ),
                         ),
                       ],
                     ),
