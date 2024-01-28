@@ -37,7 +37,7 @@ class _CalendarPageState extends State<CalendarPage> {
   GlobalKey changeMonthKey = GlobalKey();
   GlobalKey viewCalendarKey = GlobalKey();
   void _showTutorialCoachmark() {
-    calendarGuide = true;
+    calendarGuide = false;
     _initTarget();
     tutorialCoachMark = TutorialCoachMark(
       targets: targets!,

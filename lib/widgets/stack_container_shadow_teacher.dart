@@ -16,21 +16,32 @@ import 'package:spectrum_speak/units/custom_button.dart';
 import 'package:spectrum_speak/units/custom_clipper.dart';
 import 'package:tuple/tuple.dart';
 
-class StackContainerShadowTeacher extends StatelessWidget {
+class StackContainerShadowTeacher extends StatefulWidget {
   final String userId;
   StackContainerShadowTeacher({
     super.key,
     required this.userId,
   });
-  String? url;
-  Future<void> assignUrl() async {
-    ChatUser u = await Utils.fetchUser(userId);
-    url = u.image;
-  }
 
   @override
-  Widget build(BuildContext context) {
+  State<StackContainerShadowTeacher> createState() => _StackContainerShadowTeacherState();
+}
+
+class _StackContainerShadowTeacherState extends State<StackContainerShadowTeacher> {
+  String url='';
+
+  Future<void> assignUrl() async {
+    ChatUser u = await Utils.fetchUser(widget.userId);
+    await(url = u.image);
+    setState((){url=url;});
+  }
+  @override
+  initState(){
+    super.initState();
     assignUrl();
+  }
+  @override
+  Widget build(BuildContext context) {
     MediaQueryData mq = MediaQuery.of(context);
     return FutureBuilder<Tuple2<ShadowTeacher?, String?>>(
         future: _getShadowTeacher(context),
@@ -86,7 +97,7 @@ class StackContainerShadowTeacher extends StatelessWidget {
                         child: CachedNetworkImage(
                           width: mq.size.height * .05,
                           height: mq.size.height * .05,
-                          imageUrl: AuthManager.u.image,
+                          imageUrl: url,
                           imageBuilder: (context, imageProvider) => Container(
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
@@ -184,7 +195,7 @@ class StackContainerShadowTeacher extends StatelessWidget {
                         ),
                         const SizedBox(height: 5.0),
                         Visibility(
-                          visible: userId == userIdLogin,
+                          visible: widget.userId == userIdLogin,
                           child: CustomButton(
                             foregroundColor: kDarkerColor,
                             backgroundColor: kBlue,
@@ -221,10 +232,10 @@ class StackContainerShadowTeacher extends StatelessWidget {
       BuildContext context) async {
     try {
       String? userIdLogin = await AuthManager.getUserId();
-      var result = await profileShadowTeacher(userId);
+      var result = await profileShadowTeacher(widget.userId);
       // Check if result is null or if Shadow Teacher sign-up is not complete
       if (result == null) {
-        var check = await checkShadowTeacherSignUpComplete(userId);
+        var check = await checkShadowTeacherSignUpComplete(widget.userId);
         if (!check!) {
           Navigator.push(
             context,

@@ -29,7 +29,7 @@ class AuthManager {
     u = await Utils.fetchUser(userId);
     Utils.updateActiveStatus(userId, true);
     u.lastActive = DateTime.now().millisecondsSinceEpoch.toString();
-    u.image = (await Utils.getProfilePictureUrl(userId, ''))!;
+    // u.image = (await Utils.getProfilePictureUrl(userId, ''))!;
     firstTime = await checkForFirstTime(userId);
     String category = await getUserCategory(userId);
     bool admin = await checkAdmin(userId);

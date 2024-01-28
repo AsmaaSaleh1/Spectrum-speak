@@ -61,23 +61,14 @@ class CustomAppBar extends StatefulWidget implements PreferredSizeWidget {
   State<CustomAppBar> createState() => _CustomAppBarState();
 }
 
+TutorialCoachMark? tutorialCoachMark;
+
 class _CustomAppBarState extends State<CustomAppBar> {
   late bool? showNotif = false;
   String category = '';
-  TutorialCoachMark? tutorialCoachMark;
-  List<TargetFocus>? targets;
-  GlobalKey profileKey = GlobalKey();
-  GlobalKey notificationsKey = GlobalKey();
-  GlobalKey calendarKey = GlobalKey();
-  GlobalKey inboxKey = GlobalKey();
-  GlobalKey menuKey = GlobalKey();
-  GlobalKey spectrumBotKey = GlobalKey();
+
   @override
   initState() {
-    if (AuthManager.firstTime && topBarGuide)
-      Future.delayed(const Duration(seconds: 1), () {
-        _showTutorialCoachmark();
-      });
     super.initState();
     setState(() {
       Future.delayed(Duration.zero, () async {
@@ -85,158 +76,6 @@ class _CustomAppBarState extends State<CustomAppBar> {
         setState(() {});
       });
     });
-  }
-
-  void _showTutorialCoachmark() {
-    topBarGuide = false;
-    _initTarget();
-    tutorialCoachMark = TutorialCoachMark(
-      targets: targets!,
-      pulseEnable: false,
-      colorShadow: tutorialColor,
-      onClickTarget: (target) {
-        print("${target.identify}");
-      },
-      hideSkip: true,
-      alignSkip: Alignment.topRight,
-      onFinish: () {
-        print("Finish");
-        topBarGuide = false;
-      },
-    )..show(context: context);
-  }
-
-  void _initTarget() {
-    targets = [
-      // profile
-      TargetFocus(
-        identify: "profile-key",
-        keyTarget: profileKey,
-        contents: [
-          TargetContent(
-            align: ContentAlign.bottom,
-            builder: (context, controller) {
-              return CoachmarkDesc(
-                next: "Start👏",
-                text:
-                    "Hello there!👋This is your Spectrum Speak Buddy🤖! I'll be here to assist you on how to use Spectrum Speak to the fullest and to introduce you to its features! Let's get started💪",
-                onNext: () {
-                  controller.next();
-                },
-                onSkip: () {
-                  controller.skip();
-                },
-              );
-            },
-          )
-        ],
-      ),
-      TargetFocus(
-        identify: "profile-key",
-        keyTarget: profileKey,
-        contents: [
-          TargetContent(
-            align: ContentAlign.bottom,
-            builder: (context, controller) {
-              return CoachmarkDesc(
-                text:
-                    "Tap on your profile picture icon to access your profile!",
-                onNext: () {
-                  controller.next();
-                },
-                onSkip: () {
-                  controller.skip();
-                },
-              );
-            },
-          )
-        ],
-      ),
-      TargetFocus(
-        identify: "notifications-key",
-        keyTarget: notificationsKey,
-        contents: [
-          TargetContent(
-            align: ContentAlign.bottom,
-            builder: (context, controller) {
-              return CoachmarkDesc(
-                text:
-                    "Tap on this Notifications bell to view your notifications!",
-                onNext: () {
-                  controller.next();
-                },
-                onSkip: () {
-                  controller.skip();
-                },
-              );
-            },
-          )
-        ],
-      ),
-      TargetFocus(
-        identify: "calendar-key",
-        keyTarget: calendarKey,
-        contents: [
-          TargetContent(
-            align: ContentAlign.bottom,
-            builder: (context, controller) {
-              return CoachmarkDesc(
-                text:
-                    "You're one click away from your Sepctrum Speak Calendar! Here you can view events near you or manage bookings!",
-                onNext: () {
-                  controller.next();
-                },
-                onSkip: () {
-                  controller.skip();
-                },
-              );
-            },
-          )
-        ],
-      ),
-      TargetFocus(
-        identify: "inbox-key",
-        keyTarget: inboxKey,
-        contents: [
-          TargetContent(
-            align: ContentAlign.bottom,
-            builder: (context, controller) {
-              return CoachmarkDesc(
-                text:
-                    "Tap the Inbox icon to access your messages. Stay informed, manage important updates, and keep your communication in check!",
-                onNext: () {
-                  controller.next();
-                },
-                onSkip: () {
-                  controller.skip();
-                },
-              );
-            },
-          )
-        ],
-      ),
-      TargetFocus(
-        identify: "menu-key",
-        keyTarget: menuKey,
-        contents: [
-          TargetContent(
-            align: ContentAlign.bottom,
-            builder: (context, controller) {
-              return CoachmarkDesc(
-                text:
-                    "Tap on the menu to discover more of Spectrum's Speak features",
-                onNext: () {
-                  controller.next();
-                },
-                onSkip: () {
-                  controller.skip();
-                },
-              );
-            },
-          )
-        ],
-      ),
-    ];
   }
 
   Future<void> updateShowNotif() async {
@@ -275,7 +114,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
           return AppBar(
             leading: IconButton(
               icon: Icon(
-                key: menuKey,
+                key: menuKeyTopBar,
                 CupertinoIcons.list_bullet,
                 color: kPrimary,
                 size: 30,
@@ -300,7 +139,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
                     _showMessagesPopUpMenu(context, popUpMenuList);
                   },
                   icon: Icon(
-                    key: inboxKey,
+                    key: inboxKeyTopBar,
                     CupertinoIcons.envelope_open,
                     color: kPrimary,
                     size: 30,
@@ -308,7 +147,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
                 ),
               ),
               IconButton(
-                key: calendarKey,
+                key: calendarKeyTopBar,
                 onPressed: () async {
                   print('Calendar button pressed');
                   String city = await getCity('${AuthManager.u.UserID}');
@@ -356,7 +195,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
                     }
                   },
                   icon: Icon(
-                    key: notificationsKey,
+                    key: notificationsKeyTopBar,
                     CupertinoIcons.bell,
                     color: kPrimary,
                     size: 30,
@@ -364,7 +203,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
                 ),
               ),
               Padding(
-                key:profileKey,
+                key: profileKeyTopBar,
                 padding: const EdgeInsets.all(8.0),
                 child: CircularProfileAvatar(
                   '',
@@ -559,12 +398,155 @@ class _CustomAppBarState extends State<CustomAppBar> {
   }
 }
 
+List<TargetFocus>? targets;
+GlobalKey profileKeyTopBar = GlobalKey();
+GlobalKey notificationsKeyTopBar = GlobalKey();
+GlobalKey calendarKeyTopBar = GlobalKey();
+GlobalKey inboxKeyTopBar = GlobalKey();
+GlobalKey menuKeyTopBar = GlobalKey();
+GlobalKey spectrumBotKeyTopBar = GlobalKey();
+void _showTutorialCoachmarkTopBar(BuildContext context) {
+  topBarGuide = false;
+  _initTarget();
+  tutorialCoachMark = TutorialCoachMark(
+    targets: targets!,
+    pulseEnable: false,
+    colorShadow: tutorialColor,
+    onClickTarget: (target) {
+      print("${target.identify}");
+    },
+    hideSkip: true,
+    alignSkip: Alignment.topRight,
+    onFinish: () {
+      print("Finish");
+      topBarGuide = false;
+    },
+  )..show(context: context);
+}
+
+void _initTarget() {
+  targets = [
+    // profile
+    TargetFocus(
+      identify: "profileTopBar-key",
+      keyTarget: profileKeyTopBar,
+      contents: [
+        TargetContent(
+          align: ContentAlign.bottom,
+          builder: (context, controller) {
+            return CoachmarkDesc(
+              text: "Tap on your profile picture icon to access your profile!",
+              onNext: () {
+                controller.next();
+              },
+              onSkip: () {
+                controller.skip();
+              },
+            );
+          },
+        )
+      ],
+    ),
+    TargetFocus(
+      identify: "notifications-key",
+      keyTarget: notificationsKeyTopBar,
+      contents: [
+        TargetContent(
+          align: ContentAlign.bottom,
+          builder: (context, controller) {
+            return CoachmarkDesc(
+              text:
+                  "Tap on this Notifications bell to view your notifications!",
+              onNext: () {
+                controller.next();
+              },
+              onSkip: () {
+                controller.skip();
+              },
+            );
+          },
+        )
+      ],
+    ),
+    TargetFocus(
+      identify: "calendar-key",
+      keyTarget: calendarKeyTopBar,
+      contents: [
+        TargetContent(
+          align: ContentAlign.bottom,
+          builder: (context, controller) {
+            return CoachmarkDesc(
+              text:
+                  "You're one click away from your Sepctrum Speak Calendar! Here you can view events near you or manage bookings!",
+              onNext: () {
+                controller.next();
+              },
+              onSkip: () {
+                controller.skip();
+              },
+            );
+          },
+        )
+      ],
+    ),
+    TargetFocus(
+      identify: "inbox-key",
+      keyTarget: inboxKeyTopBar,
+      contents: [
+        TargetContent(
+          align: ContentAlign.bottom,
+          builder: (context, controller) {
+            return CoachmarkDesc(
+              text:
+                  "Tap the Inbox icon to access your messages. Stay informed, manage important updates, and keep your communication in check!",
+              onNext: () {
+                controller.next();
+              },
+              onSkip: () {
+                controller.skip();
+              },
+            );
+          },
+        )
+      ],
+    ),
+    TargetFocus(
+      identify: "menu-key",
+      keyTarget: menuKeyTopBar,
+      contents: [
+        TargetContent(
+          align: ContentAlign.bottom,
+          builder: (context, controller) {
+            return CoachmarkDesc(
+              text:
+                  "Tap on the menu to discover more of Spectrum's Speak features",
+              onNext: () {
+                controller.next();
+              },
+              onSkip: () {
+                controller.skip();
+              },
+            );
+          },
+        )
+      ],
+    ),
+  ];
+}
+
+  void showTut(BuildContext context) {
+    if (AuthManager.firstTime && topBarGuide)
+      Future.delayed(const Duration(seconds: 1), () {
+        _showTutorialCoachmarkTopBar(context);
+      });
+  }
 class TopBar extends StatelessWidget {
   final Widget body;
-
+  final VoidCallback? callback;
   TopBar({
     super.key,
     required this.body,
+    this.callback,
   });
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
@@ -576,10 +558,9 @@ class TopBar extends StatelessWidget {
         (await getCenterIdForSpecialist(AuthManager.u.UserID.toString()))!;
     CenterUser c = await Utils.fetchCenter(centerID);
     await (url = c.image);
-      url = url;
+    url = url;
     print('$url');
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -611,7 +592,9 @@ class TopBar extends StatelessWidget {
             String? userId = snapshot.data!.item5;
             return Scaffold(
               key: _scaffoldKey,
-              appBar: CustomAppBar(scaffoldKey: _scaffoldKey),
+              appBar: CustomAppBar(
+                scaffoldKey: _scaffoldKey,
+              ),
               drawer: Drawer(
                 shadowColor: kDarkerColor,
                 backgroundColor: kPrimary,
@@ -740,43 +723,43 @@ class TopBar extends StatelessWidget {
                       otherAccountsPicturesSize: const Size.square(45),
                       otherAccountsPictures: [
                         if (category == "Specialist" && isAdmin!)
-                            CircularProfileAvatar(
-                              '',
-                              backgroundColor: kPrimary,
-                              borderWidth: 1.0,
-                              borderColor: kPrimary.withOpacity(0.5),
-                              radius:18,
-                              child: CachedNetworkImage(
-                                width: mq.size.height * .05,
-                                height: mq.size.height * .05,
-                                imageUrl: AuthManager.url,
-                                imageBuilder: (context, imageProvider) =>
-                                    Container(
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    image: DecorationImage(
-                                      image: imageProvider,
-                                      fit: BoxFit
-                                          .cover, // Set the fit property to cover
-                                    ),
+                          CircularProfileAvatar(
+                            '',
+                            backgroundColor: kPrimary,
+                            borderWidth: 1.0,
+                            borderColor: kPrimary.withOpacity(0.5),
+                            radius: 18,
+                            child: CachedNetworkImage(
+                              width: mq.size.height * .05,
+                              height: mq.size.height * .05,
+                              imageUrl: AuthManager.url,
+                              imageBuilder: (context, imageProvider) =>
+                                  Container(
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  image: DecorationImage(
+                                    image: imageProvider,
+                                    fit: BoxFit
+                                        .cover, // Set the fit property to cover
                                   ),
                                 ),
-                                errorWidget: (context, url, error) =>
-                                    const CircleAvatar(
-                                        child: Icon(CupertinoIcons.person)),
                               ),
-                              onTap: () async {
-                                if (userId != null) {
-                                  Navigator.of(context).push(
-                                    MaterialPageRoute(
-                                      builder: (context) => CenterProfile(
-                                        userId: userId,
-                                      ),
-                                    ),
-                                  );
-                                }
-                              },
+                              errorWidget: (context, url, error) =>
+                                  const CircleAvatar(
+                                      child: Icon(CupertinoIcons.person)),
                             ),
+                            onTap: () async {
+                              if (userId != null) {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) => CenterProfile(
+                                      userId: userId,
+                                    ),
+                                  ),
+                                );
+                              }
+                            },
+                          ),
                       ],
                     ),
                     ListTile(
