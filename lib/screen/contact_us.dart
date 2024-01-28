@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:spectrum_speak/constant/const_color.dart';
+import 'package:spectrum_speak/rest/auth_manager.dart';
+import 'package:spectrum_speak/rest/rest_api_contact.dart';
 import 'package:spectrum_speak/units/build_text_field.dart';
 import 'package:spectrum_speak/units/custom_button.dart';
 import 'package:spectrum_speak/widgets/top_bar.dart';
+
+import 'main_page.dart';
 
 class ContactUs extends StatefulWidget {
   const ContactUs({super.key});
@@ -30,10 +34,10 @@ class ContactUsCall extends StatefulWidget {
 }
 
 class _ContactUsCallState extends State<ContactUsCall> {
-  final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _contactController = TextEditingController();
   int _characterCount = 0;
   int _maxCharacterCount = 300;
+  bool _showErrorText = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -72,7 +76,7 @@ class _ContactUsCallState extends State<ContactUsCall> {
                 Container(
                   alignment: Alignment.center,
                   margin:
-                      const EdgeInsets.only(bottom: 35, left: 20, right: 20),
+                      const EdgeInsets.only(bottom: 25, left: 20, right: 20),
                   child: Text(
                     "Your opinion make a dentifrice",
                     style: TextStyle(
@@ -80,19 +84,6 @@ class _ContactUsCallState extends State<ContactUsCall> {
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
                     ),
-                  ),
-                ),
-                Container(
-                  alignment: Alignment.center,
-                  margin: const EdgeInsets.only(bottom: 15),
-                  width: 320,
-                  height: 50,
-                  child: CustomTextField(
-                    preIcon: Icons.person,
-                    labelText: "User Name",
-                    placeholder: "Asmaa",
-                    isPasswordTextField: false,
-                    controller: _usernameController,
                   ),
                 ),
                 Container(
@@ -141,6 +132,18 @@ class _ContactUsCallState extends State<ContactUsCall> {
                     ),
                   ),
                 ),
+                Visibility(
+                  visible: _showErrorText,
+                  child: Container(
+                    child: const Text(
+                      'Field are Important',
+                      style: TextStyle(
+                        color: Colors.red,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ),
+                ),
                 Container(
                   alignment: Alignment.centerRight,
                   margin: const EdgeInsets.only(bottom: 20),
@@ -150,7 +153,18 @@ class _ContactUsCallState extends State<ContactUsCall> {
                   child: CustomButton(
                     foregroundColor: kDarkerColor,
                     backgroundColor: kBlue,
-                    onPressed: () {},
+                    onPressed: () async {
+                      _showErrorText = false;
+                      if (_contactController.text.isEmpty) {
+                        setState(() {
+                          _showErrorText = true;
+                        });
+                        return;
+                      }
+                      doContact(
+                          _contactController.text
+                      );
+                    },
                     buttonText: "     Send     ",
                     icon: Icon(
                       Icons.send,
@@ -243,6 +257,7 @@ class _ContactUsCallState extends State<ContactUsCall> {
                           Icon(
                             Icons.email,
                             size: 30,
+                            color: kDarkBlue,
                           ),
                           const SizedBox(
                             width: 10,
@@ -275,6 +290,7 @@ class _ContactUsCallState extends State<ContactUsCall> {
                           Icon(
                             Icons.phone,
                             size: 30,
+                            color: kDarkBlue,
                           ),
                           const SizedBox(
                             width: 10,
@@ -333,5 +349,28 @@ class _ContactUsCallState extends State<ContactUsCall> {
         ],
       ),
     );
+  }
+
+  doContact(String contact) async{
+    try{
+      String? userID=await AuthManager.getUserId();
+      if(userID!=null){
+        var result =await sendContact(userID,contact);
+        if(result["success"]){
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (_) => const MainPage(),
+            ),
+          );
+        }else{
+          print("Error in doContact");
+        }
+      }else{
+        print("Null userID in doContact");
+      }
+    }catch(e){
+       print("Error in doContact $e");
+    }
   }
 }
