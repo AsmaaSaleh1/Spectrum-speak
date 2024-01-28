@@ -173,11 +173,11 @@ class _MainPageState extends State<MainPage> {
                               Padding(
                                 padding: const EdgeInsets.only(left: 30),
                                 child: Container(
-                                  height: screenHeight / 2,
+                                  height: screenHeight / 2.3,
                                   child: Image.asset(
                                     'images/spectrumSpeakWithoutWard.png',
-                                    width: screenHeight / 2,
-                                    height: screenHeight / 2,
+                                    width: screenHeight / 2.3,
+                                    height: screenHeight / 2.3,
                                     fit: BoxFit.cover,
                                   ),
                                 ),
@@ -221,7 +221,7 @@ class _MainPageState extends State<MainPage> {
                           Positioned(
                             left:
                                 (screenWidth - (linePadding * 2) - (120 * 3)) / 2,
-                            top: screenHeight / 2,
+                            top: screenHeight / 2.3,
                             child: SingleChildScrollView(
                               scrollDirection: Axis.horizontal,
                               child: Row(
@@ -289,7 +289,7 @@ class _MainPageState extends State<MainPage> {
                         if (!kIsWeb)
                           Positioned(
                             bottom: screenWidth / 40,
-                            top: screenHeight / 2,
+                            top: screenWidth / 1.5,
                             left:
                                 (screenWidth - (linePadding * 2) - (120 * 3)) / 2,
                             child: SingleChildScrollView(
