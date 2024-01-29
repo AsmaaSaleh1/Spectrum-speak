@@ -6,13 +6,17 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart';
+import 'package:spectrum_speak/modules/BookingNotification.dart';
 import 'package:spectrum_speak/modules/CenterNotification.dart';
 import 'package:spectrum_speak/modules/CenterUser.dart';
 import 'package:spectrum_speak/modules/ChatUser.dart';
 import 'package:spectrum_speak/modules/Message.dart';
 import 'package:spectrum_speak/rest/auth_manager.dart';
+import 'package:spectrum_speak/rest/rest_api_center.dart';
+// import 'package:spectrum_speak/screen/calendar_specialist.dart';
 import 'package:spectrum_speak/screen/chat_screen.dart';
 import 'package:spectrum_speak/widgets/top_bar.dart';
+import 'package:tuple/tuple.dart';
 
 import '../screen/offers_and_requests.dart';
 
@@ -454,6 +458,9 @@ class Utils {
 
   static Future<List<CenterNotification>> getNotifications(
       String userType, String id) async {
+    print('centerrrrrr $id');
+    int sp = await getSpecialistAdminUserIDForCenter(id);
+    print('sp $sp');
     QuerySnapshot<Map<String, dynamic>> snapshot = await firestore
         .collection('center_notifications')
         .where('toID', isEqualTo: id)
@@ -461,9 +468,7 @@ class Utils {
         .get();
     final List<QueryDocumentSnapshot<Map<String, dynamic>>> document =
         snapshot.docs;
-    final List<Map<String, dynamic>> documents =
-        snapshot.docs.map((doc) => doc.data() as Map<String, dynamic>).toList();
-    print('Ns\n$documents\n\n');
+
     List<CenterNotification> list =
         document.map((e) => CenterNotification.fromJson(e.data())).toList();
     for (var i in list) print('from:${i.fromID} type:${i.type}');
@@ -487,6 +492,24 @@ class Utils {
     return count;
   }
 
+  static Future<int> getUnreadBookingNotifications(String userId) async {
+    int count = 0;
+    QuerySnapshot<Map<String, dynamic>> snapshot1 =
+        await firestore.collection('bookings_notifications').get();
+
+    final List<QueryDocumentSnapshot<Map<String, dynamic>>> documents1 =
+        snapshot1.docs;
+    List<BookingNotification> list =
+        documents1.map((e) => BookingNotification.fromJson(e.data())).toList();
+    for (int i = 0; i < list.length; i++) {
+      if (list[i].toID == userId && !list[i].read!) {
+        count++;
+      }
+    }
+    print('Count is $count');
+    return count;
+  }
+
   static Future<CenterUser> fetchCenter(String id) async {
     final QuerySnapshot<Map<String, dynamic>> snapshot = await firestore
         .collection('centers')
@@ -505,6 +528,14 @@ class Utils {
     await firestore
         .collection('center_notifications')
         .doc('${cn.fromID}_${cn.toID}')
+        .update({'read': value});
+  }
+
+  static Future<void> updateBookingNotificationReadStatus(
+      BookingNotification bn, bool value) async {
+    await firestore
+        .collection('bookings_notifications')
+        .doc('${bn.fromID}_${bn.toID}')
         .update({'read': value});
   }
 
@@ -530,4 +561,72 @@ class Utils {
     }
     print('inside function $decisionMade');
   }
+
+  static Future<void> retrieveBookingRequestValue(
+      BookingNotification bn) async {
+    QuerySnapshot<Map<String, dynamic>> snapshot =
+        await firestore.collection('bookings_notifications').get();
+    List<String> list = snapshot.docs.map((doc) => doc.id).toList() ?? [];
+    // decisionBookingMade = 'none';
+    for (var i in list) {
+      if (i == '${bn.toID}_${bn.fromID}') {
+        DocumentSnapshot<Map<String, dynamic>> snapshot2 = await firestore
+            .collection('bookings_notifications')
+            .doc('${cn.toID}_${cn.fromID}')
+            .get();
+        Map<String, dynamic> data = snapshot2.data()!;
+        BookingNotification temp = BookingNotification.fromJson(data);
+        // if (temp.value!)
+        //   decisionBookingMade = 'accept';
+        // else
+        //   decisionBookingMade = 'decline';
+        // break;
+      }
+    }
+    print('inside function $decisionMade');
+  }
+
+  static Future<List<BookingNotification>> fetchBookingNotifications(
+      String id) async {
+    QuerySnapshot<Map<String, dynamic>> result = await firestore
+        .collection('bookings_notifications')
+        .where('toID', isEqualTo: id)
+        .get();
+    List<BookingNotification> list = result.docs
+            .map((doc) => BookingNotification.fromJson(doc.data()))
+            .toList() ??
+        [];
+    return list;
+  }
+
+  static Future<void> addBookingNotification(BookingNotification bn) async {
+    await firestore
+        .collection('bookings_notifications')
+        .doc('${bn.fromID}_${bn.toID}')
+        .set(bn.toJson());
+  }
+
+  static Future<void> setBookingRequestCompleted(BookingNotification bn) async {
+    await firestore
+        .collection('bookings_notifications')
+        .doc('${bn.toID}_${bn.fromID}')
+        .update({'value': true});
+  }
+
+  static Future<Tuple2<String, BookingNotification>> fetchBooking(
+      String toID, String fromID) async {
+    QuerySnapshot<Map<String, dynamic>> snapshot = await firestore
+        .collection('bookings_notifications')
+        .where('toID', isEqualTo: toID)
+        .where('fromID', isEqualTo: fromID)
+        .get();
+    final List<QueryDocumentSnapshot<Map<String, dynamic>>> document =
+        snapshot.docs;
+    BookingNotification bn=BookingNotification();
+    if (document.isEmpty) return Tuple2("No", bn);
+    return Tuple2("Yes",document
+        .map((e) => BookingNotification.fromJson(e.data()))
+        .toList()[0]);
+  }
+  // static Future<List<BookingNotification>> g
 }

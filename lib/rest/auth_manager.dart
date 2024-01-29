@@ -9,7 +9,7 @@ import 'package:spectrum_speak/rest/rest_api_menu.dart';
 class AuthManager {
   static late ChatUser u;
   static late bool firstTime;
-  static late String url;
+  static late String url = '';
   static Future<void> storeUserData(String userId, String userEmail,
       String userName, bool cameFromSignUp) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -37,7 +37,6 @@ class AuthManager {
     prefs.setBool('isAdmin', admin);
     if (AuthManager.getCategory() == 'Specialist' &&
         (AuthManager.checkIsAdmin == true)) {
-      String url = '';
       String centerID = (await getCenterIdForSpecialist(userId))!;
       CenterUser c = await Utils.fetchCenter(centerID);
       url = c.image;

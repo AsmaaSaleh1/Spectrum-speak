@@ -55,6 +55,7 @@ class _MyAppState extends State<MyApp> {
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       String? title = message.notification!.title;
       String? body = message.notification!.body;
+      
       AwesomeNotifications().createNotification(
           content: NotificationContent(
             id: 123,
@@ -139,11 +140,11 @@ class _MyAppState extends State<MyApp> {
               child!,
 
               /// support minimizing
-              ZegoUIKitPrebuiltCallMiniOverlayPage(
-                contextQuery: () {
-                  return navigatorKey.currentState!.context;
-                },
-              ),
+              // ZegoUIKitPrebuiltCallMiniOverlayPage(
+              //   contextQuery: () {
+              //     return navigatorKey.currentState!.context;
+              //   },
+              // ),
             ],
           );
         });
@@ -179,6 +180,7 @@ _initializeFirebase() async {
 Future<void> backgroundHandler(RemoteMessage message) async {
   String? title = message.notification!.title;
   String? body = message.notification!.body;
+  if(body=='Incoming Call')
   AwesomeNotifications().createNotification(
       content: NotificationContent(
         id: 123,

@@ -16,8 +16,8 @@ class NotificationCard extends StatefulWidget {
   final CenterNotification cn;
   final ChatUser? u;
   final CenterUser? c;
-  late Function(int,int)? callBack;
-  NotificationCard({Key? key, required this.cn, this.u, this.c,this.callBack})
+  late Function(int, int)? callBack;
+  NotificationCard({Key? key, required this.cn, this.u, this.c, this.callBack})
       : super(key: key);
 
   @override
@@ -47,7 +47,7 @@ class _NotificationCardState extends State<NotificationCard> {
       title = widget.cn.value!
           ? '${user.Name} has accepted your offer!'
           : '${user.Name} has declined your offer';
-      user.image = (await Utils.getProfilePictureUrl(widget.cn.toID, ''))!;
+      user.image = (await Utils.getProfilePictureUrl(widget.cn.fromID, ''))!;
     }
 
     subtitle = '${MyDateUtil.timeAgo(widget.cn.time!)}';
@@ -77,11 +77,12 @@ class _NotificationCardState extends State<NotificationCard> {
     // return Text('MMM');
     // The rest of your widget code...
     return PopScope(
-      onPopInvoked: (didPop) async{
+      onPopInvoked: (didPop) async {
         print('card popped');
-        unreadMessagesCount=await Utils.getUnreadConversations(false);
-        unreadNotificationsCount=await Utils.getUnreadNotifications('${AuthManager.u.UserID}');
-        widget.callBack!(unreadMessagesCount,unreadNotificationsCount);
+        unreadMessagesCount = await Utils.getUnreadConversations(false);
+        unreadNotificationsCount =
+            await Utils.getUnreadNotifications('${AuthManager.u.UserID}');
+        widget.callBack!(unreadMessagesCount, unreadNotificationsCount);
       },
       child: Card(
         elevation: 3,
@@ -107,6 +108,7 @@ class _NotificationCardState extends State<NotificationCard> {
                             )));
               } else {
                 Utils.retrieveOfferResponseValue(widget.cn);
+                Navigator.pop(context);
               }
             },
             child: ListTile(

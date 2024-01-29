@@ -33,7 +33,7 @@ class NotificationController {
     if (receivedAction.buttonKeyPressed == "ACCEPT") {
       Navigator.pushReplacement(
         navigatorKey.currentState!.context,
-        MaterialPageRoute(builder: (context) => CallPage(callId: 'call_id')),
+        MaterialPageRoute(builder: (context) => CallPage()),
       );
       print('shouldve been accepted');
     }

@@ -87,7 +87,7 @@ class _MainPageState extends State<MainPage> {
               return CoachmarkDesc(
                 next: "Start👏",
                 text:
-                  "Hello there!👋This is your Spectrum Speak Buddy🤖! I'll be here to assist you on how to use Spectrum Speak to the fullest and to introduce you to its features! Let's get started💪",
+                    "Hello there!👋This is your Spectrum Speak Buddy🤖! I'll be here to assist you on how to use Spectrum Speak to the fullest and to introduce you to its features! Let's get started💪",
                 onNext: () {
                   controller.next();
                 },
@@ -196,6 +196,18 @@ class _MainPageState extends State<MainPage> {
     }
   }
 
+  Future<void> updateData() async {
+    if (category != '') {
+      var listBook =
+          await getBookingsForSevenDay(AuthManager.u.UserID.toString(), category);
+      var listEvent = await getEventsForSevenDay(city);
+      setState(() {
+        bookingList = listBook;
+        eventList = listEvent;
+      });
+    }
+  }
+
   // Method to check if the user is logged in
   Future<void> checkLoginStatus() async {
     bool isLoggedIn = await AuthManager.isUserLoggedIn();
@@ -222,6 +234,7 @@ class _MainPageState extends State<MainPage> {
             linePadding = 20;
           }
           return TopBar(
+            callback: getData,
             body: SingleChildScrollView(
               child: Column(
                 children: [
@@ -268,7 +281,7 @@ class _MainPageState extends State<MainPage> {
                         child: Row(
                           children: [
                             Container(
-                              key:profileKey,
+                              key: profileKey,
                               child: Text(
                                 'Welcome Back,\n $userName!!',
                                 style: TextStyle(

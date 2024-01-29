@@ -9,11 +9,13 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:spectrum_speak/constant/const_color.dart';
 import 'package:spectrum_speak/constant/utils.dart';
+import 'package:spectrum_speak/modules/BookingNotification.dart';
 import 'package:spectrum_speak/modules/CenterNotification.dart';
 import 'package:spectrum_speak/modules/CenterUser.dart';
 import 'package:spectrum_speak/modules/ChatUser.dart';
 import 'package:spectrum_speak/modules/specialist.dart';
 import 'package:spectrum_speak/rest/auth_manager.dart';
+import 'package:spectrum_speak/rest/rest_api_booking.dart';
 import 'package:spectrum_speak/rest/rest_api_center.dart';
 import 'package:spectrum_speak/rest/rest_api_login.dart';
 import 'package:spectrum_speak/rest/rest_api_menu.dart';
@@ -31,6 +33,7 @@ import 'package:spectrum_speak/screen/shadow_teacher_profile.dart';
 import 'package:spectrum_speak/screen/specialist_profile.dart';
 import 'package:spectrum_speak/screen/splash_screen_chat.dart';
 import 'package:spectrum_speak/screen/calendar_grid.dart';
+import 'package:spectrum_speak/widgets/booking_notification.dart';
 import 'package:spectrum_speak/widgets/notification_card.dart';
 import 'package:tuple/tuple.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
@@ -39,6 +42,7 @@ import 'card_user_chat.dart';
 
 int unreadMessagesCount = 0;
 int unreadNotificationsCount = 0;
+int unreadBookingCount = 0;
 List<ChatUser> popUpMenuList = [];
 bool topBarGuide = true;
 CenterNotification cn = CenterNotification(
@@ -51,9 +55,11 @@ CenterNotification cn = CenterNotification(
 
 class CustomAppBar extends StatefulWidget implements PreferredSizeWidget {
   final GlobalKey<ScaffoldState> scaffoldKey;
+  final VoidCallback? callBack;
   CustomAppBar({
     super.key,
     required this.scaffoldKey,
+    this.callBack,
   });
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
@@ -90,6 +96,14 @@ class _CustomAppBarState extends State<CustomAppBar> {
       unreadMessagesCount = unreadM;
       unreadNotificationsCount = unreadN;
     });
+    widget.callBack!();
+  }
+
+  void _updateDataBooking(int unreadB) {
+    setState(() {
+      unreadBookingCount = unreadB;
+    });
+    widget.callBack!();
   }
 
   @override
@@ -98,16 +112,22 @@ class _CustomAppBarState extends State<CustomAppBar> {
     return FutureBuilder<List<int>>(
         future: Future.wait([
           Utils.getUnreadConversations(false),
-          if (showNotif!)
+          if (showNotif! && category == 'Specialist')
             Utils.getUnreadNotifications(AuthManager.u.UserID.toString()),
+          if (showNotif!)
+            Utils.getUnreadBookingNotifications(
+                AuthManager.u.UserID.toString()),
           if (showNotif == false) Future(() => 9)
         ]),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             unreadMessagesCount = snapshot.data![0] ?? 0;
-            if (showNotif!)
+            if (showNotif! && category == 'Specialist') {
               unreadNotificationsCount = snapshot.data![1];
-            else {
+              unreadBookingCount = snapshot.data![2];
+            } else if (showNotif! && category == 'Parent') {
+              unreadBookingCount = snapshot.data![1];
+            } else {
               unreadNotificationsCount = 0;
             }
           }
@@ -165,7 +185,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
               ),
               badges.Badge(
                 badgeContent: Text(
-                  '$unreadNotificationsCount',
+                  '${unreadNotificationsCount + unreadBookingCount}',
                   style: TextStyle(color: kPrimary),
                 ),
                 animationType: BadgeAnimationType.slide,
@@ -182,16 +202,19 @@ class _CustomAppBarState extends State<CustomAppBar> {
                     if (category == 'Specialist') {
                       s = await profileSpecialist(
                           await '${AuthManager.u.UserID}');
+                      print('admoona ${s!.admin}');
                       if (s!.admin)
-                        _showNotificationsPopUpMenu(
+                        _showNotificationsSpecialistPopUpMenu(
                             context,
                             await Utils.getNotifications(
                                 'Center', s!.centerID));
                       else
-                        _showNotificationsPopUpMenu(
+                        _showNotificationsSpecialistPopUpMenu(
                             context,
                             await Utils.getNotifications(
                                 'Specialist', s!.userID));
+                    } else if (category == 'Parent') {
+                      _showNotificationsParentPopUpMenu(context);
                     }
                   },
                   icon: Icon(
@@ -323,12 +346,13 @@ class _CustomAppBarState extends State<CustomAppBar> {
     );
   }
 
-  void _showNotificationsPopUpMenu(
+  void _showNotificationsSpecialistPopUpMenu(
       BuildContext context, List<CenterNotification> list) async {
     final RenderBox overlay =
         Overlay.of(context).context.findRenderObject() as RenderBox;
     List<dynamic> u = [];
-
+    List<BookingNotification> bns =
+        await Utils.fetchBookingNotifications(AuthManager.u.UserID.toString());
     for (int i = 0; i < list.length; i++) {
       if (list[i].type == 'response') {
         ChatUser user = await Utils.fetchUser(list[i].fromID);
@@ -338,64 +362,247 @@ class _CustomAppBarState extends State<CustomAppBar> {
         u.add(user);
       }
     }
-
+    bool isAdmin = await checkAdmin(AuthManager.u.UserID.toString());
     // Now use list in your logic
     list.sort((a, b) {
       DateTime timeA = DateFormat('yyyy/MM/dd hh:mm a').parse(a.time!);
       DateTime timeB = DateFormat('yyyy/MM/dd hh:mm a').parse(b.time!);
       return timeB.compareTo(timeA); // Descending order
     });
-
+    bns.sort((a, b) {
+      DateTime timeA = DateFormat('yyyy/MM/dd hh:mm a').parse(a.timeSent!);
+      DateTime timeB = DateFormat('yyyy/MM/dd hh:mm a').parse(b.timeSent!);
+      return timeB.compareTo(timeA); // Descending order
+    });
     await showMenu(
-      color: kPrimary,
-      context: context,
-      position: RelativeRect.fromLTRB(
-        overlay.size.width - 50, // Adjust the value as needed
-        53, // Y position, set to 0 for top
-        overlay.size.width, // Right edge of the screen
-        MediaQuery.of(context).size.height, // Bottom edge of the screen
-      ),
-      items: [
-        PopupMenuItem(
-          padding: const EdgeInsets.all(0),
-          child: SizedBox(
-            width: 300,
-            child: Column(
-              children: [
-                for (int i = 0; i < list.length; i++)
-                  ListTile(
-                    contentPadding: EdgeInsets.zero,
-                    title: list[i].type == 'request'
-                        ? NotificationCard(
-                            cn: list[i],
-                            c: u[i],
-                            callBack: _updateData,
-                          ) //Center notification card
-                        : NotificationCard(
-                            cn: list[i],
-                            u: u[i],
-                            callBack: _updateData,
-                          ), //Specialist notificatiod card
-                  ),
-                ListTile(
-                  title: TextButton(
-                    onPressed: () {},
-                    child: Text(
-                      list.isNotEmpty
-                          ? 'That\'s it😁'
-                          : 'You have not received any notifications yet!',
-                      style: TextStyle(
-                          color: kDarkerColor, fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
+        color: kPrimary,
+        context: context,
+        position: RelativeRect.fromLTRB(
+          overlay.size.width - 50, // Adjust the value as needed
+          53, // Y position, set to 0 for top
+          overlay.size.width, // Right edge of the screen
+          MediaQuery.of(context).size.height, // Bottom edge of the screen
         ),
-      ],
-    );
+        items: [
+          PopupMenuItem(
+            padding: const EdgeInsets.all(0),
+            child: SizedBox(
+              width: 300,
+              child: DefaultTabController(
+                length: isAdmin ? 2 : 1,
+                child: Column(children: <Widget>[
+                  TabBar(
+                    padding: EdgeInsets.zero,
+                    indicatorPadding: EdgeInsets.zero,
+                    labelPadding: EdgeInsets.zero,
+                    indicator: const BoxDecoration(
+                      border: Border(
+                        bottom: BorderSide(
+                          color: kDarkBlue, // Change the indicator color
+                          width: 3.0, // Set the width of the line
+                        ),
+                      ),
+                    ),
+                    labelColor:
+                        kDarkBlue, // Change the selected tab label color
+                    unselectedLabelColor: kDarkerColor,
+                    tabs: <Widget>[
+                      Tab(
+                        child: Container(
+                          width: double.infinity,
+                          padding: EdgeInsets.zero,
+                          child: Column(
+                            children: [
+                              Text(isAdmin ? 'Offer responses' : 'Requests'),
+                              const SizedBox(
+                                height: 8,
+                              ),
+                              badges.Badge(
+                                badgeContent: Text(
+                                  '$unreadNotificationsCount',
+                                  style: TextStyle(color: kPrimary),
+                                ),
+                                animationType: BadgeAnimationType.scale,
+                                animationDuration: Duration(milliseconds: 1200),
+                                badgeColor: kRed,
+                                position:
+                                    badges.BadgePosition.bottomEnd(bottom: 3),
+                                child: Icon(
+                                  FontAwesomeIcons.userCheck,
+                                  size: 15.0,
+                                  color: kDarkerColor,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      Tab(
+                        child: Container(
+                          width: double.infinity,
+                          padding: EdgeInsets.zero,
+                          child: Column(
+                            children: [
+                              const Text('Bookings Requests'),
+                              const SizedBox(
+                                height: 8,
+                              ),
+                              badges.Badge(
+                                badgeContent: Text(
+                                  '$unreadBookingCount',
+                                  style: TextStyle(color: kPrimary),
+                                ),
+                                animationType: BadgeAnimationType.scale,
+                                animationDuration: Duration(milliseconds: 1200),
+                                badgeColor: kRed,
+                                position:
+                                    badges.BadgePosition.bottomEnd(bottom: 3),
+                                child: Icon(
+                                  FontAwesomeIcons.calendarXmark,
+                                  size: 15.0,
+                                  color: kDarkerColor,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  SingleChildScrollView(
+                      physics: const NeverScrollableScrollPhysics(),
+                      child: SizedBox(
+                          height: 300,
+                          child: TabBarView(children: [
+                            Column(
+                              children: [
+                                for (int i = 0; i < list.length; i++)
+                                  ListTile(
+                                    contentPadding: EdgeInsets.zero,
+                                    title: list[i].type == 'request'
+                                        ? NotificationCard(
+                                            cn: list[i],
+                                            c: u[i],
+                                            callBack: _updateData,
+                                          ) //Center notification card
+                                        : NotificationCard(
+                                            cn: list[i],
+                                            u: u[i],
+                                            callBack: _updateData,
+                                          ), //Specialist notificatiod card
+                                  ),
+                                ListTile(
+                                  title: TextButton(
+                                    onPressed: () {},
+                                    child: Text(
+                                      list.isNotEmpty
+                                          ? 'That\'s it😁'
+                                          : 'You have not received any notifications yet!',
+                                      style: TextStyle(
+                                          color: kDarkerColor,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Column(children: [
+                              for (int i = 0; i < bns.length; i++)
+                                ListTile(
+                                    contentPadding: EdgeInsets.zero,
+                                    title: BookingNotificationCard(
+                                      bn: bns[i],
+                                      callBack: _updateDataBooking,
+                                    ))
+                            ])
+                          ])))
+                ]),
+              ),
+            ),
+          )
+        ]);
   }
+
+  void _showNotificationsParentPopUpMenu(BuildContext context) async {
+    final RenderBox overlay =
+        Overlay.of(context).context.findRenderObject() as RenderBox;
+    List<BookingNotification> bns =
+        await Utils.fetchBookingNotifications(AuthManager.u.UserID.toString());
+    // Now use list in your logic
+
+    bns.sort((a, b) {
+      DateTime timeA = DateFormat('yyyy/MM/dd hh:mm a').parse(a.timeSent!);
+      DateTime timeB = DateFormat('yyyy/MM/dd hh:mm a').parse(b.timeSent!);
+      return timeB.compareTo(timeA); // Descending order
+    });
+    await showMenu(
+        color: kPrimary,
+        context: context,
+        position: RelativeRect.fromLTRB(
+          overlay.size.width - 50, // Adjust the value as needed
+          53, // Y position, set to 0 for top
+          overlay.size.width, // Right edge of the screen
+          MediaQuery.of(context).size.height, // Bottom edge of the screen
+        ),
+        items: [
+          PopupMenuItem(
+              padding: const EdgeInsets.all(0),
+              child: SizedBox(
+                  width: 300,
+                  child: SingleChildScrollView(
+                      physics: const NeverScrollableScrollPhysics(),
+                      child: SizedBox(
+                          height: 300,
+                          child: Column(children: [
+                            for (int i = 0; i < bns.length; i++)
+                              ListTile(
+                                  contentPadding: EdgeInsets.zero,
+                                  title: BookingNotificationCard(
+                                    bn: bns[i],
+                                    callBack: _updateDataBooking,
+                                  ))
+                          ])))))
+        ]);
+  }
+
+  ////
+  //             child: Column(
+  //               children: [
+  //                 for (int i = 0; i < list.length; i++)
+  //                   ListTile(
+  //                     contentPadding: EdgeInsets.zero,
+  //                     title: list[i].type == 'request'
+  //                         ? NotificationCard(
+  //                             cn: list[i],
+  //                             c: u[i],
+  //                             callBack: _updateData,
+  //                           ) //Center notification card
+  //                         : NotificationCard(
+  //                             cn: list[i],
+  //                             u: u[i],
+  //                             callBack: _updateData,
+  //                           ), //Specialist notificatiod card
+  //                   ),
+  //                 ListTile(
+  //                   title: TextButton(
+  //                     onPressed: () {},
+  //                     child: Text(
+  //                       list.isNotEmpty
+  //                           ? 'That\'s it😁'
+  //                           : 'You have not received any notifications yet!',
+  //                       style: TextStyle(
+  //                           color: kDarkerColor, fontWeight: FontWeight.bold),
+  //                     ),
+  //                   ),
+  //                 ),
+  //               ],
+  //             ),
+  //           ),
+  //         ),
+  //       ),
+  //     ],
+  //   );
+  // }
 }
 
 List<TargetFocus>? targets;
@@ -534,12 +741,13 @@ void _initTarget() {
   ];
 }
 
-  void showTut(BuildContext context) {
-    if (AuthManager.firstTime && topBarGuide)
-      Future.delayed(const Duration(seconds: 1), () {
-        _showTutorialCoachmarkTopBar(context);
-      });
-  }
+void showTut(BuildContext context) {
+  if (AuthManager.firstTime && topBarGuide)
+    Future.delayed(const Duration(seconds: 1), () {
+      _showTutorialCoachmarkTopBar(context);
+    });
+}
+
 class TopBar extends StatelessWidget {
   final Widget body;
   final VoidCallback? callback;
@@ -550,17 +758,6 @@ class TopBar extends StatelessWidget {
   });
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-
-  String url = '';
-
-  Future<void> assignUrl() async {
-    String centerID =
-        (await getCenterIdForSpecialist(AuthManager.u.UserID.toString()))!;
-    CenterUser c = await Utils.fetchCenter(centerID);
-    await (url = c.image);
-    url = url;
-    print('$url');
-  }
 
   @override
   Widget build(BuildContext context) {

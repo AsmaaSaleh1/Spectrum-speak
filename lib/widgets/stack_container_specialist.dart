@@ -5,12 +5,15 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:spectrum_speak/constant/const_color.dart';
+import 'package:spectrum_speak/modules/BookingNotification.dart';
 import 'package:spectrum_speak/modules/ChatUser.dart';
 import 'package:spectrum_speak/modules/Dialogs.dart';
 import 'package:spectrum_speak/modules/child.dart';
+import 'package:spectrum_speak/modules/my_date_util.dart';
 import 'package:spectrum_speak/modules/specialist.dart';
 import 'package:spectrum_speak/rest/auth_manager.dart';
 import 'package:spectrum_speak/rest/rest_api_booking.dart';
+import 'package:spectrum_speak/rest/rest_api_menu.dart';
 import 'package:spectrum_speak/rest/rest_api_profile.dart';
 import 'package:spectrum_speak/screen/center_profile.dart';
 import 'package:spectrum_speak/screen/search_page.dart';
@@ -32,22 +35,31 @@ class StackContainerSpecialist extends StatefulWidget {
   });
 
   @override
-  State<StackContainerSpecialist> createState() => _StackContainerSpecialistState();
+  State<StackContainerSpecialist> createState() =>
+      _StackContainerSpecialistState();
 }
 
 class _StackContainerSpecialistState extends State<StackContainerSpecialist> {
-  String url='';
-
+  String url = '';
+  String cat = '';
   Future<void> assignUrl() async {
     ChatUser u = await Utils.fetchUser(widget.userId);
-    await(url = u.image);
-    setState((){url=url;});
+    await (url = u.image);
+    cat = await getUserCategory(AuthManager.u.UserID.toString());
+    await (cat = cat);
+    setState(() {
+      url = url;
+      cat = cat;
+      print('categoryyyyyyyyyyyyy $cat');
+    });
   }
+
   @override
-  initState(){
+  initState() {
     super.initState();
     assignUrl();
   }
+
   @override
   Widget build(BuildContext context) {
     MediaQueryData mq = MediaQuery.of(context);
@@ -174,7 +186,7 @@ class _StackContainerSpecialistState extends State<StackContainerSpecialist> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Visibility(
-                              visible: widget.category == 'Parent',
+                              visible: cat == 'Parent',
                               child: CustomButton(
                                 key: widget.key,
                                 foregroundColor: kDarkerColor,
@@ -340,8 +352,8 @@ class _StackContainerSpecialistState extends State<StackContainerSpecialist> {
           // TODO: Handle the selected date, time, and child as needed
           print('Selected Date and Time: $selectedDate');
           print('Selected Child: ${selectedChild.childName}');
-          String availability = await checkBooking(
-              widget.userId, AuthManager.u.UserID.toString(), selectedDate.toString());
+          String availability = await checkBooking(widget.userId,
+              AuthManager.u.UserID.toString(), selectedDate.toString());
           if (availability == 'Parent Unavailable') {
             Dialogs.showSnackbar(context,
                 'You have a session at the requested time, please pick a different date and time slot');
@@ -349,14 +361,25 @@ class _StackContainerSpecialistState extends State<StackContainerSpecialist> {
             Dialogs.showSnackbar(context,
                 'Unable to book the session. Specialist is unavailable at the requested time, please pick a different date and time slot');
           } else {
-            await addBooking(
-                AuthManager.u.UserID.toString(),
-                selectedChild!.childID,
-                widget.userId,
-                '${specialist.specialistCategory}',
-                selectedDate.toString());
+            // await addBooking(
+            //     AuthManager.u.UserID.toString(),
+            //     selectedChild!.childID,
+            //     widget.userId,
+            //     '${specialist.specialistCategory}',
+            //     selectedDate.toString());
             Dialogs.showSnackbar(context,
-                "Session for ${selectedChild!.childName} has been booked successfully}");
+                "Your request of a session for ${selectedChild!.childName} has been sent successfully}");
+            BookingNotification bn = BookingNotification(
+                toID: widget.userId,
+                childName: selectedChild.childName,
+                childID: selectedChild.childID,
+                read: false,
+                timeSent: MyDateUtil.getCurrentDateTime(),
+                timeOfBooking: selectedDate.toString(),
+                type: "request",
+                fromID: AuthManager.u.UserID.toString(),
+                value: false);
+            await Utils.addBookingNotification(bn);
             Navigator.push(
                 context, MaterialPageRoute(builder: ((context) => Search())));
           }

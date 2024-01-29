@@ -15,7 +15,9 @@ import 'package:spectrum_speak/widgets/top_bar.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
 import 'login.dart';
-bool spprofileGuide=true;
+
+bool spprofileGuide = true;
+
 class SpecialistProfile extends StatefulWidget {
   final String userId;
   const SpecialistProfile({
@@ -110,16 +112,19 @@ class _SpecialistProfileState extends State<SpecialistProfile> {
 
   @override
   void initState() {
-    if (AuthManager.firstTime && spprofileGuide &&AuthManager.getCategory()=='Parent')
-    Future.delayed(const Duration(seconds: 1), () {
-      _showTutorialCoachmark();
-    });
+    if (AuthManager.firstTime &&
+        spprofileGuide &&
+        AuthManager.getCategory() == 'Parent')
+      Future.delayed(const Duration(seconds: 1), () {
+        _showTutorialCoachmark();
+      });
     super.initState();
     checkLoginStatus();
     loadReviews(); // Call the method to load reviews
     getName();
     getID();
     getSpecialistID();
+    print('user categy $category');
   }
 
   Future<void> getCategory() async {
@@ -233,10 +238,10 @@ class _SpecialistProfileState extends State<SpecialistProfile> {
                           child: Column(
                             children: <Widget>[
                               StackContainerSpecialist(
-                                  key: bookSessionKey,
-                                  userId: widget.userId,
-                                  category: category,
-                                ),
+                                key: bookSessionKey,
+                                userId: widget.userId,
+                                category: category,
+                              ),
                               SpecialistInformation(
                                 userId: widget.userId,
                               ),

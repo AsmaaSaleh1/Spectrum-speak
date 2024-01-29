@@ -15,13 +15,14 @@ import 'package:spectrum_speak/modules/Message.dart';
 import 'package:spectrum_speak/modules/my_date_util.dart';
 import 'package:spectrum_speak/rest/auth_manager.dart';
 import 'package:spectrum_speak/rest/rest_api_menu.dart';
-import 'package:spectrum_speak/screen/call_page.dart';
+// import 'package:spectrum_speak/screen/call_page.dart';
 import 'package:spectrum_speak/screen/parent_profile.dart';
 import 'package:spectrum_speak/screen/shadow_teacher_profile.dart';
 import 'package:spectrum_speak/screen/specialist_profile.dart';
 import 'package:spectrum_speak/units/build_text_field.dart';
 import 'package:spectrum_speak/widgets/message_card.dart';
 import 'login.dart';
+import './call_page.dart';
 
 List<bool> showSeperators = [];
 
@@ -301,8 +302,7 @@ class _ChatScreenState extends State<ChatScreen> {
                         Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
-                                builder: (context) =>
-                                    CallPage(callId: 'call_id')));
+                                builder: (context) =>CallPage()));
                       },
                       icon: const Icon(
                         Icons.video_call,
