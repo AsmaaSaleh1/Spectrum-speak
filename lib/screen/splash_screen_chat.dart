@@ -41,7 +41,7 @@ class _SplashChatScreenState extends State<SplashChatScreen> {
             height: mq.height * 0.5,
             duration: const Duration(seconds: 2),
             child: Image.asset(
-              'images/chatSplash.png',
+              'images/chatSplash.jpeg',
               fit: BoxFit.contain,
             ),
           ),

@@ -1,4 +1,6 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:circular_profile_avatar/circular_profile_avatar.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:spectrum_speak/constant/const_color.dart';
@@ -38,6 +40,7 @@ class ReviewUi extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    MediaQueryData mq=MediaQuery.of(context);
     return Padding(
       padding: const EdgeInsets.only(
         left: 8,
@@ -93,7 +96,24 @@ class ReviewUi extends StatelessWidget {
                     borderWidth: 2.0,
                     borderColor: kDarkerColor.withOpacity(0.7),
                     radius: 27.0,
-                    child: Image.asset(image),
+                    child: CachedNetworkImage(
+                          width: mq.size.height * .05,
+                          height: mq.size.height * .05,
+                          imageUrl: image,
+                          imageBuilder: (context, imageProvider) => Container(
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              image: DecorationImage(
+                                image: imageProvider,
+                                fit: BoxFit
+                                    .cover, // Set the fit property to cover
+                              ),
+                            ),
+                          ),
+                          errorWidget: (context, url, error) =>
+                              const CircleAvatar(
+                                  child: Icon(CupertinoIcons.person)),
+                        ),
                   ),
                 ),
               ),

@@ -1,4 +1,6 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:circular_profile_avatar/circular_profile_avatar.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:spectrum_speak/constant/const_color.dart';
@@ -6,7 +8,7 @@ import 'package:spectrum_speak/constant/utils.dart';
 import 'package:spectrum_speak/screen/specialist_profile.dart';
 import 'package:spectrum_speak/units/custom_clipper_puzzle.dart';
 
-class CardSpecialist extends StatelessWidget {
+class CardSpecialist extends StatefulWidget {
   final String userId;
   final Color cardColor;
   final String username;
@@ -26,7 +28,27 @@ class CardSpecialist extends StatelessWidget {
   });
 
   @override
+  State<CardSpecialist> createState() => _CardSpecialistState();
+}
+
+class _CardSpecialistState extends State<CardSpecialist> {
+  String image = '';
+  @override
+  initState() {
+    super.initState();
+    getImage();
+  }
+
+  Future<void> getImage() async {
+    image = (await Utils.fetchUser(widget.userId)).image;
+    setState(() {
+      image = image;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
+    MediaQueryData mq = MediaQuery.of(context);
     return Padding(
       padding: const EdgeInsets.all(19.0),
       child: Container(
@@ -51,7 +73,7 @@ class CardSpecialist extends StatelessWidget {
               child: ClipPath(
                 clipper: CustomClipperPuzzle(),
                 child: Container(
-                  color: cardColor,
+                  color: widget.cardColor,
                   width: 300,
                   height: 350,
                 ),
@@ -84,7 +106,24 @@ class CardSpecialist extends StatelessWidget {
                         '',
                         borderWidth: 1.0,
                         radius: 60.0,
-                        child: Image.asset('images/prof.png'),
+                        child: CachedNetworkImage(
+                          width: mq.size.height * .05,
+                          height: mq.size.height * .05,
+                          imageUrl: image,
+                          imageBuilder: (context, imageProvider) => Container(
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              image: DecorationImage(
+                                image: imageProvider,
+                                fit: BoxFit
+                                    .cover, // Set the fit property to cover
+                              ),
+                            ),
+                          ),
+                          errorWidget: (context, url, error) =>
+                              const CircleAvatar(
+                                  child: Icon(CupertinoIcons.person)),
+                        ),
                       ),
                     ),
                   ),
@@ -92,7 +131,7 @@ class CardSpecialist extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.only(bottom: 10, top: 10),
                   child: Text(
-                    username,
+                    widget.username,
                     style: TextStyle(
                       fontSize: 25.0,
                       fontWeight: FontWeight.w900,
@@ -114,7 +153,7 @@ class CardSpecialist extends StatelessWidget {
                         width: 7,
                       ),
                       Text(
-                        category,
+                        widget.category,
                         style: TextStyle(
                           fontSize: 14.0,
                           fontWeight: FontWeight.bold,
@@ -139,7 +178,7 @@ class CardSpecialist extends StatelessWidget {
                         width: 7,
                       ),
                       Text(
-                        city,
+                        widget.city,
                         style: TextStyle(
                           fontSize: 12.0,
                           fontWeight: FontWeight.bold,
@@ -164,7 +203,7 @@ class CardSpecialist extends StatelessWidget {
                         width: 7,
                       ),
                       Text(
-                        price + "\$", //Price for one session
+                        widget.price + "\$", //Price for one session
                         style: TextStyle(
                           fontSize: 12.0,
                           fontWeight: FontWeight.bold,
@@ -189,7 +228,7 @@ class CardSpecialist extends StatelessWidget {
                         width: 7,
                       ),
                       Text(
-                        centerName, //If any
+                        widget.centerName, //If any
                         style: TextStyle(
                           fontSize: 12.0,
                           fontWeight: FontWeight.bold,
@@ -213,7 +252,7 @@ class CardSpecialist extends StatelessWidget {
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => SpecialistProfile(
-                                          userId: userId,
+                                          userId: widget.userId,
                                         )),
                               );
                             },
@@ -234,14 +273,14 @@ class CardSpecialist extends StatelessWidget {
                                       MaterialPageRoute(
                                           builder: (context) =>
                                               SpecialistProfile(
-                                                userId: userId,
+                                                userId: widget.userId,
                                               )),
                                     );
                                   },
                                   icon: Icon(
                                     FontAwesomeIcons.anglesRight,
                                     size: 14,
-                                    color: cardColor,
+                                    color: widget.cardColor,
                                   ),
                                 ),
                               ],

@@ -15,6 +15,7 @@ import 'package:spectrum_speak/modules/CenterUser.dart';
 import 'package:spectrum_speak/modules/ChatUser.dart';
 import 'package:spectrum_speak/modules/specialist.dart';
 import 'package:spectrum_speak/rest/auth_manager.dart';
+import 'package:spectrum_speak/rest/rest_api_admin.dart';
 import 'package:spectrum_speak/rest/rest_api_booking.dart';
 import 'package:spectrum_speak/rest/rest_api_center.dart';
 import 'package:spectrum_speak/rest/rest_api_login.dart';
@@ -22,7 +23,11 @@ import 'package:spectrum_speak/rest/rest_api_menu.dart';
 import 'package:spectrum_speak/rest/rest_api_profile.dart';
 import 'package:spectrum_speak/rest/rest_api_profile_delete.dart';
 import 'package:spectrum_speak/screen/Quiz.dart';
+import 'package:spectrum_speak/screen/add_remove_admin.dart';
+import 'package:spectrum_speak/screen/analysis_page.dart';
+import 'package:spectrum_speak/screen/block_user.dart';
 import 'package:spectrum_speak/screen/center_profile.dart';
+import 'package:spectrum_speak/screen/show_all_contact_us.dart';
 import 'package:spectrum_speak/screen/spectrum_bot.dart';
 import 'package:spectrum_speak/screen/contact_us.dart';
 import 'package:spectrum_speak/screen/login.dart';
@@ -134,7 +139,8 @@ class _CustomAppBarState extends State<CustomAppBar> {
           return AppBar(
             leading: IconButton(
               icon: Icon(
-                key: menuKeyTopBar,
+                key:menuKeyTopBar,
+                // key:AuthManager.firstTime? menuKeyTopBar:null,
                 CupertinoIcons.list_bullet,
                 color: kPrimary,
                 size: 30,
@@ -159,7 +165,8 @@ class _CustomAppBarState extends State<CustomAppBar> {
                     _showMessagesPopUpMenu(context, popUpMenuList);
                   },
                   icon: Icon(
-                    key: inboxKeyTopBar,
+                    key:inboxKeyTopBar,
+                    // key: AuthManager.firstTime?inboxKeyTopBar:null,
                     CupertinoIcons.envelope_open,
                     color: kPrimary,
                     size: 30,
@@ -167,7 +174,8 @@ class _CustomAppBarState extends State<CustomAppBar> {
                 ),
               ),
               IconButton(
-                key: calendarKeyTopBar,
+                key:calendarKeyTopBar,
+                // key:AuthManager.firstTime? calendarKeyTopBar:null,
                 onPressed: () async {
                   print('Calendar button pressed');
                   String city = await getCity('${AuthManager.u.UserID}');
@@ -218,7 +226,8 @@ class _CustomAppBarState extends State<CustomAppBar> {
                     }
                   },
                   icon: Icon(
-                    key: notificationsKeyTopBar,
+                    key:notificationsKeyTopBar,
+                    // key: AuthManager.firstTime?notificationsKeyTopBar:null,
                     CupertinoIcons.bell,
                     color: kPrimary,
                     size: 30,
@@ -226,7 +235,8 @@ class _CustomAppBarState extends State<CustomAppBar> {
                 ),
               ),
               Padding(
-                key: profileKeyTopBar,
+                key:profileKeyTopBar,
+                // key:AuthManager.firstTime? profileKeyTopBar:null,
                 padding: const EdgeInsets.all(8.0),
                 child: CircularProfileAvatar(
                   '',
@@ -762,7 +772,7 @@ class TopBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     MediaQueryData mq = MediaQuery.of(context);
-    return FutureBuilder<Tuple5<String?, String?, String?, bool?, String?>>(
+    return FutureBuilder<Tuple6<String?, String?, String?, bool?, String?,bool?>>(
         future: _getEmailNameAndCategory(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -787,10 +797,12 @@ class TopBar extends StatelessWidget {
             String? category = snapshot.data!.item3;
             bool? isAdmin = snapshot.data!.item4;
             String? userId = snapshot.data!.item5;
+            bool? isAdminForSystem = snapshot.data!.item6;
             return Scaffold(
               key: _scaffoldKey,
               appBar: CustomAppBar(
                 scaffoldKey: _scaffoldKey,
+                // callBack: this.callback!,
               ),
               drawer: Drawer(
                 shadowColor: kDarkerColor,
@@ -1053,13 +1065,87 @@ class TopBar extends StatelessWidget {
                           fontSize: 17,
                         ),
                       ),
-                      onTap: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const ContactUs(),
+                      onTap: () {
+                        if (isAdminForSystem!) {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const ContactUsAdmin(),
+                            ),
+                          );
+                        } else {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const ContactUs(),
+                            ),
+                          );
+                        }
+                      }
+                    ),
+                    if (isAdminForSystem!)
+                      ListTile(
+                        leading: Icon(
+                          FontAwesomeIcons.userShield,
+                          color: kDarkerColor,
+                          size: 22,
+                        ),
+                        title: const Text(
+                          "Add or Remove Admin",
+                          style: TextStyle(
+                            fontWeight: FontWeight.w700,
+                            fontSize: 17,
+                          ),
+                        ),
+                        onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const AddRemoveAdmin(),
+                          ),
                         ),
                       ),
-                    ),
+                    if (isAdminForSystem)
+                      ListTile(
+                        leading: Icon(
+                          FontAwesomeIcons.userXmark,
+                          color: kDarkerColor,
+                          size: 22,
+                        ),
+                        title: const Text(
+                          "Block user",
+                          style: TextStyle(
+                            fontWeight: FontWeight.w700,
+                            fontSize: 17,
+                          ),
+                        ),
+                        onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const BlockUser(),
+                          ),
+                        ),
+                      ),
+                    if (isAdminForSystem)
+                      ListTile(
+                        leading: Icon(
+                          FontAwesomeIcons.chartPie,
+                          color: kDarkerColor,
+                          size: 22,
+                        ),
+                        title: const Text(
+                          "Some Analysis",
+                          style: TextStyle(
+                            fontWeight: FontWeight.w700,
+                            fontSize: 17,
+                          ),
+                        ),
+                        onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const Analysis(),
+                          ),
+                        ),
+                      ),
                     ListTile(
                       leading: Icon(
                         FontAwesomeIcons.doorOpen,
@@ -1140,7 +1226,7 @@ class TopBar extends StatelessWidget {
         });
   }
 
-  Future<Tuple5<String?, String?, String?, bool?, String?>>
+  Future<Tuple6<String?, String?, String?, bool?, String?,bool?>>
       _getEmailNameAndCategory() async {
     try {
       String? userId = await AuthManager.getUserId();
@@ -1150,16 +1236,17 @@ class TopBar extends StatelessWidget {
         var email = await AuthManager.getUserEmail();
         var userName = await getUserName(userId);
         var category = await getUserCategory(userId);
-        bool isAdmin = await checkAdmin(userId);
+        bool isAdminForCenter = await checkAdmin(userId);
+        bool? isAdminForSystem = await isAdminSystem(userId);
         // Return a tuple of email, userName, and category
-        return Tuple5(email, userName, category, isAdmin, userId);
+        return Tuple6(email, userName, category, isAdminForCenter, userId,isAdminForSystem);
       } else {
-        return Tuple5(null, null, null, false, null);
+        return Tuple6(null, null, null, false, null,false);
       }
     } catch (error) {
       // Handle errors here
       print('Error in _getEmailNameAndCategory: $error');
-      return const Tuple5(null, null, null, false, null);
+      return const Tuple6(null, null, null, false, null,false);
     }
   }
 

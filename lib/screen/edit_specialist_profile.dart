@@ -388,7 +388,7 @@ class _EditSpecialistProfileState extends State<EditSpecialistProfile> {
                       onPressed: () {
                         Navigator.pop(context);
                       },
-                      buttonText: 'Cansel',
+                      buttonText: 'Cancel',
                       icon: const Icon(
                         Icons.cancel,
                         size: 18.0,

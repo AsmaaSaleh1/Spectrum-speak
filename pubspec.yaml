@@ -71,6 +71,8 @@ dependencies:
   chat_gpt_sdk: ^2.2.5
   tutorial_coach_mark: ^1.2.11
   flutter_swiper_view: ^1.1.8
+  mailer: ^6.0.1
+  fl_chart: ^0.66.0
 
 dev_dependencies:
   flutter_test:

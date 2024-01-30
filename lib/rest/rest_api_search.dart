@@ -34,6 +34,7 @@ Future<List<dynamic>> searchCenter(String namePrefix,String city) async {
       Uri.parse('${Utils.baseUrl}/search/center?city=$city&namePrefix=$namePrefix'),
       headers: {
         'Accept': 'application/json',
+        "Content-Type":"application/json"
       },
     );
 

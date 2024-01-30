@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:spectrum_speak/constant/const_color.dart';
@@ -225,6 +226,7 @@ class _MainPageState extends State<MainPage> {
   Widget build(BuildContext context) => LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) {
           double screenWidth = constraints.maxWidth;
+          double screenHeight = constraints.minHeight;
           double linePadding;
           if (screenWidth >= 1200) {
             linePadding = 110;
@@ -245,7 +247,7 @@ class _MainPageState extends State<MainPage> {
                           clipper: MyCustomClipperMainSquare(),
                           child: Container(
                             color: kYellow,
-                            height: screenWidth,
+                            height: kIsWeb ? 500 :screenWidth,
                             width: screenWidth,
                           ),
                         ),
@@ -274,16 +276,48 @@ class _MainPageState extends State<MainPage> {
                           ),
                         ),
                       ),
+                      if (kIsWeb)
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              Container(
+                                child: Text(
+                                  'Welcome Back,\n $userName💫',
+                                  style: TextStyle(
+                                    color: kDarkerColor,
+                                    fontSize: 30,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(left: 30),
+                                child: Container(
+                                  height: screenHeight / 2.3,
+                                  child: Image.asset(
+                                    'images/borderPuzzle.png',
+                                    width: screenHeight / 2.3,
+                                    height: screenHeight / 2.3,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                      if(!kIsWeb)
                       Positioned(
                         bottom: screenWidth / 2,
                         left: linePadding,
                         right: 0,
                         child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
                             Container(
-                              key: profileKey,
+                              // key:profileKey,
+                              // key: AuthManager.firstTime?profileKey:null,
                               child: Text(
-                                'Welcome Back,\n $userName!!',
+                                key:profileKey,
+                                'Welcome Back,\n $userName💫',
                                 style: TextStyle(
                                   color: kDarkerColor,
                                   fontSize: 30,
@@ -296,7 +330,7 @@ class _MainPageState extends State<MainPage> {
                               child: Container(
                                 height: screenWidth / 3,
                                 child: Image.asset(
-                                  'images/spectrumSpeakWithoutWord.png',
+                                  'images/borderPuzzle.png',
                                   width: screenWidth / 3,
                                   height: screenWidth / 3,
                                   fit: BoxFit.cover,
@@ -306,95 +340,85 @@ class _MainPageState extends State<MainPage> {
                           ],
                         ),
                       ),
-                      Positioned(
-                        bottom: screenWidth / 40,
-                        left: (screenWidth - (linePadding * 2) - (120 * 3)) / 2,
-                        child: SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: Row(
-                            children: [
-                              Container(
-                                width: 120,
-                                height: 120,
-                                child: CustomMainButton(
-                                  foregroundColor: kPrimary,
-                                  backgroundColor: kBlue,
-                                  onPressed: () {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: ((context) => CalendarPage(
-                                                city: city,
-                                                category: category))));
-                                  },
-                                  buttonText: 'Calender',
-                                  icon: const Icon(
-                                    FontAwesomeIcons.calendar,
-                                    size: 35.0,
-                                  ),
-                                  iconColor: kPrimary,
-                                ),
-                              ),
-                              SizedBox(
-                                width: linePadding,
-                              ),
-                              Container(
-                                width: 120,
-                                height: 120,
-                                child: CustomMainButton(
-                                  key: spectrumKey,
-                                  foregroundColor: kPrimary,
-                                  backgroundColor: kBlue,
-                                  onPressed: () {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: ((context) => SpectrumBot(
-                                                name: AuthManager.u.Name,
-                                                id: AuthManager.u.UserID
-                                                    .toString()))));
-                                  },
-                                  buttonText: 'Spectrum\n     Bot',
-                                  icon: const Icon(
-                                    FontAwesomeIcons.brain,
-                                    size: 35.0,
-                                  ),
-                                  iconColor: kPrimary,
-                                ),
-                              ),
-                              SizedBox(
-                                width: linePadding,
-                              ),
-                              Container(
-                                width: 120,
-                                height: 120,
-                                child: CustomMainButton(
-                                  key: searchKey,
-                                  foregroundColor: kPrimary,
-                                  backgroundColor: kBlue,
-                                  onPressed: () => Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => const Search(),
+                      if (!kIsWeb)
+                          Positioned(
+                            bottom: screenWidth / 40,
+                            top: screenWidth / 1.5,
+                            left:
+                                (screenWidth - (linePadding * 2) - (120 * 3)) /
+                                    2,
+                            child: SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: Row(
+                                children: [
+                                  Container(
+                                    width: 120,
+                                    height: 120,
+                                    child: CustomMainButton(
+                                      foregroundColor: kPrimary,
+                                      backgroundColor: kBlue,
+                                      onPressed: () {},
+                                      buttonText: 'Calender',
+                                      icon: const Icon(
+                                        FontAwesomeIcons.calendar,
+                                        size: 35.0,
+                                      ),
+                                      iconColor: kPrimary,
                                     ),
                                   ),
-                                  buttonText: 'Search',
-                                  icon: const Icon(
-                                    FontAwesomeIcons.magnifyingGlass,
-                                    size: 35.0,
+                                  SizedBox(
+                                    width: linePadding,
                                   ),
-                                  iconColor: kPrimary,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
+                                  Container(
+                                    key:spectrumKey,
+                                    width: 120,
+                                    height: 120,
+                                    child: CustomMainButton(
+                                      foregroundColor: kPrimary,
+                                      backgroundColor: kBlue,
+                                      onPressed: () {},
+                                      buttonText: 'Spectrum\n     Bot',
+                                      icon: const Icon(
+                                        FontAwesomeIcons.brain,
+                                        size: 35.0,
+                                      ),
+                                      iconColor: kPrimary,
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: linePadding,
+                                  ),
+                                  Container(
+                                    key:searchKey,
+                                    width: 120,
+                                    height: 120,
+                                    child: CustomMainButton(
+                                      foregroundColor: kPrimary,
+                                      backgroundColor: kBlue,
+                                      onPressed: () => Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => const Search(),
+                                        ),
+                                      ),
+                                      buttonText: 'Search',
+                                      icon: const Icon(
+                                        FontAwesomeIcons.magnifyingGlass,
+                                        size: 35.0,
+                                      ),
+                                      iconColor: kPrimary,
+                                    ),
+                                  ),
+                                ],
+                            ),
+                          )
+                      )
                     ],
                   ),
                   SizedBox(
                     height: 10,
                   ),
+                  if (category != "ShadowTeacher")
                   Row(
                     children: [
                       SizedBox(
@@ -406,7 +430,7 @@ class _MainPageState extends State<MainPage> {
                         color: kDarkerColor,
                       ),
                       SizedBox(
-                        width: linePadding,
+                        width: 20,
                       ),
                       Text(
                         "Sessions Of The Week",
@@ -418,6 +442,7 @@ class _MainPageState extends State<MainPage> {
                       ),
                     ],
                   ),
+                  if (category != "ShadowTeacher")
                   FutureBuilder<List<Widget>?>(
                     future: getBookingWidgets(),
                     builder: (context, snapshot) {
@@ -540,6 +565,152 @@ class _MainPageState extends State<MainPage> {
                         );
                       }
                     },
+                  ),
+                  Divider(
+                    color: kDarkBlue,
+                    thickness: 2.0,
+                    indent: linePadding,
+                    endIndent: linePadding,
+                  ),
+                  Container(
+                    alignment: Alignment.topLeft,
+                    margin: EdgeInsets.symmetric(horizontal: linePadding * 1.5),
+                    child: Text(
+                      "Be The Reason",
+                      style: TextStyle(
+                        fontSize: 35.0,
+                        fontWeight: FontWeight.bold,
+                        color: kYellow.withGreen(180),
+                      ),
+                    ),
+                  ),
+                  Container(
+                    alignment: Alignment.topLeft,
+                    margin: EdgeInsets.symmetric(horizontal: linePadding * 1.5),
+                    child: Text(
+                      "Someone Smiles Today!",
+                      style: TextStyle(
+                        fontSize: 30.0,
+                        fontWeight: FontWeight.bold,
+                        color: kDarkBlue,
+                      ),
+                    ),
+                  ),
+                  Container(
+                    alignment: Alignment.topLeft,
+                    margin: EdgeInsets.symmetric(horizontal: linePadding * 1.5),
+                    child: Text(
+                      "Join us in creating brighter futures and fostering a world where every child on the autism spectrum receives the support they deserve. Your support makes a meaningful difference.",
+                      style: TextStyle(
+                        fontSize: 15.0,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.grey.shade700,
+                      ),
+                    ),
+                  ),
+                  Container(
+                    alignment: Alignment.topLeft,
+                    margin: EdgeInsets.symmetric(horizontal: linePadding * 1.5),
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 10.0),
+                      child: Text(
+                        "For further details, please don't hesitate to reach out to us through the following channels:",
+                        style: TextStyle(
+                          fontSize: 15.0,
+                          fontWeight: FontWeight.bold,
+                          color: kDarkerColor,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Container(
+                    alignment: Alignment.topLeft,
+                    margin: EdgeInsets.symmetric(
+                        horizontal: linePadding*0.8  + 20),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(height: 10),
+                            Row(
+                              children: [
+                                Icon(
+                                  Icons.email,
+                                  size: 30,
+                                  color: kDarkBlue,
+                                ),
+                                const SizedBox(
+                                  width: 10,
+                                ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'Email:',
+                                      style: TextStyle(
+                                        color: kDarkerColor,
+                                        fontSize: 17,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    Text(
+                                      'spectrumspeak2024@gmail.com',
+                                      style: TextStyle(
+                                        color: kDarkerColor,
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                  ],
+                                )
+                              ],
+                            ),
+                            SizedBox(height: 10),
+                            Row(
+                              children: [
+                                Icon(
+                                  Icons.phone,
+                                  size: 30,
+                                  color: kDarkBlue,
+                                ),
+                                const SizedBox(
+                                  width: 10,
+                                ),
+                                Row(
+                                  children: [
+                                    Text(
+                                      'Phone:',
+                                      style: TextStyle(
+                                        color: kDarkerColor,
+                                        fontSize: 17,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    Text(
+                                      '+(970) 592-676-710',
+                                      style: TextStyle(
+                                        color: kDarkerColor,
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                  ],
+                                )
+                              ],
+                            ),
+                          ],
+                        ),
+                        Container(
+                          height: screenWidth / 5,
+                          child: Image.asset(
+                            'images/donation_img.png',
+                            width: screenWidth / 5,
+                            height: screenWidth / 5,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                   SizedBox(
                     height: 50,

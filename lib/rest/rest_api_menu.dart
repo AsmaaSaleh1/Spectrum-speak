@@ -40,3 +40,21 @@ Future getUserName(String userId) async {
     return null;
   }
 }
+Future getEmailByID(String userId) async {
+  try {
+    final response = await http.get(
+      Uri.parse('${Utils.baseUrl}/users/email/$userId'),
+      headers: {"Accept": "application/json","Content-Type":"application/json"},
+    );
+    var decodedData = jsonDecode(response.body);
+    if (decodedData['data'] is List && decodedData['data'].isNotEmpty) {
+      return decodedData['data'][0]['Email'];
+    } else {
+      print("Error: Unable to extract 'Email' from the JSON response.");
+      return '';
+    }
+  } catch (error) {
+    print("Error in getEmailByID: $error");
+    return null;
+  }
+}

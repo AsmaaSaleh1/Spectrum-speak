@@ -16,6 +16,7 @@ import 'package:spectrum_speak/rest/rest_api_booking.dart';
 import 'package:spectrum_speak/rest/rest_api_menu.dart';
 import 'package:spectrum_speak/rest/rest_api_profile.dart';
 import 'package:spectrum_speak/screen/center_profile.dart';
+import 'package:spectrum_speak/screen/edit_specialist_profile.dart';
 import 'package:spectrum_speak/screen/search_page.dart';
 import 'package:spectrum_speak/screen/sign_up_center.dart';
 import 'package:spectrum_speak/screen/sign_up_specialist.dart';
@@ -209,7 +210,9 @@ class _StackContainerSpecialistState extends State<StackContainerSpecialist> {
                               child: CustomButton(
                                 foregroundColor: kDarkerColor,
                                 backgroundColor: kBlue,
-                                onPressed: () {},
+                                onPressed: () {
+                                  Navigator.push(context, MaterialPageRoute(builder: (context)=>EditSpecialistProfile()));
+                                },
                                 buttonText: 'Edit Profile',
                                 icon: const Icon(
                                   Icons.edit,

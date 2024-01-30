@@ -122,7 +122,7 @@ class ParentInformation extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                "User Name",
+                                "Name",
                                 style: TextStyle(
                                   fontSize: 15.0,
                                   fontWeight: FontWeight.bold,

@@ -226,7 +226,7 @@ class ShadowTeacherInformation extends StatelessWidget {
                                   height: 10.0,
                                 ),
                                 Text(
-                                  shadowTeacher.qualification,
+                                  "Bachelor's Degree",
                                   style: TextStyle(
                                     fontSize: 15.0,
                                     fontWeight: FontWeight.bold,

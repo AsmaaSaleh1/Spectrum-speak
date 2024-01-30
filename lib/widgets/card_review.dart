@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:spectrum_speak/constant/const_color.dart';
+import 'package:spectrum_speak/constant/utils.dart';
 import 'package:spectrum_speak/units/review_ui.dart';
 
 class CardReview extends StatefulWidget {
@@ -32,6 +33,19 @@ class CardReview extends StatefulWidget {
 class _CardReviewState extends State<CardReview> {
   bool isMore = false;
   bool isMenuOpen = false;
+  String image = '';
+  Future<void> getImage() async {
+    image = (await Utils.fetchUser(widget.userId)).image;
+    setState(() {
+      image = image;
+    });
+  }
+
+  @override
+  initState() {
+    super.initState();
+    getImage();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +67,7 @@ class _CardReviewState extends State<CardReview> {
           ],
         ),
         child: ReviewUi(
-          image: 'images/prof.png',
+          image: image,
           rateID: widget.rateId,
           name: widget.userName,
           date: widget.date,

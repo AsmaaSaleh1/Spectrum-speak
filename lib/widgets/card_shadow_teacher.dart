@@ -1,12 +1,14 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:circular_profile_avatar/circular_profile_avatar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:spectrum_speak/constant/const_color.dart';
+import 'package:spectrum_speak/constant/utils.dart';
 import 'package:spectrum_speak/screen/shadow_teacher_profile.dart';
 import 'package:spectrum_speak/units/custom_clipper_shadow_teacher.dart';
 
-class CardShadowTeacher extends StatelessWidget {
+class CardShadowTeacher extends StatefulWidget {
   final String userId;
   final Color cardColor;
   final String teacherName;
@@ -26,9 +28,29 @@ class CardShadowTeacher extends StatelessWidget {
   });
 
   @override
+  State<CardShadowTeacher> createState() => _CardShadowTeacherState();
+}
+
+class _CardShadowTeacherState extends State<CardShadowTeacher> {
+  String image = '';
+  Future<void> getImage() async {
+    image = (await Utils.fetchUser(widget.userId)).image;
+    setState(() {
+      image = image;
+    });
+  }
+
+  @override
+  initState() {
+    super.initState();
+    getImage();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    MediaQueryData mq=MediaQuery.of(context);
     bool isTeacherAvailable;
-    if (availability == "Available") {
+    if (widget.availability == "Available") {
       isTeacherAvailable = true;
     } else {
       isTeacherAvailable = false;
@@ -58,7 +80,7 @@ class CardShadowTeacher extends StatelessWidget {
               child: ClipPath(
                 clipper: CustomClipperShadowTeacher(),
                 child: Container(
-                  color: cardColor,
+                  color: widget.cardColor,
                   width: 300,
                   height: 350,
                 ),
@@ -91,7 +113,24 @@ class CardShadowTeacher extends StatelessWidget {
                         '',
                         borderWidth: 1.0,
                         radius: 60.0,
-                        child: Image.asset('images/prof.png'),
+                        child: CachedNetworkImage(
+                          width: mq.size.height * .1,
+                          height: mq.size.height * .1,
+                          imageUrl: image,
+                          imageBuilder: (context, imageProvider) => Container(
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              image: DecorationImage(
+                                image: imageProvider,
+                                fit: BoxFit
+                                    .cover, // Set the fit property to cover
+                              ),
+                            ),
+                          ),
+                          errorWidget: (context, url, error) =>
+                              const CircleAvatar(
+                                  child: Icon(CupertinoIcons.person)),
+                        ),
                       ),
                     ),
                   ),
@@ -99,7 +138,7 @@ class CardShadowTeacher extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.only(bottom: 10, top: 10),
                   child: Text(
-                    teacherName,
+                    widget.teacherName,
                     style: TextStyle(
                       fontSize: 25.0,
                       fontWeight: FontWeight.w900,
@@ -121,7 +160,7 @@ class CardShadowTeacher extends StatelessWidget {
                         width: 7,
                       ),
                       Text(
-                        academicQualification,
+                        widget.academicQualification,
                         style: TextStyle(
                           fontSize: 14.0,
                           fontWeight: FontWeight.bold,
@@ -145,7 +184,7 @@ class CardShadowTeacher extends StatelessWidget {
                         width: 7,
                       ),
                       Text(
-                        city,
+                        widget.city,
                         style: TextStyle(
                           fontSize: 12.0,
                           fontWeight: FontWeight.bold,
@@ -169,7 +208,7 @@ class CardShadowTeacher extends StatelessWidget {
                         width: 7,
                       ),
                       Text(
-                        gender,
+                        widget.gender,
                         style: TextStyle(
                           fontSize: 12.0,
                           fontWeight: FontWeight.bold,
@@ -195,7 +234,7 @@ class CardShadowTeacher extends StatelessWidget {
                         width: 3,
                       ),
                       Text(
-                        availability,
+                        widget.availability,
                         style: TextStyle(
                           fontSize: 12.0,
                           fontWeight: FontWeight.bold,
@@ -218,8 +257,9 @@ class CardShadowTeacher extends StatelessWidget {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) =>
-                                    ShadowTeacherProfile(userId: userId,),
+                                builder: (context) => ShadowTeacherProfile(
+                                  userId: widget.userId,
+                                ),
                               ),
                             );
                           },
@@ -239,14 +279,16 @@ class CardShadowTeacher extends StatelessWidget {
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) =>
-                                          ShadowTeacherProfile(userId: userId,),
+                                          ShadowTeacherProfile(
+                                        userId: widget.userId,
+                                      ),
                                     ),
                                   );
                                 },
                                 icon: Icon(
                                   FontAwesomeIcons.anglesRight,
                                   size: 14,
-                                  color: cardColor,
+                                  color: widget.cardColor,
                                 ),
                               ),
                             ],
