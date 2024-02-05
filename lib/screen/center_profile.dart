@@ -31,6 +31,7 @@ class _CenterProfileState extends State<CenterProfile> {
   List<dynamic> reviews = [];
   String centerID = "";
   String userIdLogin = "";
+  String category = "";
 
   @override
   void initState() {
@@ -40,6 +41,8 @@ class _CenterProfileState extends State<CenterProfile> {
     getName();
     getID();
     loadReviews();
+    getCategory();
+    print('category is $category');
   }
 
   Future<void> getCenterID() async {
@@ -57,6 +60,14 @@ class _CenterProfileState extends State<CenterProfile> {
       // Handle errors here
       print('Error in getSpecialistID: $error');
     }
+  }
+
+  Future<void> getCategory() async {
+    category = await getUserCategory(AuthManager.u.UserID.toString());
+    setState(() {
+      category = category;
+      print('fffffffffffffffffffffs $category');
+    });
   }
 
   Future<void> loadReviews() async {
@@ -141,6 +152,10 @@ class _CenterProfileState extends State<CenterProfile> {
                 } else if (snapshot.hasData) {
                   // Build your UI with the fetched data
                   bool checkCenter = snapshot.data!;
+                  print('checkCenter is $checkCenter');
+                  // // setState(() {
+                  //   checkCenter = checkCenter;
+                  // });
                   return Scaffold(
                     appBar: AppBar(
                       title: Text('Center Profile'),
@@ -157,7 +172,7 @@ class _CenterProfileState extends State<CenterProfile> {
                                 userId: centerID,
                               ),
                               Visibility(
-                                visible: !checkCenter,
+                                visible: !checkCenter && category == 'Parent',
                                 child: Divider(
                                   color:
                                       kDarkerColor, // You can customize the color
@@ -168,7 +183,7 @@ class _CenterProfileState extends State<CenterProfile> {
                                 ),
                               ),
                               Visibility(
-                                visible: !checkCenter,
+                                visible: !checkCenter && category == 'Parent',
                                 child: AddReview(
                                   image: 'images/prof.png',
                                   name: name,
@@ -317,6 +332,8 @@ class _CenterProfileState extends State<CenterProfile> {
     String centerID,
   ) async {
     try {
+      print('c $centerID');
+      print('u $userID');
       bool? checkCenter = await checkIfUserRateCenterBefore(userID, centerID);
       return checkCenter;
     } catch (e) {

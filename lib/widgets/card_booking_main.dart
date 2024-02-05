@@ -89,7 +89,7 @@ class CardBooking extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(
-                    width: 25.0,
+                    width: 15.0,
                   ),
                   Column(
                     mainAxisAlignment: MainAxisAlignment.start,

@@ -132,7 +132,7 @@ class _BarChartChildrenGroupedByOldAndGenderState
                         width: 15,
                       ),
                       Text(
-                        "Children group by Old and",
+                        "Children group by Age and Gender",
                         style: TextStyle(
                           fontSize: 22.0,
                           fontWeight: FontWeight.bold,

@@ -159,7 +159,7 @@ class _CenterInformationState extends State<CenterInformation> {
                                           height: 10.0,
                                         ),
                                         Text(
-                                          "Specialist Admin",
+                                          "Center Admin",
                                           style: TextStyle(
                                             fontSize: 15.0,
                                             fontWeight: FontWeight.bold,

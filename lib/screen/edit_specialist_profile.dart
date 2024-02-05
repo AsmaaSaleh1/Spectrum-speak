@@ -295,7 +295,7 @@ class _EditSpecialistProfileState extends State<EditSpecialistProfile> {
                         },
                       ),
                       const SizedBox(
-                        width: 20,
+                        width: 5,
                       ),
                       CustomDropDown(
                         items: const [

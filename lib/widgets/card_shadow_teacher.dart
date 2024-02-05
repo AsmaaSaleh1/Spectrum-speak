@@ -59,7 +59,7 @@ class _CardShadowTeacherState extends State<CardShadowTeacher> {
       padding: const EdgeInsets.all(19.0),
       child: Container(
         width: 300,
-        height: 380,
+        height: 400,//was 380
         decoration: BoxDecoration(
           color: kPrimary,
           borderRadius: BorderRadius.circular(15),

@@ -103,15 +103,16 @@ class _MessageCardState extends State<MessageCard> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        
         Row(children: [
           SizedBox(width: mq.size.width * .04),
-          if (widget.message.read.isNotEmpty&&showTrailing)
+          if (widget.message.read.isNotEmpty && showTrailing)
             Icon(Icons.done_all_rounded, color: kBlue, size: 20),
           const SizedBox(width: 2),
-          Text(showTrailing?
-            MyDateUtil.getFormattedTime(
-                context: context, time: widget.message.sent):'            ',
+          Text(
+            showTrailing
+                ? MyDateUtil.getFormattedTime(
+                    context: context, time: widget.message.sent)
+                : '            ',
             style: const TextStyle(fontSize: 13, color: Colors.black54),
           ),
         ]),
@@ -202,10 +203,8 @@ class _MessageCardState extends State<MessageCard> {
                         color: Colors.red, size: 26),
                     name: 'Delete Message',
                     onTap: () async {
-                      await Utils.deleteMessage(widget.message).then((value) {
-                        //for hiding bottom sheet
-                        Navigator.pop(context);
-                      });
+                      await Utils.deleteMessage(widget.message);
+                      Navigator.pop(context);
                     },
                     mq: mq),
             ],

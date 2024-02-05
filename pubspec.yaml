@@ -73,6 +73,7 @@ dependencies:
   flutter_swiper_view: ^1.1.8
   mailer: ^6.0.1
   fl_chart: ^0.66.0
+  keyboard_detection: ^0.7.0
 
 dev_dependencies:
   flutter_test:

@@ -199,7 +199,7 @@ class _AddChildState extends State<AddChild> {
             Container(
               alignment: Alignment.center,
               margin: const EdgeInsets.only(bottom: 15),
-              width: 280,
+              width: 320,
               height: 60,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -316,14 +316,13 @@ class _AddChildState extends State<AddChild> {
       if (widget.comeFromSignUp) {
         Navigator.of(context).push(
           MaterialPageRoute(
-            builder: (context) => const MainPage(),
+            builder: (context) =>  AddProfilePhoto(comeFromSignUp: true,),
           ),
         );
       } else {
         Navigator.of(context).push(
           MaterialPageRoute(
-            builder: (context) => ParentProfile(
-              userID: userId,
+            builder: (context) => MainPage(
             ),
           ),
         );

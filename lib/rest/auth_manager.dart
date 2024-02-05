@@ -2,6 +2,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spectrum_speak/constant/utils.dart';
 import 'package:spectrum_speak/modules/CenterUser.dart';
 import 'package:spectrum_speak/modules/ChatUser.dart';
+import 'package:spectrum_speak/rest/rest_api_admin.dart';
 import 'package:spectrum_speak/rest/rest_api_center.dart';
 import 'package:spectrum_speak/rest/rest_api_login.dart';
 import 'package:spectrum_speak/rest/rest_api_menu.dart';
@@ -10,6 +11,8 @@ class AuthManager {
   static late ChatUser u;
   static late bool firstTime;
   static late String url = '';
+  static late bool isAdminOfSystem = false;
+  static late String category;
   static Future<void> storeUserData(String userId, String userEmail,
       String userName, bool cameFromSignUp) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -31,8 +34,9 @@ class AuthManager {
     u.lastActive = DateTime.now().millisecondsSinceEpoch.toString();
     // u.image = (await Utils.getProfilePictureUrl(userId, ''))!;
     firstTime = await checkForFirstTime(userId);
-    String category = await getUserCategory(userId);
+    category = await getUserCategory(userId);
     bool admin = await checkAdmin(userId);
+    isAdminOfSystem = (await isAdminSystem(userId))!;
     prefs.setString('Category', category);
     prefs.setBool('isAdmin', admin);
     if (AuthManager.getCategory() == 'Specialist' &&

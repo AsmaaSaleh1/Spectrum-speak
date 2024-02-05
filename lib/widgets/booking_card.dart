@@ -11,28 +11,44 @@ import 'package:spectrum_speak/rest/rest_api_booking.dart';
 import 'package:spectrum_speak/rest/rest_api_profile.dart';
 import 'package:spectrum_speak/screen/calendar_grid.dart';
 
-class BookingCard extends StatelessWidget {
+class BookingCard extends StatefulWidget {
   final Booking booking;
   final String category;
-  final VoidCallback onDelete; // Add this line
-  const BookingCard(
+  late String? history;
+  late VoidCallback? onDelete; // Add this line
+  BookingCard(
       {Key? key,
       required this.booking,
       required this.category,
-      required this.onDelete});
+      this.history,
+      this.onDelete});
+
+  @override
+  State<BookingCard> createState() => _BookingCardState();
+}
+
+class _BookingCardState extends State<BookingCard> {
+  @override
+  initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     print('event card');
-    String bookingMessage = (category == 'Parent')
-        ? '${booking.childName} is scheduled for a ${booking.description} on this day'
-        : 'You are scheduled for a ${booking.description} session with ${booking.childName} on this day';
+    String bookingMessage = (widget.category == 'Parent')
+        ? '${widget.booking.childName} scheduled for a ${widget.booking.description} on this day'
+        : 'You are scheduled for a ${widget.booking.description} session with ${widget.booking.childName} on this day';
+    if (widget.history == 'Child') {
+      bookingMessage =
+          '${widget.booking.description} session on this day with ${widget.booking.specialistName}';
+    }
     MediaQueryData mq = MediaQuery.of(context);
     return Padding(
       padding: const EdgeInsets.all(19.0),
       child: Container(
         width: 350,
-        height: 300,
+        height: widget.history=='Child'?235:280,
         decoration: BoxDecoration(
           color: kPrimary,
           borderRadius: BorderRadius.circular(15),
@@ -52,37 +68,42 @@ class BookingCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Align(
-                  alignment: Alignment.topLeft,
-                  child: Padding(
-                    padding: const EdgeInsets.all(5.0),
-                    child: Container(
-                      width: 110, // Adjust the width as needed
-                      height: 110, // Adjust the height as needed
+                Visibility(
+                  visible:widget.history!='Child',
+                  child: Align(
+                    alignment: Alignment.topLeft,
+                    child: Padding(
+                      padding: const EdgeInsets.all(5.0),
                       child: Container(
-                        margin: EdgeInsets.all(8.0),
-                        child: CircularProfileAvatar(
-                          '',
-                          radius: 110,
-                          borderWidth: 3,
-                          borderColor: kDarkBlue,
-                          child: CachedNetworkImage(
-                            width: mq.size.width * .4,
-                            height: mq.size.width * .4,
-                            imageUrl: category=='Parent'?booking.parentImageUrl:booking.specialistImageUrl,
-                            imageBuilder: (context, imageProvider) => Container(
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                image: DecorationImage(
-                                  image: imageProvider,
-                                  fit: BoxFit
-                                      .cover, // Set the fit property to cover
+                        width: 110, // Adjust the width as needed
+                        height: 110, // Adjust the height as needed
+                        child: Container(
+                          margin: EdgeInsets.all(8.0),
+                          child: CircularProfileAvatar(
+                            '',
+                            radius: 110,
+                            borderWidth: 3,
+                            borderColor: kDarkBlue,
+                            child: CachedNetworkImage(
+                              width: mq.size.width * .4,
+                              height: mq.size.width * .4,
+                              imageUrl: widget.category == 'Parent'
+                                  ? widget.booking.parentImageUrl
+                                  : widget.booking.specialistImageUrl,
+                              imageBuilder: (context, imageProvider) => Container(
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  image: DecorationImage(
+                                    image: imageProvider,
+                                    fit: BoxFit
+                                        .cover, // Set the fit property to cover
+                                  ),
                                 ),
                               ),
+                              errorWidget: (context, url, error) =>
+                                  const CircleAvatar(
+                                      child: Icon(CupertinoIcons.person)),
                             ),
-                            errorWidget: (context, url, error) =>
-                                const CircleAvatar(
-                                    child: Icon(CupertinoIcons.person)),
                           ),
                         ),
                       ),
@@ -98,7 +119,7 @@ class BookingCard extends StatelessWidget {
                       Padding(
                         padding: const EdgeInsets.only(left: 8.0),
                         child: Text(
-                          '${booking.description}',
+                          '${widget.booking.description}',
                           style: TextStyle(
                             fontSize: 22.0,
                             fontWeight: FontWeight.bold,
@@ -107,7 +128,7 @@ class BookingCard extends StatelessWidget {
                         ),
                       ),
                       Visibility(
-                        visible: category == 'Specialist',
+                        visible: widget.category == 'Specialist',
                         child: Padding(
                           padding: EdgeInsets.only(top: 3.0, left: 8),
                           child: Row(
@@ -115,7 +136,7 @@ class BookingCard extends StatelessWidget {
                               Icon(CupertinoIcons.person_2_alt,
                                   color: kRed, size: 20),
                               Text(
-                                booking.parentName,
+                                widget.booking.parentName,
                                 style: TextStyle(
                                   fontSize: 18,
                                   color: kRed,
@@ -130,15 +151,15 @@ class BookingCard extends StatelessWidget {
                         child: Row(
                           children: [
                             Icon(
-                                category == 'Parent'
+                                widget.category == 'Parent'
                                     ? FontAwesomeIcons.userDoctor
                                     : FontAwesomeIcons.childReaching,
                                 color: kRed,
                                 size: 20),
                             Text(
-                              category == 'Parent'
-                                  ? '${booking.specialistName}'
-                                  : '${booking.childName}',
+                              widget.category == 'Parent'
+                                  ? '${widget.booking.specialistName}'
+                                  : '${widget.booking.childName}',
                               style: TextStyle(
                                 fontSize: 18,
                                 color: kRed,
@@ -154,7 +175,7 @@ class BookingCard extends StatelessWidget {
                             Icon(Icons.calendar_today_rounded,
                                 color: kBlue, size: 20),
                             Text(
-                              ' ${booking.time.day}-${booking.time.month}',
+                              ' ${widget.booking.time.day}-${widget.booking.time.month}',
                               style: TextStyle(
                                 fontSize: 18,
                                 color: kBlue,
@@ -170,7 +191,7 @@ class BookingCard extends StatelessWidget {
                             Icon(Icons.access_time_filled_outlined,
                                 color: kYellow, size: 20),
                             Text(
-                              '${MyDateUtil.formatDateTime(booking.time)}',
+                              '${MyDateUtil.formatDateTime(widget.booking.time)}',
                               style: TextStyle(
                                 fontSize: 18,
                                 color: Color.fromARGB(255, 212, 163, 17),
@@ -228,7 +249,7 @@ class BookingCard extends StatelessWidget {
                                               fontSize: 30)),
                                     ]),
                                 content: Text(
-                                    'Are you sure you want to delete your booking with ${category == 'Parent' ? booking.specialistName : booking.childName}',
+                                    'Are you sure you want to delete your booking with ${widget.category == 'Parent' ? widget.booking.specialistName : widget.booking.childName}',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
                                         fontWeight: FontWeight.w300,
@@ -237,9 +258,10 @@ class BookingCard extends StatelessWidget {
                                 actions: [
                                   TextButton(
                                       onPressed: () async {
-                                        await deleteBooking(booking.bookingID);
+                                        await deleteBooking(
+                                            widget.booking.bookingID);
                                         Navigator.of(context).pop(true);
-                                        onDelete();
+                                        widget.onDelete!();
                                         Dialogs.showSnackbar(context,
                                             'Session booking has been deleted successfully');
                                       },
@@ -281,7 +303,7 @@ class BookingCard extends StatelessWidget {
             ),
             Row(mainAxisAlignment: MainAxisAlignment.center, children: [
               Padding(
-                padding: EdgeInsets.only(top: 20.0, left: 2),
+                padding: EdgeInsets.only(top: 10.0, left: 2),
                 child: Container(
                   constraints: BoxConstraints(
                     maxWidth:

@@ -1,4 +1,6 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:circular_profile_avatar/circular_profile_avatar.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:spectrum_speak/constant/const_color.dart';
@@ -61,7 +63,7 @@ class _AddReviewState extends State<AddReview> {
               Text(
                 "Rate this SpectrumSpeaker🚀",
                 style: TextStyle(
-                  fontSize: 30.0,
+                  fontSize: 25.0,//was 30
                   fontWeight: FontWeight.bold,
                   color: kDarkerColor,
                 ),
@@ -88,9 +90,26 @@ class _AddReviewState extends State<AddReview> {
                       '',
                       borderWidth: 2.0,
                       borderColor: kDarkerColor.withOpacity(0.7),
-                      radius: 27.0,
-                      child: Image.asset(widget.image),
-                    ),
+                      radius: 22.0,
+                      child: CachedNetworkImage(
+                          width: MediaQuery.of(context).size.height * .005,
+                          height: MediaQuery.of(context).size.height * .005,
+                          imageUrl: AuthManager.u.image,
+                          imageBuilder: (context, imageProvider) => Container(
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              image: DecorationImage(
+                                image: imageProvider,
+                                fit: BoxFit
+                                    .cover, // Set the fit property to cover
+                              ),
+                            ),
+                          ),
+                          errorWidget: (context, url, error) =>
+                              const CircleAvatar(
+                                  child: Icon(CupertinoIcons.person)),
+                        ),
+                      )
                   ),
                   Text(
                     widget.name,
@@ -144,7 +163,7 @@ class _AddReviewState extends State<AddReview> {
                   Text(
                     "Reviews are public and include your account",
                     style: TextStyle(
-                      fontSize: 13.0,
+                      fontSize: 11.0,//was 13
                       fontWeight: FontWeight.bold,
                       color: kDarkerColor.withOpacity(0.6),
                     ),

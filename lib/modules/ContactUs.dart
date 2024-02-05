@@ -3,7 +3,7 @@ class Contact {
   final String userID;
   final String userName;
   final String contact;
-  final int done;
+  late int done;
   final DateTime dateTime;
 
   Contact(

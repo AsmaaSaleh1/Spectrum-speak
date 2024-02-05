@@ -1,4 +1,4 @@
-import 'package:flutter/foundation.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:spectrum_speak/constant/const_color.dart';
@@ -199,8 +199,8 @@ class _MainPageState extends State<MainPage> {
 
   Future<void> updateData() async {
     if (category != '') {
-      var listBook =
-          await getBookingsForSevenDay(AuthManager.u.UserID.toString(), category);
+      var listBook = await getBookingsForSevenDay(
+          AuthManager.u.UserID.toString(), category);
       var listEvent = await getEventsForSevenDay(city);
       setState(() {
         bookingList = listBook;
@@ -247,15 +247,13 @@ class _MainPageState extends State<MainPage> {
                           clipper: MyCustomClipperMainSquare(),
                           child: Container(
                             color: kYellow,
-                            height: kIsWeb ? 500 :screenWidth,
+                            height: kIsWeb ? 500 : screenWidth,
                             width: screenWidth,
                           ),
                         ),
                       ),
                       Container(
                         alignment: Alignment.topCenter,
-                        height: screenWidth,
-                        width: screenWidth,
                         child: ClipPath(
                           clipper: MyCustomClipperMainUpper(),
                           child: Container(
@@ -266,8 +264,6 @@ class _MainPageState extends State<MainPage> {
                       ),
                       Container(
                         alignment: Alignment.topCenter,
-                        height: screenWidth,
-                        width: screenWidth,
                         child: ClipPath(
                           clipper: MyCustomClipperMain(),
                           child: Container(
@@ -277,46 +273,11 @@ class _MainPageState extends State<MainPage> {
                         ),
                       ),
                       if (kIsWeb)
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              Container(
-                                child: Text(
-                                  'Welcome Back,\n $userName💫',
-                                  style: TextStyle(
-                                    color: kDarkerColor,
-                                    fontSize: 30,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(left: 30),
-                                child: Container(
-                                  height: screenHeight / 2.3,
-                                  child: Image.asset(
-                                    'images/borderPuzzle.png',
-                                    width: screenHeight / 2.3,
-                                    height: screenHeight / 2.3,
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                      if(!kIsWeb)
-                      Positioned(
-                        bottom: screenWidth / 2,
-                        left: linePadding,
-                        right: 0,
-                        child: Row(
+                        Row(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
                             Container(
-                              // key:profileKey,
-                              // key: AuthManager.firstTime?profileKey:null,
                               child: Text(
-                                key:profileKey,
                                 'Welcome Back,\n $userName💫',
                                 style: TextStyle(
                                   color: kDarkerColor,
@@ -328,20 +289,55 @@ class _MainPageState extends State<MainPage> {
                             Padding(
                               padding: const EdgeInsets.only(left: 30),
                               child: Container(
-                                height: screenWidth / 3,
+                                height: screenHeight / 2.3,
                                 child: Image.asset(
                                   'images/borderPuzzle.png',
-                                  width: screenWidth / 3,
-                                  height: screenWidth / 3,
+                                  width: screenHeight / 2.3,
+                                  height: screenHeight / 2.3,
                                   fit: BoxFit.cover,
                                 ),
                               ),
                             ),
                           ],
                         ),
-                      ),
                       if (!kIsWeb)
-                          Positioned(
+                        Positioned(
+                          bottom: screenWidth / 2,
+                          left: linePadding*0.3,
+                          right: 0,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              Container(
+                                // key:profileKey,
+                                key: AuthManager.firstTime?profileKey:null,
+                                child: Text(
+                                  // key: profileKey,
+                                  'Welcome Back,\n $userName💫',
+                                  style: TextStyle(
+                                    color: kDarkerColor,
+                                    fontSize: 30,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(left: 1),// was 30
+                                child: Container(
+                                  height: screenWidth / 3,
+                                  child: Image.asset(
+                                    'images/borderPuzzle.png',
+                                    width: screenWidth / 3,
+                                    height: screenWidth / 3,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      if (!kIsWeb)
+                        Positioned(
                             bottom: screenWidth / 40,
                             top: screenWidth / 1.5,
                             left:
@@ -370,13 +366,23 @@ class _MainPageState extends State<MainPage> {
                                     width: linePadding,
                                   ),
                                   Container(
-                                    key:spectrumKey,
+                                    key: spectrumKey,
                                     width: 120,
                                     height: 120,
                                     child: CustomMainButton(
                                       foregroundColor: kPrimary,
                                       backgroundColor: kBlue,
-                                      onPressed: () {},
+                                      onPressed: () {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    SpectrumBot(
+                                                        id: AuthManager.u.UserID
+                                                            .toString(),
+                                                        name: AuthManager
+                                                            .u.Name)));
+                                      },
                                       buttonText: 'Spectrum\n     Bot',
                                       icon: const Icon(
                                         FontAwesomeIcons.brain,
@@ -389,7 +395,7 @@ class _MainPageState extends State<MainPage> {
                                     width: linePadding,
                                   ),
                                   Container(
-                                    key:searchKey,
+                                    key: searchKey,
                                     width: 120,
                                     height: 120,
                                     child: CustomMainButton(
@@ -410,89 +416,89 @@ class _MainPageState extends State<MainPage> {
                                     ),
                                   ),
                                 ],
-                            ),
-                          )
-                      )
+                              ),
+                            ))
                     ],
                   ),
                   SizedBox(
-                    height: 10,
+                    height: 1,
                   ),
                   if (category != "ShadowTeacher")
-                  Row(
-                    children: [
-                      SizedBox(
-                        width: linePadding,
-                      ),
-                      Icon(
-                        FontAwesomeIcons.bookBookmark,
-                        size: 28,
-                        color: kDarkerColor,
-                      ),
-                      SizedBox(
-                        width: 20,
-                      ),
-                      Text(
-                        "Sessions Of The Week",
-                        style: TextStyle(
-                          color: kDarkerColor,
-                          fontSize: 23,
-                          fontWeight: FontWeight.bold,
+                    Row(
+                      children: [
+                        SizedBox(
+                          width: linePadding,
                         ),
-                      ),
-                    ],
-                  ),
-                  if (category != "ShadowTeacher")
-                  FutureBuilder<List<Widget>?>(
-                    future: getBookingWidgets(),
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return Container(
-                          color: kPrimary,
-                          child: Container(
-                            alignment: Alignment.center,
-                            child: const CircularProgressIndicator(
-                              backgroundColor: kDarkBlue,
-                              color: kDarkBlue,
-                            ),
+                        Icon(
+                          FontAwesomeIcons.bookBookmark,
+                          size: 28,
+                          color: kDarkerColor,
+                        ),
+                        SizedBox(
+                          width: 20,
+                        ),
+                        Text(
+                          "Sessions Of The Week",
+                          style: TextStyle(
+                            color: kDarkerColor,
+                            fontSize: 23,
+                            fontWeight: FontWeight.bold,
                           ),
-                        );
-                      } else if (snapshot.hasError) {
-                        return Text('Error: ${snapshot.error}');
-                      } else {
-                        return Stack(
-                          children: [
-                            Visibility(
-                              visible: snapshot.data != null &&
-                                  snapshot.data!.isNotEmpty,
-                              child: SingleChildScrollView(
-                                scrollDirection: Axis.horizontal,
-                                child: Row(
-                                  children: snapshot.data ??
-                                      [], // Provide a default value when null
-                                ),
+                        ),
+                      ],
+                    ),
+                  if (category != "ShadowTeacher")
+                    FutureBuilder<List<Widget>?>(
+                      future: getBookingWidgets(),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return Container(
+                            color: kPrimary,
+                            child: Container(
+                              alignment: Alignment.center,
+                              child: const CircularProgressIndicator(
+                                backgroundColor: kDarkBlue,
+                                color: kDarkBlue,
                               ),
                             ),
-                            Visibility(
-                              visible: snapshot.data == null &&
-                                  snapshot.data!.isEmpty,
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Text(
-                                  "No Sessions For This Week",
-                                  style: TextStyle(
-                                    fontSize: 17.0,
-                                    fontWeight: FontWeight.bold,
-                                    color: kBlue,
+                          );
+                        } else if (snapshot.hasError) {
+                          return Text('Error: ${snapshot.error}');
+                        } else {
+                          return Stack(
+                            children: [
+                              Visibility(
+                                visible: snapshot.data != null &&
+                                    snapshot.data!.isNotEmpty,
+                                child: SingleChildScrollView(
+                                  scrollDirection: Axis.horizontal,
+                                  child: Row(
+                                    children: snapshot.data ??
+                                        [], // Provide a default value when null
                                   ),
                                 ),
                               ),
-                            ),
-                          ],
-                        );
-                      }
-                    },
-                  ),
+                              Visibility(
+                                visible: snapshot.data == null ||
+                                    snapshot.data!.isEmpty,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text(
+                                    "No Sessions For This Week",
+                                    style: TextStyle(
+                                      fontSize: 17.0,
+                                      fontWeight: FontWeight.bold,
+                                      color: kBlue,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          );
+                        }
+                      },
+                    ),
                   Row(
                     children: [
                       SizedBox(
@@ -626,9 +632,9 @@ class _MainPageState extends State<MainPage> {
                   Container(
                     alignment: Alignment.topLeft,
                     margin: EdgeInsets.symmetric(
-                        horizontal: linePadding*0.8  + 20),
+                        horizontal: linePadding * 0.8),
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -638,7 +644,7 @@ class _MainPageState extends State<MainPage> {
                               children: [
                                 Icon(
                                   Icons.email,
-                                  size: 30,
+                                  size: 25,
                                   color: kDarkBlue,
                                 ),
                                 const SizedBox(
@@ -671,7 +677,7 @@ class _MainPageState extends State<MainPage> {
                               children: [
                                 Icon(
                                   Icons.phone,
-                                  size: 30,
+                                  size: 25,
                                   color: kDarkBlue,
                                 ),
                                 const SizedBox(

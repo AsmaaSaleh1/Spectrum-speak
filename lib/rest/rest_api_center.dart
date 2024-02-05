@@ -382,3 +382,24 @@ Future<List<Event>> getEventsForSevenDay(String city) async {
   }
   return list;
 }
+
+Future<bool> addEvent(
+    String CenterID, String Description, String EventTime) async {
+  try {
+    final response = await http.post(
+        Uri.parse('${Utils.baseUrl}/center/addEvent'),
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: jsonEncode({
+          "CenterID": CenterID,
+          "Description": Description,
+          "EventTime": EventTime
+        }));
+    var decodedData = jsonDecode(response.body);
+    return decodedData['result'];
+  } catch (e) {
+    return false;
+  }
+}

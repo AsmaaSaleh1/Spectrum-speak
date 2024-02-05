@@ -21,7 +21,7 @@ import 'package:tuple/tuple.dart';
 import '../screen/offers_and_requests.dart';
 
 class Utils {
-  static String baseUrl = "http://192.168.1.3:3000";
+  static String baseUrl = "http://192.168.1.9:3000";
   // static String baseUrl="http://localhost:3000";
   static List<RemoteMessage> messageNotifications = [];
   static FirebaseFirestore firestore = FirebaseFirestore.instance;
@@ -99,10 +99,14 @@ class Utils {
   }
 
   static Future<List<ChatUser>> getAllUsersSearch() async {
-    QuerySnapshot<Map<String, dynamic>> snapshot = await firestore
-        .collection('users')
-        .where('UserID', isNotEqualTo: u.UserID)
-        .get();
+    QuerySnapshot<Map<String, dynamic>> snapshot;
+    print('admin ${AuthManager.isAdminOfSystem}');
+    if (!AuthManager.isAdminOfSystem)
+      snapshot = await firestore
+          .collection('users')
+          .where('UserID', whereNotIn: {7, 34, 35, 36}).get();
+    else
+      snapshot = await firestore.collection('users').get();
     return snapshot.docs.map((doc) => ChatUser.fromJson(doc.data())).toList();
   }
 
@@ -184,6 +188,7 @@ class Utils {
   static Future<void> sendMessage(
       ChatUser chatUser, String msg, Type type) async {
     //message sending time (also used as id)
+    await addChatUser(chatUser.Email);
     final time = DateTime.now().millisecondsSinceEpoch.toString();
 
     //message to send
@@ -339,7 +344,7 @@ class Utils {
           .doc(u.UserID.toString())
           .collection('my_users')
           .doc(data.docs.first.id)
-          .set({});
+          .set({'accept': true});
 
       return true;
     } else {
@@ -347,7 +352,28 @@ class Utils {
     }
   }
 
-  static Future<void> addChatUser2(int id, String email) async {
+  static Future<bool> checkIfMessageAccepted(ChatUser u) async {
+    DocumentSnapshot<Map<String, dynamic>> snapshot = await firestore
+        .collection('users')
+        .doc(AuthManager.u.UserID.toString())
+        .collection('my_users')
+        .doc(u.UserID.toString())
+        .get();
+    Map<String, dynamic> data = snapshot.data()!;
+    print('------------------------data-----------------------------');
+    print(data['accept']);
+    return data['accept'];
+  }
+  static Future<void> setMessageAccepted(ChatUser u) async {
+    await firestore
+        .collection('users')
+        .doc(AuthManager.u.UserID.toString())
+        .collection('my_users')
+        .doc(u.UserID.toString())
+        .set({'accept':true});
+  }
+
+  static Future<void> addChatUser2(int id, String email, bool b) async {
     print('I am here');
     final data = await firestore
         .collection('users')
@@ -359,7 +385,7 @@ class Utils {
         .doc(id.toString())
         .collection('my_users')
         .doc(data.docs.first.id)
-        .set({});
+        .set({'accept': b});
   }
 
   static Future<void> createFireBaseUser(
@@ -438,11 +464,12 @@ class Utils {
       final List<QueryDocumentSnapshot<Map<String, dynamic>>> documents3 =
           snapshot3.docs;
       List<Message> msgs =
-          documents3.map((e) => Message.fromJson(e.data())).toList();
+          documents3.map((e) => Message.fromJson(e.data())).toList()??[];
+      if(msgs.isNotEmpty)
       if (msgs[msgs.length - 1].read.isEmpty &&
           msgs[msgs.length - 1].toID == u.UserID) count++;
     }
-    return count;
+    return count ?? 0;
   }
 
   static Future<ChatUser> fetchUser(String id) async {
@@ -622,11 +649,13 @@ class Utils {
         .get();
     final List<QueryDocumentSnapshot<Map<String, dynamic>>> document =
         snapshot.docs;
-    BookingNotification bn=BookingNotification();
+    BookingNotification bn = BookingNotification();
     if (document.isEmpty) return Tuple2("No", bn);
-    return Tuple2("Yes",document
-        .map((e) => BookingNotification.fromJson(e.data()))
-        .toList()[0]);
+    return Tuple2(
+        "Yes",
+        document
+            .map((e) => BookingNotification.fromJson(e.data()))
+            .toList()[0]);
   }
   // static Future<List<BookingNotification>> g
 }

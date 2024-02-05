@@ -47,8 +47,9 @@ Future<List<Booking>> getBookings(String uid, String category) async {
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
       for (var item in data['result']) {
-        String? url = await Utils.getProfilePictureUrl(
-            '${item['imageTargetUserID']}', '');
+        String? url =
+            (await Utils.fetchUser('${item['imageTargetUserID']}')).image;
+        print('url $url');
         Booking booking = Booking(
             item['ParentName'],
             item['ChildName'],
@@ -56,8 +57,10 @@ Future<List<Booking>> getBookings(String uid, String category) async {
             DateTime.parse(item['Time']),
             item['Description'],
             item['BookingID'],
-            category == 'Sepcialist' ? url! : '',
-            category == 'Parent' ? url! : '');
+            category == 'Specialist' ? url! : '',
+            category == 'Parent'? url! : '');
+        print(booking.parentImageUrl);
+        print(booking.specialistImageUrl);
         bookings.add(booking);
       }
     }

@@ -93,7 +93,7 @@ class _SignUpShadowTeacherState extends State<SignUpShadowTeacher> {
               ),
             ),
             Container(
-              alignment: Alignment.center,
+              alignment: Alignment.bottomLeft,
               width: 280,
               height: 60,
               child: Row(
@@ -121,12 +121,12 @@ class _SignUpShadowTeacherState extends State<SignUpShadowTeacher> {
               ),
             ),
             Container(
-              alignment: Alignment.center,
+              // alignment: Alignment.center,
               margin: const EdgeInsets.only(bottom: 15),
-              width: 280,
+              width: 300,
               height: 60,
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   CustomDropDown(
                     items: const [

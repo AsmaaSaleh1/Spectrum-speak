@@ -28,7 +28,7 @@ class _SpectrumBotState extends State<SpectrumBot> {
   TextEditingController controller = TextEditingController();
   final _openAI = OpenAI.instance.build(
       token: OPENAI_API_KEY,
-      baseOption: HttpSetup(receiveTimeout: Duration(seconds: 5)),
+      baseOption: HttpSetup(receiveTimeout: Duration(seconds: 10)),
       enableLog: true);
   late ChatUser _currentUser =
       new ChatUser(id: widget.id, firstName: widget.name);
@@ -229,7 +229,7 @@ class _SpectrumBotState extends State<SpectrumBot> {
     final request = ChatCompleteText(
         model: GptTurbo0301ChatModel(),
         messages: _messagesHistory,
-        maxToken: 200);
+        maxToken: 600);
     final response = await _openAI.onChatCompletion(request: request);
     for (var element in response!.choices) {
       if (element.message != null) {

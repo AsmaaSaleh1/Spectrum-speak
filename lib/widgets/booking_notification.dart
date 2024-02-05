@@ -18,7 +18,7 @@ import 'package:spectrum_speak/screen/offers_and_requests.dart';
 import 'package:spectrum_speak/widgets/top_bar.dart';
 
 class BookingNotificationCard extends StatefulWidget {
-  final BookingNotification bn;
+  late BookingNotification bn;
   late Function(int)? callBack;
   BookingNotificationCard({Key? key, required this.bn, this.callBack})
       : super(key: key);
@@ -52,7 +52,7 @@ class _BookingNotificationCardState extends State<BookingNotificationCard> {
       if ((await Utils.fetchBooking(widget.bn.fromID!, widget.bn.toID!))
               .item1 ==
           'Yes') {
-            print('there\'s a response');
+        print('there\'s a response');
         BookingNotification t =
             (await Utils.fetchBooking(widget.bn.fromID!, widget.bn.toID!))
                 .item2;
@@ -157,7 +157,7 @@ class _BookingNotificationCardState extends State<BookingNotificationCard> {
                           )
                         : null),
                 Visibility(
-                  visible: visible&&widget.bn.type=='request',
+                  visible: visible && widget.bn.type == 'request',
                   child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -184,8 +184,9 @@ class _BookingNotificationCardState extends State<BookingNotificationCard> {
                                   s!.specialistCategory,
                                   b.timeOfBooking.toString());
                               setState(() {
-                                visible = false;
+                                widget.bn.value = true;
                                 decision = 'accept';
+                                visible = false;
                               });
                             },
                             icon: Icon(FontAwesomeIcons.check, color: kGreen)),
@@ -205,15 +206,18 @@ class _BookingNotificationCardState extends State<BookingNotificationCard> {
                               await Utils.addBookingNotification(b);
                               await Utils.setBookingRequestCompleted(b);
                               setState(() {
-                                visible = false;
+                                widget.bn.value = true;
                                 decision = 'reject';
+                                visible = false;
                               });
                             },
                             icon: Icon(FontAwesomeIcons.x, color: kRed))
                       ]),
                 ),
                 Visibility(
-                  visible: !visible && widget.bn.type == 'request',
+                  visible: !visible &&
+                      widget.bn.value! &&
+                      widget.bn.type == 'request',
                   child:
                       Row(mainAxisAlignment: MainAxisAlignment.end, children: [
                     Text(decision == 'accept' ? 'Accepted' : 'Rejected',

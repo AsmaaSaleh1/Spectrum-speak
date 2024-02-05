@@ -101,7 +101,7 @@ class _ParentProfileState extends State<ParentProfile> {
                               Align(
                                 alignment: AlignmentDirectional.topCenter,
                                 child: Text(
-                                  "My Children",
+                                   AuthManager.category=='Parent'?"My Children":"Children",
                                   style: TextStyle(
                                     fontSize: 30.0,
                                     fontWeight: FontWeight.bold,

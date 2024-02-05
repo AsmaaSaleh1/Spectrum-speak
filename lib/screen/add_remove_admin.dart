@@ -36,7 +36,7 @@ class _AddRemoveAdminCallState extends State<AddRemoveAdminCall> {
 
   Future<void> getUsers(String namePrefix) async {
     try {
-      var data = await searchToUsers(namePrefix);
+      var data = await searchToUsers(namePrefix,true);
 
       setState(() {
         usersData = data;

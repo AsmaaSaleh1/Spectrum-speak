@@ -55,7 +55,8 @@ class _AllChatState extends State<AllChat> {
             });
             return Future.value(false);
           } else {
-            Navigator.pushReplacement(context, MaterialPageRoute(builder: ((context) => MainPage())));
+            Navigator.pushReplacement(
+                context, MaterialPageRoute(builder: ((context) => MainPage())));
             return Future.value(true);
           }
         },
@@ -98,6 +99,7 @@ class _AllChatState extends State<AllChat> {
 
                       List<ChatUser> listt = await Utils.getAllUsersSearch();
                       for (var i in listt) {
+                        print('iteration for ${i.Name}');
                         if ((i.Name?.toLowerCase()
                                     ?.startsWith(val.toLowerCase()) ??
                                 false) ||
@@ -108,6 +110,7 @@ class _AllChatState extends State<AllChat> {
                           print('${i.Name}\n');
                           searchList.add(i);
                         }
+                        print('-------------');
                       }
                       setState(() {
                         // Set the state after the entire loop has finished
@@ -136,16 +139,16 @@ class _AllChatState extends State<AllChat> {
               IconButton(onPressed: () {}, icon: const Icon(Icons.more_vert)),
             ],
           ),
-          floatingActionButton: FloatingActionButton(
-            onPressed: () {
-              _addChatUserDialog();
-            },
-            backgroundColor: kDarkBlue,
-            child: const Icon(
-              Icons.add_comment_rounded,
-              color: kPrimary,
-            ),
-          ),
+          // floatingActionButton: FloatingActionButton(
+          //   onPressed: () {
+          //     _addChatUserDialog();
+          //   },
+          //   backgroundColor: kDarkBlue,
+          //   child: const Icon(
+          //     Icons.add_comment_rounded,
+          //     color: kPrimary,
+          //   ),
+          // ),
           body: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 6),
             child: StreamBuilder(
@@ -171,11 +174,11 @@ class _AllChatState extends State<AllChat> {
                             // } else if (snapshot.hasError) {
                             //   return Center(
                             //       child: Text('Error: ${snapshot.error}'));
-                            // } else if (!snapshot.hasData ||
-                            //     snapshot.data!.docs.isEmpty) {
-                            //   return Center(
-                            //       child: Text('No messages available.'));
-                            // } else {
+                            if (!_isSearching&&(!snapshot.hasData ||
+                                snapshot.data!.docs.isEmpty)) {
+                              return Center(
+                                  child: Text('Start Chatting Now!'));
+                            } else {
                             final data = snapshot.data?.docs;
                             list = data
                                     ?.map((e) => ChatUser.fromJson(e.data()))
@@ -198,7 +201,7 @@ class _AllChatState extends State<AllChat> {
                                           : list[index]);
                                 });
                           }
-                          // }
+                          }
                           );
                   }
                 }),

@@ -50,11 +50,12 @@ class _CardAdminState extends State<CardAdmin> {
   void initState() {
     super.initState();
     isUserAdmin();
+    getImage();
   }
 
   @override
   Widget build(BuildContext context) {
-    MediaQueryData mq=MediaQuery.of(context);
+    MediaQueryData mq = MediaQuery.of(context);
     return Card(
       elevation: 3,
       shadowColor: kDarkerColor,

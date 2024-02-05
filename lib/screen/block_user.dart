@@ -36,7 +36,7 @@ class _BlockUserCallState extends State<BlockUserCall> {
 
   Future<void> getUsers(String namePrefix) async {
     try {
-      var data = await searchToUsers(namePrefix);
+      var data = await searchToUsers(namePrefix,false);
 
       setState(() {
         usersData = data;

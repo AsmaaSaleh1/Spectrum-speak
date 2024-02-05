@@ -70,6 +70,13 @@ class _AddProfilePhotoState extends State<AddProfilePhoto> {
                           MaterialPageRoute(
                               builder: (context) => const EditProfile()),
                         );
+                      else if(widget.comeFromSignUp){
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const MainPage()),
+                        );
+                      }
                       else
                         Navigator.pop(context);
                     },
@@ -222,7 +229,7 @@ class _AddProfilePhotoState extends State<AddProfilePhoto> {
                           )),
                 const SizedBox(height: 35),
                 SizedBox(
-                  width: 235,
+                  width: 243,
                   height: 45,
                   child: CustomButton(
                     foregroundColor: kPrimary,

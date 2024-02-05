@@ -45,13 +45,13 @@ class _SignUpState extends State<SignUp> {
   String? selectedCity;
   String messages() {
     if (_validEmail) {
-      return "Not valid Email";
+      return "Invalid Email";
     } else if (_existEmail) {
-      return "Already exist email";
+      return "User Already Exists";
     } else if (_showTextPassword) {
       return 'Passwords do not match';
     } else if (_showTextPasswordValid) {
-      return 'Passwords not valid';
+      return 'Password is not valid';
     } else {
       return "Error";
     }
@@ -137,7 +137,7 @@ class _SignUpState extends State<SignUp> {
                 height: 50,
                 child: CustomTextField(
                     preIcon: Icons.person,
-                    labelText: "User Name",
+                    labelText: "Name",
                     placeholder: "Asmaa",
                     isPasswordTextField: false,
                     controller: _usernameController),),

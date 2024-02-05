@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:spectrum_speak/constant/const_color.dart';
 import 'package:universal_platform/universal_platform.dart';
+import 'package:spectrum_speak/rest/auth_manager.dart';
 
 import 'all_chat.dart';
 
@@ -41,7 +42,7 @@ class _SplashChatScreenState extends State<SplashChatScreen> {
             height: mq.height * 0.5,
             duration: const Duration(seconds: 2),
             child: Image.asset(
-              'images/chatSplash.jpeg',
+              'images/chatSplash.png',
               fit: BoxFit.contain,
             ),
           ),
@@ -49,7 +50,7 @@ class _SplashChatScreenState extends State<SplashChatScreen> {
             bottom: isWeb ? mq.height * 0.12 : mq.height * 0.2,
             width: mq.width,
             child: Text(
-              'Hello userName',
+              'Hello ${AuthManager.u.Name}',
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 20,

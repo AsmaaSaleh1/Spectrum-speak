@@ -13,16 +13,19 @@ import 'package:spectrum_speak/modules/BookingNotification.dart';
 import 'package:spectrum_speak/modules/CenterNotification.dart';
 import 'package:spectrum_speak/modules/CenterUser.dart';
 import 'package:spectrum_speak/modules/ChatUser.dart';
+import 'package:spectrum_speak/modules/ContactUs.dart';
 import 'package:spectrum_speak/modules/specialist.dart';
 import 'package:spectrum_speak/rest/auth_manager.dart';
 import 'package:spectrum_speak/rest/rest_api_admin.dart';
 import 'package:spectrum_speak/rest/rest_api_booking.dart';
 import 'package:spectrum_speak/rest/rest_api_center.dart';
+import 'package:spectrum_speak/rest/rest_api_contact.dart';
 import 'package:spectrum_speak/rest/rest_api_login.dart';
 import 'package:spectrum_speak/rest/rest_api_menu.dart';
 import 'package:spectrum_speak/rest/rest_api_profile.dart';
 import 'package:spectrum_speak/rest/rest_api_profile_delete.dart';
 import 'package:spectrum_speak/screen/Quiz.dart';
+import 'package:spectrum_speak/screen/Result.dart';
 import 'package:spectrum_speak/screen/add_remove_admin.dart';
 import 'package:spectrum_speak/screen/analysis_page.dart';
 import 'package:spectrum_speak/screen/block_user.dart';
@@ -39,6 +42,7 @@ import 'package:spectrum_speak/screen/specialist_profile.dart';
 import 'package:spectrum_speak/screen/splash_screen_chat.dart';
 import 'package:spectrum_speak/screen/calendar_grid.dart';
 import 'package:spectrum_speak/widgets/booking_notification.dart';
+import 'package:spectrum_speak/widgets/contact_us_notifications.dart';
 import 'package:spectrum_speak/widgets/notification_card.dart';
 import 'package:tuple/tuple.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
@@ -48,6 +52,7 @@ import 'card_user_chat.dart';
 int unreadMessagesCount = 0;
 int unreadNotificationsCount = 0;
 int unreadBookingCount = 0;
+int unreadAdminNCount = 0;
 List<ChatUser> popUpMenuList = [];
 bool topBarGuide = true;
 CenterNotification cn = CenterNotification(
@@ -117,7 +122,9 @@ class _CustomAppBarState extends State<CustomAppBar> {
     return FutureBuilder<List<int>>(
         future: Future.wait([
           Utils.getUnreadConversations(false),
-          if (showNotif! && category == 'Specialist')
+          if (AuthManager.isAdminOfSystem)
+            getDoneContact()
+          else if (showNotif! && category == 'Specialist')
             Utils.getUnreadNotifications(AuthManager.u.UserID.toString()),
           if (showNotif!)
             Utils.getUnreadBookingNotifications(
@@ -127,7 +134,9 @@ class _CustomAppBarState extends State<CustomAppBar> {
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             unreadMessagesCount = snapshot.data![0] ?? 0;
-            if (showNotif! && category == 'Specialist') {
+            if (AuthManager.isAdminOfSystem) {
+              unreadAdminNCount = snapshot.data![1];
+            } else if (showNotif! && category == 'Specialist') {
               unreadNotificationsCount = snapshot.data![1];
               unreadBookingCount = snapshot.data![2];
             } else if (showNotif! && category == 'Parent') {
@@ -139,8 +148,8 @@ class _CustomAppBarState extends State<CustomAppBar> {
           return AppBar(
             leading: IconButton(
               icon: Icon(
-                key:menuKeyTopBar,
-                // key:AuthManager.firstTime? menuKeyTopBar:null,
+                // key:menuKeyTopBar,
+                key: AuthManager.firstTime ? menuKeyTopBar : null,
                 CupertinoIcons.list_bullet,
                 color: kPrimary,
                 size: 30,
@@ -165,8 +174,8 @@ class _CustomAppBarState extends State<CustomAppBar> {
                     _showMessagesPopUpMenu(context, popUpMenuList);
                   },
                   icon: Icon(
-                    key:inboxKeyTopBar,
-                    // key: AuthManager.firstTime?inboxKeyTopBar:null,
+                    // key:inboxKeyTopBar,
+                    key: AuthManager.firstTime ? inboxKeyTopBar : null,
                     CupertinoIcons.envelope_open,
                     color: kPrimary,
                     size: 30,
@@ -174,8 +183,8 @@ class _CustomAppBarState extends State<CustomAppBar> {
                 ),
               ),
               IconButton(
-                key:calendarKeyTopBar,
-                // key:AuthManager.firstTime? calendarKeyTopBar:null,
+                // key:calendarKeyTopBar,
+                key: AuthManager.firstTime ? calendarKeyTopBar : null,
                 onPressed: () async {
                   print('Calendar button pressed');
                   String city = await getCity('${AuthManager.u.UserID}');
@@ -193,7 +202,13 @@ class _CustomAppBarState extends State<CustomAppBar> {
               ),
               badges.Badge(
                 badgeContent: Text(
-                  '${unreadNotificationsCount + unreadBookingCount}',
+                  AuthManager.isAdminOfSystem
+                      ? '${unreadAdminNCount}'
+                      : showNotif! && category == 'Specialist'
+                          ? '${unreadNotificationsCount + unreadBookingCount}'
+                          : category == 'Parent'
+                              ? '${unreadBookingCount}'
+                              : '${unreadAdminNCount}',
                   style: TextStyle(color: kPrimary),
                 ),
                 animationType: BadgeAnimationType.slide,
@@ -207,7 +222,9 @@ class _CustomAppBarState extends State<CustomAppBar> {
                     String category =
                         await getUserCategory(AuthManager.u.UserID.toString());
                     Specialist? s;
-                    if (category == 'Specialist') {
+                    if (AuthManager.isAdminOfSystem) {
+                      _showNotificationsAdminPopUpMenu(context);
+                    } else if (category == 'Specialist') {
                       s = await profileSpecialist(
                           await '${AuthManager.u.UserID}');
                       print('admoona ${s!.admin}');
@@ -226,8 +243,8 @@ class _CustomAppBarState extends State<CustomAppBar> {
                     }
                   },
                   icon: Icon(
-                    key:notificationsKeyTopBar,
-                    // key: AuthManager.firstTime?notificationsKeyTopBar:null,
+                    // key:notificationsKeyTopBar,
+                    key: AuthManager.firstTime ? notificationsKeyTopBar : null,
                     CupertinoIcons.bell,
                     color: kPrimary,
                     size: 30,
@@ -235,8 +252,8 @@ class _CustomAppBarState extends State<CustomAppBar> {
                 ),
               ),
               Padding(
-                key:profileKeyTopBar,
-                // key:AuthManager.firstTime? profileKeyTopBar:null,
+                // key:profileKeyTopBar,
+                key: AuthManager.firstTime ? profileKeyTopBar : null,
                 padding: const EdgeInsets.all(8.0),
                 child: CircularProfileAvatar(
                   '',
@@ -570,7 +587,58 @@ class _CustomAppBarState extends State<CustomAppBar> {
                                   title: BookingNotificationCard(
                                     bn: bns[i],
                                     callBack: _updateDataBooking,
-                                  ))
+                                  )),
+                            if (bns.length == 0)
+                              Center(child: Text('No Notification Yet'))
+                          ])))))
+        ]);
+  }
+
+  void _updateAdminNotifications(int unreadA) {
+    unreadAdminNCount = unreadA;
+  }
+
+  void _showNotificationsAdminPopUpMenu(BuildContext context) async {
+    final RenderBox overlay =
+        Overlay.of(context).context.findRenderObject() as RenderBox;
+    List<Contact> bns = (await getAllContact())!;
+    // Now use list in your logic
+
+    bns.sort((a, b) {
+      DateTime timeA =
+          DateFormat('yyyy-MM-dd hh:mm:ss').parse(a.dateTime.toString());
+      DateTime timeB =
+          DateFormat('yyyy-MM-dd hh:mm:ss').parse(b.dateTime.toString());
+      return timeB.compareTo(timeA); // Descending order
+    });
+    await showMenu(
+        color: kPrimary,
+        context: context,
+        position: RelativeRect.fromLTRB(
+          overlay.size.width - 50, // Adjust the value as needed
+          53, // Y position, set to 0 for top
+          overlay.size.width, // Right edge of the screen
+          MediaQuery.of(context).size.height, // Bottom edge of the screen
+        ),
+        items: [
+          PopupMenuItem(
+              padding: const EdgeInsets.all(0),
+              child: SizedBox(
+                  width: 300,
+                  child: SingleChildScrollView(
+                      physics: const NeverScrollableScrollPhysics(),
+                      child: SizedBox(
+                          height: 300,
+                          child: Column(children: [
+                            for (int i = 0; i < bns.length; i++)
+                              ListTile(
+                                  contentPadding: EdgeInsets.zero,
+                                  title: ContactUsCard(
+                                    c: bns[i],
+                                    callBack: _updateAdminNotifications,
+                                  )),
+                            if (bns.length == 0)
+                              Center(child: Text('No Notification Yet'))
                           ])))))
         ]);
   }
@@ -761,10 +829,12 @@ void showTut(BuildContext context) {
 class TopBar extends StatelessWidget {
   final Widget body;
   final VoidCallback? callback;
+  final bool? cameFromSearch;
   TopBar({
     super.key,
     required this.body,
     this.callback,
+    this.cameFromSearch,
   });
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
@@ -772,7 +842,8 @@ class TopBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     MediaQueryData mq = MediaQuery.of(context);
-    return FutureBuilder<Tuple6<String?, String?, String?, bool?, String?,bool?>>(
+    return FutureBuilder<
+            Tuple6<String?, String?, String?, bool?, String?, bool?>>(
         future: _getEmailNameAndCategory(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -941,7 +1012,7 @@ class TopBar extends StatelessWidget {
                             child: CachedNetworkImage(
                               width: mq.size.height * .05,
                               height: mq.size.height * .05,
-                              imageUrl: AuthManager.url,
+                              imageUrl:AuthManager.url,
                               imageBuilder: (context, imageProvider) =>
                                   Container(
                                 decoration: BoxDecoration(
@@ -985,7 +1056,7 @@ class TopBar extends StatelessWidget {
                           fontSize: 17,
                         ),
                       ),
-                      onTap: () => Navigator.push(
+                      onTap: () => Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
                             builder: (context) => const MainPage()),
@@ -1053,36 +1124,35 @@ class TopBar extends StatelessWidget {
                         },
                       ),
                     ListTile(
-                      leading: Icon(
-                        FontAwesomeIcons.message,
-                        color: kDarkerColor,
-                        size: 22,
-                      ),
-                      title: const Text(
-                        "contact us",
-                        style: TextStyle(
-                          fontWeight: FontWeight.w700,
-                          fontSize: 17,
+                        leading: Icon(
+                          FontAwesomeIcons.message,
+                          color: kDarkerColor,
+                          size: 22,
                         ),
-                      ),
-                      onTap: () {
-                        if (isAdminForSystem!) {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const ContactUsAdmin(),
-                            ),
-                          );
-                        } else {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const ContactUs(),
-                            ),
-                          );
-                        }
-                      }
-                    ),
+                        title: const Text(
+                          "contact us",
+                          style: TextStyle(
+                            fontWeight: FontWeight.w700,
+                            fontSize: 17,
+                          ),
+                        ),
+                        onTap: () {
+                          if (isAdminForSystem!) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const ContactUsAdmin(),
+                              ),
+                            );
+                          } else {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const ContactUs(),
+                              ),
+                            );
+                          }
+                        }),
                     if (isAdminForSystem!)
                       ListTile(
                         leading: Icon(
@@ -1133,7 +1203,7 @@ class TopBar extends StatelessWidget {
                           size: 22,
                         ),
                         title: const Text(
-                          "Some Analysis",
+                          "Analysis",
                           style: TextStyle(
                             fontWeight: FontWeight.w700,
                             fontSize: 17,
@@ -1178,7 +1248,7 @@ class TopBar extends StatelessWidget {
                         size: 22,
                       ),
                       title: const Text(
-                        "Destroy account",
+                        "Delete account",
                         style: TextStyle(
                           fontWeight: FontWeight.w700,
                           fontSize: 17,
@@ -1200,7 +1270,7 @@ class TopBar extends StatelessWidget {
                           size: 22,
                         ),
                         title: const Text(
-                          "Destroy Center account",
+                          "Delete Center account",
                           style: TextStyle(
                             fontWeight: FontWeight.w700,
                             fontSize: 17,
@@ -1226,7 +1296,7 @@ class TopBar extends StatelessWidget {
         });
   }
 
-  Future<Tuple6<String?, String?, String?, bool?, String?,bool?>>
+  Future<Tuple6<String?, String?, String?, bool?, String?, bool?>>
       _getEmailNameAndCategory() async {
     try {
       String? userId = await AuthManager.getUserId();
@@ -1239,14 +1309,15 @@ class TopBar extends StatelessWidget {
         bool isAdminForCenter = await checkAdmin(userId);
         bool? isAdminForSystem = await isAdminSystem(userId);
         // Return a tuple of email, userName, and category
-        return Tuple6(email, userName, category, isAdminForCenter, userId,isAdminForSystem);
+        return Tuple6(email, userName, category, isAdminForCenter, userId,
+            isAdminForSystem);
       } else {
-        return Tuple6(null, null, null, false, null,false);
+        return Tuple6(null, null, null, false, null, false);
       }
     } catch (error) {
       // Handle errors here
       print('Error in _getEmailNameAndCategory: $error');
-      return const Tuple6(null, null, null, false, null,false);
+      return const Tuple6(null, null, null, false, null, false);
     }
   }
 

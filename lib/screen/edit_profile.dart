@@ -315,7 +315,7 @@ class _EditProfileState extends State<EditProfile> {
                           builder: (context) => OTPScreen(
                             myAuth: myAuth,
                             email: _emailController.text,
-                            comeFromSignUp: true,
+                            comeFromSignUp: false,
                           ),
                         ),
                       );

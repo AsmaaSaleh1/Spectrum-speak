@@ -272,7 +272,7 @@ class _StackContainerSpecialistState extends State<StackContainerSpecialist> {
                                             ),
                                           );
                                         },
-                                        buttonText: 'Make Center',
+                                        buttonText: 'Register Center',
                                         icon: const Icon(
                                           Icons.login,
                                           size: 18.0,
@@ -280,8 +280,9 @@ class _StackContainerSpecialistState extends State<StackContainerSpecialist> {
                                         iconColor: kPrimary,
                                       ),
                               ),
-                          ],
-                        ),
+                          ],),
+                        // ),if(specialist.admin)
+                        //   CustomButton()
                       ],
                     ),
                   ),

@@ -100,12 +100,11 @@ Future resetPassword(String email, String password)async{
   final response = await http.patch(
       Uri.parse('${Utils.baseUrl}/profileEdit/password/$email'),
       headers: {
-        "Accept": "application/json",
-        "Content-Type":"application/json"
+        "Accept": "application/json","Content-Type":"application/json"
       },
-      body: {
+      body: jsonEncode({
         'Password':password
-      });
+      }));
   var decodedData = jsonDecode(response.body);
   return decodedData;
 }

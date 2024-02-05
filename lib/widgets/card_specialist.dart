@@ -53,7 +53,7 @@ class _CardSpecialistState extends State<CardSpecialist> {
       padding: const EdgeInsets.all(19.0),
       child: Container(
         width: 300,
-        height: 380,
+        height: 400,
         decoration: BoxDecoration(
           color: kPrimary,
           borderRadius: BorderRadius.circular(15),
@@ -242,7 +242,7 @@ class _CardSpecialistState extends State<CardSpecialist> {
                     alignment: Alignment.topRight,
                     child: Padding(
                       padding:
-                          const EdgeInsets.only(right: 10, top: 2, bottom: 2),
+                          const EdgeInsets.only(right: 10, top: 2, bottom:5),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [

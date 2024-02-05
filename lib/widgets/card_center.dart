@@ -13,6 +13,7 @@ import 'package:spectrum_speak/units/custom_clipper_center_card.dart';
 
 class CenterCard extends StatefulWidget {
   final String userId;
+  final String CenterID;
   final Color cardColor;
   final String about;
   final String centerName;
@@ -28,6 +29,7 @@ class CenterCard extends StatefulWidget {
     required this.city,
     required this.onTap,
     required this.isLess,
+    required this.CenterID,
   });
 
   @override
@@ -37,12 +39,13 @@ class CenterCard extends StatefulWidget {
 class _CenterCardState extends State<CenterCard> {
   String url = '';
   Future<void> assignUrl() async {
-    String centerID = (await getCenterIdForSpecialist(widget.userId))!;
-    CenterUser c = await Utils.fetchCenter(centerID);
-    await (url = c.image);
+    CenterUser c = await Utils.fetchCenter(widget.CenterID);
+    url = c.image;
     setState(() {
       url = url;
+      print('center image ${widget.CenterID}');
     });
+    print('-------------------------------------------------');
   }
 
   @override

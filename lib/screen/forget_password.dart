@@ -176,7 +176,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                         builder: (context) => OTPScreen(
                           myAuth: myAuth,
                           email: _emailController.text,
-                          comeFromSignUp: true,
+                          comeFromSignUp: false,
                         ),
                       ),
                     );

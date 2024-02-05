@@ -82,14 +82,17 @@ class _MyTabState extends State<MyTab> {
                 case 0:
                   onSearchTypeChanged(SearchEnum.specialist);
                   getResults();
+                  didUpdateWidget(widget);
                   break;
                 case 1:
                   onSearchTypeChanged(SearchEnum.center);
                   getResults();
+                  didUpdateWidget(widget);
                   break;
                 case 2:
                   onSearchTypeChanged(SearchEnum.shadowTeacher);
                   getResults();
+                  didUpdateWidget(widget);
                   break;
               }
             },
@@ -176,7 +179,7 @@ class _MyTabState extends State<MyTab> {
                   Column(
                     children: [
                       Padding(
-                        padding: const EdgeInsets.only(left: 30),
+                        padding: const EdgeInsets.only(left: 10),
                         child: Container(
                           alignment: Alignment.topLeft,
                           child: Wrap(
@@ -216,7 +219,7 @@ class _MyTabState extends State<MyTab> {
                                 ],
                               ),
                               const SizedBox(
-                                width: 30,
+                                width: 10, //was 30
                               ),
                               Column(
                                 children: [
@@ -403,13 +406,20 @@ class _MyTabState extends State<MyTab> {
     setState(() {
       selectedSearch = newValue;
     });
+    setState(() {
+      getResults();
+      didUpdateWidget(widget);
+    });
   }
 
   void onCityChanged(String? value) {
     setState(() {
       selectedCity = value;
     });
-    getResults();
+    setState(() {
+      getResults();
+      didUpdateWidget(widget);
+    });
   }
 
   void onSpecialistChanged(String? value) {
@@ -417,6 +427,10 @@ class _MyTabState extends State<MyTab> {
       selectedSpecialist = value;
     });
     getResults();
+    setState(() {
+      getResults();
+      didUpdateWidget(widget);
+    });
   }
 
   void onGenderChanged(String? value) {
@@ -424,6 +438,10 @@ class _MyTabState extends State<MyTab> {
       selectedGender = value;
     });
     getResults();
+    setState(() {
+      getResults();
+      didUpdateWidget(widget);
+    });
   }
 
   Future<void> getSpecialists(
@@ -456,10 +474,12 @@ class _MyTabState extends State<MyTab> {
     try {
       var data = await searchCenter(namePrefix, selectedCity);
       setState(() {
+        centerData.clear();
         centerData = data;
         centerCards = centerData.asMap().entries.map((entry) {
           int index = entry.key;
           return CenterCard(
+            CenterID: entry.value['CenterID'].toString(),
             userId: entry.value['UserID'].toString(),
             cardColor: cardColors[index % cardColors.length],
             about: entry.value['Description'] ?? '',

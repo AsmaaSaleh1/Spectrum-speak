@@ -185,14 +185,14 @@ class ParentInformation extends StatelessWidget {
                               Row(
                                 children: [
                                   Text(
-                                    "\t\t\t\t\t\t"+num,
+                                    "\t\t\t"+num,
                                     style: TextStyle(
                                       fontSize: 15.0,
                                       fontWeight: FontWeight.bold,
                                       color: kDarkerColor,
                                     ),
                                   ),
-                                  const SizedBox(width: 10,),
+                                  const SizedBox(width: 6,),
                                   Text(
                                     "(In the system)",
                                     style: TextStyle(

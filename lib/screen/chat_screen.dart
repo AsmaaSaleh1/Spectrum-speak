@@ -42,6 +42,7 @@ class _ChatScreenState extends State<ChatScreen> {
   bool _isUploading = false;
   String lastT = '';
   bool showSeperator = true;
+  bool accepted = true;
   bool firstTime = true;
   late FocusNode _focusNode;
   ScrollController _scrollController = ScrollController();
@@ -72,6 +73,11 @@ class _ChatScreenState extends State<ChatScreen> {
         MaterialPageRoute(builder: (context) => Login()),
       );
     }
+    accepted = await Utils.checkIfMessageAccepted(widget.user);
+    print('aqq $accepted');
+    setState(() {
+      accepted = accepted;
+    });
   }
 
   @override
@@ -115,6 +121,7 @@ class _ChatScreenState extends State<ChatScreen> {
                             return Center(
                                 child: Text('No messages available.'));
                           } else {
+                            firstMessage = false;
                             final data = snapshot.data?.docs;
                             print('Data: ${jsonEncode(data![0].data())}');
                             _messagesList = data
@@ -169,7 +176,69 @@ class _ChatScreenState extends State<ChatScreen> {
                             padding: EdgeInsets.symmetric(
                                 vertical: 8, horizontal: 20),
                             child: CircularProgressIndicator(strokeWidth: 2))),
-                  _chatInput(),
+                  if (accepted) _chatInput(),
+                  if (!accepted)
+                    Column(
+                      children: [
+                        Divider(color: Colors.grey),
+                        Text(
+                            'You can accept or reject this message\nrequest by ${widget.user.Name}',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                fontSize: 15, color: Colors.grey.shade900)),
+                        SizedBox(height: 10),
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 10.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              TextButton(
+                                onPressed: () {
+                                  // Navigator.of(context).pop(false);
+                                  Utils.setMessageAccepted(widget.user);
+                                  setState(() {
+                                    accepted = true;
+                                  });
+                                },
+                                style: ElevatedButton.styleFrom(
+                                    fixedSize: Size(120.0, 30.0),
+                                    backgroundColor: kGreen,
+                                    side: BorderSide(width: 1.0),
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(10))),
+                                child: Text(
+                                  'Accept',
+                                  style: TextStyle(
+                                      color: kPrimary,
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop(false);
+                                },
+                                style: ElevatedButton.styleFrom(
+                                    fixedSize: Size(120.0, 30.0),
+                                    backgroundColor: kRed,
+                                    side: BorderSide(width: 1.0),
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(10))),
+                                child: Text(
+                                  'Reject',
+                                  style: TextStyle(
+                                      color: kPrimary,
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
                   if (_showEmoji)
                     SizedBox(
                       height: mq.size.height * .35,
@@ -302,7 +371,7 @@ class _ChatScreenState extends State<ChatScreen> {
                         Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
-                                builder: (context) =>CallPage()));
+                                builder: (context) => CallPage()));
                       },
                       icon: const Icon(
                         Icons.video_call,
@@ -414,13 +483,19 @@ class _ChatScreenState extends State<ChatScreen> {
               onPressed: () async {
                 if (_textController.text.isNotEmpty) {
                   showSeperators.add(false);
-                  await Utils.sendMessage(
-                      widget.user, _textController.text, Type.text);
+
                   if (firstMessage) {
                     print('First Message ever\n');
                     firstMessage = false;
-                    Utils.addChatUser2(widget.user.UserID, AuthManager.u.Email);
+                    Utils.addChatUser2(
+                        widget.user.UserID, AuthManager.u.Email, false);
+                  } else {
+                    print('not First Message ever\n');
+                    Utils.addChatUser2(
+                        widget.user.UserID, AuthManager.u.Email, true);
                   }
+                  await Utils.sendMessage(
+                      widget.user, _textController.text, Type.text);
                 }
                 _textController.text = '';
               },

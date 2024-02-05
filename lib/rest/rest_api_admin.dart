@@ -33,10 +33,10 @@ Future<bool?> isAdminSystem(String userID) async {
   }
 }
 
-Future<List<dynamic>> searchToUsers(String namePrefix) async {
+Future<List<dynamic>> searchToUsers(String namePrefix,bool b) async {
   try {
     final response = await http.get(
-      Uri.parse('${Utils.baseUrl}/admin/search/user?namePrefix=$namePrefix'),
+      Uri.parse('${Utils.baseUrl}/admin/${b?'search':'searchBlocked'}/user?namePrefix=$namePrefix'),
       headers: {
         'Accept': 'application/json',"Content-Type":"application/json"
       },

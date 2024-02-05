@@ -1,7 +1,6 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/foundation.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter_notification_channel/flutter_notification_channel.dart';
 import 'package:flutter_notification_channel/notification_importance.dart'
@@ -22,7 +21,7 @@ final navigatorKey = GlobalKey<NavigatorState>();
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   _initializeFirebase();
-  
+
   AwesomeNotifications().initialize(null, [
     NotificationChannel(
         channelKey: "call_channel",
@@ -55,7 +54,7 @@ class _MyAppState extends State<MyApp> {
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       String? title = message.notification!.title;
       String? body = message.notification!.body;
-      
+
       AwesomeNotifications().createNotification(
           content: NotificationContent(
             id: 123,
@@ -155,17 +154,17 @@ _initializeFirebase() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  await FirebaseAuth.instance.useAuthEmulator('localhost', 9099);
-  FirebaseAuth.instance
-  .authStateChanges()
-  .listen((User? user) {
-    if (user == null) {
-      print('User is currently signed out!');
-    } else {
-      print('User is signed in!');
-    }
-  });
-  if (!kIsWeb||kIsWeb) {
+  // await FirebaseAuth.instance.useAuthEmulator('localhost', 9099);
+  // FirebaseAuth.instance
+  // .authStateChanges()
+  // .listen((User? user) {
+  //   if (user == null) {
+  //     print('User is currently signed out!');
+  //   } else {
+  //     print('User is signed in!');
+  //   }
+  // });
+  if (!kIsWeb || kIsWeb) {
     var result = await FlutterNotificationChannel.registerNotificationChannel(
       description: 'For Showing Messaging ',
       id: 'chats',
@@ -180,30 +179,45 @@ _initializeFirebase() async {
 Future<void> backgroundHandler(RemoteMessage message) async {
   String? title = message.notification!.title;
   String? body = message.notification!.body;
-  if(body=='Incoming Call')
-  AwesomeNotifications().createNotification(
-      content: NotificationContent(
-        id: 123,
-        channelKey: "call_channel",
-        color: Colors.white,
-        title: title,
-        body: body,
-        category: NotificationCategory.Call,
-        wakeUpScreen: true,
-        fullScreenIntent: true,
-        autoDismissible: false,
-        backgroundColor: Colors.orange,
-      ),
-      actionButtons: [
-        NotificationActionButton(
-            key: "ACCEPT",
-            label: 'Accept',
-            color: Colors.green,
-            autoDismissible: true),
-        NotificationActionButton(
-            key: "REJECT",
-            label: 'Reject',
-            color: Colors.red,
-            autoDismissible: true)
-      ]);
+  if (body == 'Incoming Call') {
+    AwesomeNotifications().createNotification(
+        content: NotificationContent(
+          id: 123,
+          channelKey: "call_channel",
+          color: Colors.white,
+          title: title,
+          body: body,
+          category: NotificationCategory.Call,
+          wakeUpScreen: true,
+          fullScreenIntent: true,
+          autoDismissible: false,
+          backgroundColor: Colors.orange,
+        ),
+        actionButtons: [
+          NotificationActionButton(
+              key: "ACCEPT",
+              label: 'Accept',
+              color: Colors.green,
+              autoDismissible: true),
+          NotificationActionButton(
+              key: "REJECT",
+              label: 'Reject',
+              color: Colors.red,
+              autoDismissible: true)
+        ]);
+  } else {
+    AwesomeNotifications().createNotification(
+        content: NotificationContent(
+      id: 125,
+      channelKey: "msg_channel",
+      color: Colors.white,
+      title: title,
+      body: body,
+      category: NotificationCategory.Message,
+      wakeUpScreen: true,
+      fullScreenIntent: true,
+      autoDismissible: false,
+      backgroundColor: Colors.orange,
+    ));
+  }
 }

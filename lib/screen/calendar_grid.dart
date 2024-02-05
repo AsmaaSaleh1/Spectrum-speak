@@ -241,6 +241,7 @@ class _CalendarPageState extends State<CalendarPage> {
                     itemBuilder: (BuildContext context, int index) {
                       return Container(
                         alignment: Alignment.center,
+                        
                         child: Text(
                           daysOfWeek[index],
                           style: const TextStyle(
@@ -309,6 +310,8 @@ class _CalendarPageState extends State<CalendarPage> {
                           });
                         },
                         child: Container(
+                          height:MediaQuery.of(context).size.width*0.01,
+                          width:MediaQuery.of(context).size.width*0.1,
                           alignment: Alignment.center,
                           decoration: BoxDecoration(
                             color: index == _selectedIndex
@@ -420,6 +423,7 @@ class _CalendarPageState extends State<CalendarPage> {
               const SizedBox(
                 height: 5,
               ),
+              
               Expanded(
                 child: Column(
                   children: [
@@ -444,8 +448,7 @@ class _CalendarPageState extends State<CalendarPage> {
                             for (var b in dayBookings)
                               BookingCard(
                                   booking: b,
-                                  category: widget.category,
-                                  onDelete: refresh)
+                                  category: widget.category,)
                           ]))
                   ],
                 ),

@@ -24,6 +24,7 @@ class _SearchState extends State<Search> {
     return Scaffold(
       body: TopBar(
         body: SearchToCall(),
+        cameFromSearch:true,
       ),
     );
   }
@@ -46,12 +47,12 @@ class _SearchToCallState extends State<SearchToCall> {
   GlobalKey viewInfoKey = GlobalKey();
   @override
   void initState() {
-    print(AuthManager.firstTime);
-    if (AuthManager.firstTime && searchGuide)
-      Future.delayed(const Duration(seconds: 1), () {
-        _showTutorialCoachmark();
-      });
+    // if (AuthManager.firstTime && searchGuide)
+    //   Future.delayed(const Duration(seconds: 1), () {
+    //     _showTutorialCoachmark();
+    //   });
     super.initState();
+    onSearchTypeChanged(selectedSearch);
   }
 
   void _showTutorialCoachmark() {
@@ -168,7 +169,7 @@ class _SearchToCallState extends State<SearchToCall> {
                   ),
                 ),
                 CustomSearchTextField(
-                  key: searchKey,
+                  // key: searchKey,
                   labelText: "Search",
                   placeholder: "eg: Al-Amal center",
                   controller: _searchController,
@@ -181,7 +182,7 @@ class _SearchToCallState extends State<SearchToCall> {
                 Padding(
                   padding: const EdgeInsets.all(5.0),
                   child: MyTab(
-                    key: viewInfoKey,
+                    // key: viewInfoKey,
                     selectedSearch: selectedSearch,
                     namePrefix: _searchController.text,
                   ),

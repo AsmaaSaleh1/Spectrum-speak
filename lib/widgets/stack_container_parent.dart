@@ -15,16 +15,27 @@ import 'package:spectrum_speak/units/custom_button.dart';
 import 'package:spectrum_speak/units/custom_clipper.dart';
 import 'package:tuple/tuple.dart';
 
-class StackContainerParent extends StatelessWidget {
+class StackContainerParent extends StatefulWidget {
   final String userID;
   StackContainerParent({super.key, required this.userID});
+
+  @override
+  State<StackContainerParent> createState() => _StackContainerParentState();
+}
+
+class _StackContainerParentState extends State<StackContainerParent> {
   @override
   String? url = '';
-  Widget build(BuildContext context) {
+  @override
+  initState() {
+    super.initState();
     assignUrl();
+  }
+
+  Widget build(BuildContext context) {
     MediaQueryData mq = MediaQuery.of(context);
     return FutureBuilder<Tuple2<Parent?, String?>>(
-        future: _getParent(userID),
+        future: _getParent(widget.userID),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             // You can return a loading indicator here if needed
@@ -128,7 +139,7 @@ class StackContainerParent extends StatelessWidget {
                         ),
                         const SizedBox(height: 5.0),
                         Visibility(
-                          visible: userID ==
+                          visible: widget.userID ==
                               userIdLogin, // Show only if userId equals userIdLogin
                           child: CustomButton(
                             foregroundColor: kDarkerColor,
@@ -175,7 +186,10 @@ class StackContainerParent extends StatelessWidget {
   }
 
   Future<void> assignUrl() async {
-    ChatUser u = await Utils.fetchUser(userID);
+    ChatUser u = await Utils.fetchUser(widget.userID);
     url = u.image;
+    setState(() {
+      url = url;
+    });
   }
 }

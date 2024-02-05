@@ -263,7 +263,7 @@ class _SpecialistProfileState extends State<SpecialistProfile> {
                                   visible: !checkSpecialist,
                                   child: AddReview(
                                     key: rateKey,
-                                    image: 'images/prof.png',
+                                    image: AuthManager.u.image,
                                     name: name,
                                     userRating: userRating,
                                     onRating: (double newRating) {

@@ -283,6 +283,8 @@ Future<bool?> checkShadowTeacherSignUpComplete(String userID) async {
     );
     if (response.statusCode == 200) {
       var decodedData = jsonDecode(response.body);
+      print(
+          'dkldsnfkdablkdabvlakdbvkdabvlakb;kbc;kdbflkadbfkdabfkpdahfalfabfldaf ${decodedData["result"]}');
       return decodedData["result"];
     } else {
       print(
